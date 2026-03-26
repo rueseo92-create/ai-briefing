@@ -4,7 +4,7 @@ import { getPost, getAllSlugs, getRelatedPosts } from "@/lib/posts";
 import { siteConfig, getCategory } from "@/lib/config";
 import { PostCard } from "@/components/PostCard";
 import { SourceCard } from "@/components/SourceCard";
-import { CoupangAd, AdSlot } from "@/components/CoupangAd";
+import { CoupangAd, CoupangLinkAd, AdSlot } from "@/components/CoupangAd";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 // 동적 파라미터 허용
@@ -206,12 +206,13 @@ export default function PostPage({ params }: { params: { slug: string } }) {
           </div>
         </div>
 
-        {/* 쿠팡 광고: 본문 하단 */}
-        {siteConfig.coupang.enabled && (
+        {/* 쿠팡 파트너스: 글 관련 상품 추천 */}
+        {siteConfig.coupang.enabled && meta.tags.length > 0 && (
           <div className="max-w-4xl mx-auto px-6 mt-12">
-            <AdSlot>
-              <CoupangAd {...siteConfig.coupang.ads.postBottom} />
-            </AdSlot>
+            <CoupangLinkAd
+              keywords={meta.tags.slice(0, 4).map((tag) => `${tag} 추천`)}
+              title="관련 상품 보러가기"
+            />
           </div>
         )}
 

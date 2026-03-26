@@ -42,15 +42,12 @@ export const siteConfig = {
   // 쿠팡 파트너스
   coupang: {
     enabled: true,
-    // 쿠팡 파트너스에서 발급받은 광고 ID들
+    trackingCode: "AF9905627",
+    // 동적 배너 광고 ID
     ads: {
-      // 글 본문 하단 (캐러셀)
       postBottom: { id: 838592, template: "carousel" as const, width: "680", height: "140" },
-      // 사이드바 (카드)
       sidebar: { id: 838592, template: "card" as const, width: "300", height: "250" },
-      // 글 중간 (배너)
       postMid: { id: 838592, template: "banner" as const, width: "680", height: "100" },
-      // 홈 히어로 아래 (캐러셀)
       homeTop: { id: 838592, template: "carousel" as const, width: "680", height: "140" },
     },
     disclaimer:

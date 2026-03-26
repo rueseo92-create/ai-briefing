@@ -1,7 +1,7 @@
 import { getAllPosts } from "@/lib/posts";
 import { siteConfig } from "@/lib/config";
 import { PostCard } from "@/components/PostCard";
-import { CoupangAd, AdSlot } from "@/components/CoupangAd";
+import { CoupangAd, CoupangSidebarAd, AdSlot } from "@/components/CoupangAd";
 
 export default function Home() {
   const posts = getAllPosts();
@@ -154,13 +154,17 @@ export default function Home() {
             </div>
           </section>
 
-          {/* 쿠팡 광고: 사이드바 */}
+          {/* 쿠팡 파트너스: 사이드바 */}
           {siteConfig.coupang.enabled && (
-            <section>
-              <AdSlot>
-                <CoupangAd {...siteConfig.coupang.ads.sidebar} />
-              </AdSlot>
-            </section>
+            <CoupangSidebarAd
+              keywords={[
+                "AI 관련 도서 베스트셀러",
+                "프로그래밍 키보드 추천",
+                "노트북 거치대 인기",
+                "무선 마우스 가성비",
+                "모니터 암 추천",
+              ]}
+            />
           )}
 
           {/* Newsletter Signup */}
