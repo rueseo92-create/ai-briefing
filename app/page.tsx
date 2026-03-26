@@ -1,7 +1,27 @@
+import { Metadata } from "next";
 import { getAllPosts } from "@/lib/posts";
 import { siteConfig } from "@/lib/config";
 import { PostCard } from "@/components/PostCard";
 import { CoupangAd, CoupangSidebarAd, AdSlot } from "@/components/CoupangAd";
+
+export const metadata: Metadata = {
+  title: siteConfig.defaultTitle,
+  description: siteConfig.description,
+  openGraph: {
+    title: siteConfig.defaultTitle,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    type: "website",
+    images: [
+      {
+        url: `${siteConfig.url}/api/og?title=${encodeURIComponent(siteConfig.name)}&category=홈`,
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
+  },
+};
 
 export default function Home() {
   const posts = getAllPosts();

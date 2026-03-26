@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getPost, getAllSlugs, getRelatedPosts } from "@/lib/posts";
 import { siteConfig, getCategory } from "@/lib/config";
+import { breadcrumbSchema, articleSchema, faqSchema, ogImageUrl } from "@/lib/seo";
 import { PostCard } from "@/components/PostCard";
 import { SourceCard } from "@/components/SourceCard";
 import { CoupangAd, CoupangLinkAd, AdSlot } from "@/components/CoupangAd";
@@ -38,9 +39,14 @@ export function generateMetadata({
       publishedTime: meta.date,
       authors: [siteConfig.author],
       tags: meta.tags,
-      images: meta.thumbnail
-        ? [{ url: meta.thumbnail, width: 1200, height: 630 }]
-        : [],
+      images: [
+        {
+          url: meta.thumbnail || ogImageUrl(meta.title, meta.category),
+          width: 1200,
+          height: 630,
+          alt: meta.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
@@ -76,31 +82,49 @@ export default function PostPage({ params }: { params: { slug: string } }) {
   const readingTime = estimateReadingTime(content);
   const diff = meta.difficulty ? difficultyConfig[meta.difficulty] : null;
 
-  // Article 구조화 데이터
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: meta.title,
-    description: meta.description,
-    datePublished: meta.date,
-    author: {
-      "@type": "Person",
-      name: siteConfig.author,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: siteConfig.name,
-    },
-    ...(meta.thumbnail && { image: meta.thumbnail }),
-  };
+  // 구조화 데이터
+  const articleJsonLd = articleSchema(meta);
+  const breadcrumbJsonLd = breadcrumbSchema([
+    { name: "홈", url: siteConfig.url },
+    ...(category
+      ? [{ name: category.name, url: `${siteConfig.url}/categories/${meta.category}` }]
+      : []),
+    { name: meta.title, url: `${siteConfig.url}/posts/${meta.slug}` },
+  ]);
+
+  // FAQ 자동 추출 (본문에서 Q1/A1 패턴 찾기)
+  const faqs: { question: string; answer: string }[] = [];
+  const lines = content.split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    const qMatch = lines[i].match(/^###\s*Q\d*[:.]?\s*(.+)/);
+    if (qMatch && i + 1 < lines.length) {
+      const aMatch = lines[i + 1].match(/^A\d*[:.]?\s*(.+)/);
+      if (aMatch) {
+        faqs.push({ question: qMatch[1].trim(), answer: aMatch[1].trim() });
+      }
+    }
+  }
+  const faqJsonLd = faqs.length > 0 ? faqSchema(faqs) : null;
 
   return (
     <>
-      {/* 구조화 데이터 */}
+      {/* 구조화 데이터: Article */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
+      {/* 구조화 데이터: Breadcrumb */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      {/* 구조화 데이터: FAQ (리치 스니펫) */}
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
 
       <article className="pt-28 pb-20">
         {/* Breadcrumbs */}

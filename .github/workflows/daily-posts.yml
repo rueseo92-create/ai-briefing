@@ -47,3 +47,8 @@ jobs:
           git add content/posts/*.mdx scripts/publish_history.json
           git diff --staged --quiet || git commit -m "feat: 일일 자동 발행 $(date +%Y-%m-%d)"
           git push
+
+      - name: Submit URLs to search engines (IndexNow)
+        run: |
+          cd scripts
+          python submit_urls.py --new-only
