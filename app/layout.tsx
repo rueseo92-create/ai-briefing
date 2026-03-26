@@ -170,6 +170,12 @@ function Footer() {
           &copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           <br />
           {siteConfig.disclaimer}
+          {siteConfig.coupang.enabled && (
+            <>
+              <br />
+              {siteConfig.coupang.disclaimer}
+            </>
+          )}
         </p>
       </div>
     </footer>

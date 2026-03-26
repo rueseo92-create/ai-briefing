@@ -39,6 +39,24 @@ export const siteConfig = {
     { href: "/about", label: "소개" },
   ],
 
+  // 쿠팡 파트너스
+  coupang: {
+    enabled: true,
+    // 쿠팡 파트너스에서 발급받은 광고 ID들
+    ads: {
+      // 글 본문 하단 (캐러셀)
+      postBottom: { id: 838592, template: "carousel" as const, width: "680", height: "140" },
+      // 사이드바 (카드)
+      sidebar: { id: 838592, template: "card" as const, width: "300", height: "250" },
+      // 글 중간 (배너)
+      postMid: { id: 838592, template: "banner" as const, width: "680", height: "100" },
+      // 홈 히어로 아래 (캐러셀)
+      homeTop: { id: 838592, template: "carousel" as const, width: "680", height: "140" },
+    },
+    disclaimer:
+      "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+  },
+
   // Google Analytics
   analytics: {
     gaId: "", // G-XXXXXXXXXX

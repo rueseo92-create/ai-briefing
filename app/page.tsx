@@ -1,6 +1,7 @@
 import { getAllPosts } from "@/lib/posts";
 import { siteConfig } from "@/lib/config";
 import { PostCard } from "@/components/PostCard";
+import { CoupangAd, AdSlot } from "@/components/CoupangAd";
 
 export default function Home() {
   const posts = getAllPosts();
@@ -64,6 +65,13 @@ export default function Home() {
             </div>
           </div>
         </section>
+      )}
+
+      {/* 쿠팡 광고: 히어로 아래 */}
+      {siteConfig.coupang.enabled && (
+        <AdSlot className="mb-8">
+          <CoupangAd {...siteConfig.coupang.ads.homeTop} />
+        </AdSlot>
       )}
 
       {/* Category Filter Bar */}
@@ -145,6 +153,15 @@ export default function Home() {
                 ))}
             </div>
           </section>
+
+          {/* 쿠팡 광고: 사이드바 */}
+          {siteConfig.coupang.enabled && (
+            <section>
+              <AdSlot>
+                <CoupangAd {...siteConfig.coupang.ads.sidebar} />
+              </AdSlot>
+            </section>
+          )}
 
           {/* Newsletter Signup */}
           <section className="bg-gradient-to-b from-indigo-50 to-white rounded-2xl p-8 border border-indigo-100/50">

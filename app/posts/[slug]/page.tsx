@@ -4,6 +4,7 @@ import { getPost, getAllSlugs, getRelatedPosts } from "@/lib/posts";
 import { siteConfig, getCategory } from "@/lib/config";
 import { PostCard } from "@/components/PostCard";
 import { SourceCard } from "@/components/SourceCard";
+import { CoupangAd, AdSlot } from "@/components/CoupangAd";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 // 동적 파라미터 허용
@@ -205,6 +206,15 @@ export default function PostPage({ params }: { params: { slug: string } }) {
           </div>
         </div>
 
+        {/* 쿠팡 광고: 본문 하단 */}
+        {siteConfig.coupang.enabled && (
+          <div className="max-w-4xl mx-auto px-6 mt-12">
+            <AdSlot>
+              <CoupangAd {...siteConfig.coupang.ads.postBottom} />
+            </AdSlot>
+          </div>
+        )}
+
         {/* Source Links */}
         {meta.sources && meta.sources.length > 0 && (
           <section className="max-w-4xl mx-auto px-6 mt-16">
@@ -226,9 +236,12 @@ export default function PostPage({ params }: { params: { slug: string } }) {
         <div className="max-w-4xl mx-auto px-6 mt-12">
           <div className="flex items-start gap-3 rounded-xl bg-slate-50 p-5 border border-slate-100">
             <span className="material-symbols-outlined text-on-surface-variant text-lg mt-0.5">info</span>
-            <p className="text-xs text-on-surface-variant leading-relaxed">
-              {siteConfig.disclaimer}
-            </p>
+            <div className="text-xs text-on-surface-variant leading-relaxed space-y-1">
+              <p>{siteConfig.disclaimer}</p>
+              {siteConfig.coupang.enabled && (
+                <p>{siteConfig.coupang.disclaimer}</p>
+              )}
+            </div>
           </div>
         </div>
 
@@ -245,6 +258,15 @@ export default function PostPage({ params }: { params: { slug: string } }) {
                 </span>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* 쿠팡 광고: 관련 글 위 */}
+        {siteConfig.coupang.enabled && (
+          <div className="max-w-4xl mx-auto px-6 mt-10">
+            <AdSlot label={false}>
+              <CoupangAd {...siteConfig.coupang.ads.postMid} />
+            </AdSlot>
           </div>
         )}
 
