@@ -231,12 +231,25 @@ export default function PostPage({ params }: { params: { slug: string } }) {
           </div>
         </div>
 
-        {/* 쿠팡 파트너스: 글 관련 상품 추천 */}
+        {/* 쿠팡 파트너스: 글 태그 기반 관련 상품 추천 */}
         {siteConfig.coupang.enabled && (
           <div className="max-w-4xl mx-auto px-6 mt-12">
             <CoupangLinkAd
-              keywords={siteConfig.coupang.productKeywords[meta.category] || siteConfig.coupang.productKeywords["ai-news"]}
-              title="이 글과 함께 보면 좋은 상품"
+              keywords={(() => {
+                // 태그 매칭으로 관련 상품 찾기
+                const tagMap = siteConfig.coupang.tagProductMap;
+                const matched = meta.tags
+                  .map((tag) => {
+                    const key = Object.keys(tagMap).find((k) => tag.includes(k) || k.includes(tag));
+                    return key ? tagMap[key] : null;
+                  })
+                  .filter((v): v is string => v !== null);
+                // 매칭된 상품 + 카테고리 기본 상품으로 4개 채우기
+                const catDefaults = siteConfig.coupang.productKeywords[meta.category] || siteConfig.coupang.productKeywords["ai-news"];
+                const unique = Array.from(new Set([...matched, ...catDefaults]));
+                return unique.slice(0, 4);
+              })()}
+              title="이 글을 읽는 분들이 많이 찾는 상품"
             />
           </div>
         )}
@@ -290,9 +303,10 @@ export default function PostPage({ params }: { params: { slug: string } }) {
         {/* 쿠팡 광고: 관련 글 위 */}
         {siteConfig.coupang.enabled && (
           <div className="max-w-4xl mx-auto px-6 mt-10">
-            <AdSlot label={false}>
-              <CoupangAd {...siteConfig.coupang.ads.postMid} />
-            </AdSlot>
+            <CoupangLinkAd
+              keywords={["삼성 갤럭시북4 프로", "맥북 에어 M3", "로지텍 MX Master 3S", "LG 울트라와이드 모니터"]}
+              title="개발자·블로거 필수 장비 모음"
+            />
           </div>
         )}
 

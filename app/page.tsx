@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { getAllPosts } from "@/lib/posts";
 import { siteConfig } from "@/lib/config";
 import { PostCard } from "@/components/PostCard";
-import { CoupangAd, CoupangSidebarAd, AdSlot } from "@/components/CoupangAd";
+import { CoupangLinkAd, CoupangSidebarAd } from "@/components/CoupangAd";
 
 export const metadata: Metadata = {
   title: siteConfig.defaultTitle,
@@ -89,9 +89,12 @@ export default function Home() {
 
       {/* 쿠팡 광고: 히어로 아래 */}
       {siteConfig.coupang.enabled && (
-        <AdSlot className="mb-8">
-          <CoupangAd {...siteConfig.coupang.ads.homeTop} />
-        </AdSlot>
+        <div className="mb-8">
+          <CoupangLinkAd
+            keywords={["삼성 갤럭시북4 프로 노트북", "로지텍 MX Keys S 키보드", "LG 울트라와이드 모니터", "에어팟 프로 2세대"]}
+            title="AI 블로거들이 많이 쓰는 장비"
+          />
+        </div>
       )}
 
       {/* Category Filter Bar */}
@@ -178,11 +181,11 @@ export default function Home() {
           {siteConfig.coupang.enabled && (
             <CoupangSidebarAd
               keywords={[
-                "AI 관련 도서 베스트셀러",
-                "프로그래밍 키보드 추천",
-                "노트북 거치대 인기",
-                "무선 마우스 가성비",
-                "모니터 암 추천",
+                "챗GPT 활용법 도서",
+                "삼성 갤럭시북4 프로 노트북",
+                "로지텍 MX Master 3S",
+                "LG 울트라와이드 모니터 34인치",
+                "에어팟 프로 2세대",
               ]}
             />
           )}
