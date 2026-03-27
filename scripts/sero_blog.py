@@ -143,10 +143,23 @@ def calculate_reading_time(content: str) -> int:
 
 def _safe_json_parse(text: str) -> Optional[dict]:
     """잘린 JSON도 복구 시도"""
+    # ```json ... ``` 래퍼 제거
+    text = re.sub(r"```json\s*", "", text)
+    text = re.sub(r"```\s*$", "", text)
+    text = text.strip()
+
     try:
         return json.loads(text)
     except json.JSONDecodeError:
         print("  [경고] JSON 파싱 실패, 복구 시도...")
+        # JSON 블록만 추출 시도
+        match = re.search(r'\{[\s\S]*\}', text)
+        if match:
+            json_text = match.group(0)
+            try:
+                return json.loads(json_text)
+            except json.JSONDecodeError:
+                pass
         # 마지막 완전한 } 찾기
         last_brace = text.rfind("}")
         if last_brace > 0:
@@ -291,7 +304,7 @@ def collect_topics(topic: str = "AI", count: int = 5, source: str = "all") -> li
 
     # 토픽이 부족하면 Claude로 보충
     if len(topics) < count and source in ("all", "claude"):
-        claude_topics = _generate_topics_claude(topic, count * 2)
+        claude_topics = _generate_topics_claude(topic, min(count + 2, 12))
         topics.extend(claude_topics)
 
     # 점수 부여
@@ -352,14 +365,25 @@ SEO 기준:
   ]
 }}"""
 
-    response = claude.messages.create(
-        model=CLAUDE_MODEL,
-        max_tokens=2048,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    text = response.content[0].text.strip()
-    text = re.sub(r"```json\s*|```", "", text).strip()
-    data = json.loads(text)
+    for attempt in range(3):
+        try:
+            response = claude.messages.create(
+                model=CLAUDE_MODEL,
+                max_tokens=4096,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            text = response.content[0].text.strip()
+            data = _safe_json_parse(text)
+            if data and "topics" in data:
+                break
+        except Exception as e:
+            print(f"  [토픽 생성] 시도 {attempt+1}/3 실패: {e}")
+            if attempt == 2:
+                return []
+
+    if not data or "topics" not in data:
+        print("  [토픽 생성] JSON 파싱 실패")
+        return []
 
     results = []
     for t in data.get("topics", []):
