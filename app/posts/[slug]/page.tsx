@@ -7,6 +7,7 @@ import { PostCard } from "@/components/PostCard";
 import { SourceCard } from "@/components/SourceCard";
 import { CoupangAd, CoupangLinkAd, AdSlot } from "@/components/CoupangAd";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 
 // 동적 파라미터 허용
 export const dynamicParams = true;
@@ -226,7 +227,7 @@ export default function PostPage({ params }: { params: { slug: string } }) {
         {/* Article Body */}
         <div className="max-w-4xl mx-auto px-6">
           <div className="prose max-w-none">
-            <MDXRemote source={content} />
+            <MDXRemote source={content} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
           </div>
         </div>
 
