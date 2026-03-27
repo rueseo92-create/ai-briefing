@@ -232,11 +232,11 @@ export default function PostPage({ params }: { params: { slug: string } }) {
         </div>
 
         {/* 쿠팡 파트너스: 글 관련 상품 추천 */}
-        {siteConfig.coupang.enabled && meta.tags.length > 0 && (
+        {siteConfig.coupang.enabled && (
           <div className="max-w-4xl mx-auto px-6 mt-12">
             <CoupangLinkAd
-              keywords={meta.tags.slice(0, 4).map((tag) => `${tag} 추천`)}
-              title="관련 상품 보러가기"
+              keywords={siteConfig.coupang.productKeywords[meta.category] || siteConfig.coupang.productKeywords["ai-news"]}
+              title="이 글과 함께 보면 좋은 상품"
             />
           </div>
         )}

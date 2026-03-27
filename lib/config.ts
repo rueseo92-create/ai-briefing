@@ -50,6 +50,33 @@ export const siteConfig = {
       postMid: { id: 838592, template: "banner" as const, width: "680", height: "100" },
       homeTop: { id: 838592, template: "carousel" as const, width: "680", height: "140" },
     },
+    // 카테고리별 쿠팡 상품 키워드
+    productKeywords: {
+      "ai-news": [
+        "AI 입문 도서 베스트셀러",
+        "인공지능 책 추천",
+        "프로그래밍 노트북",
+        "개발자 키보드 기계식",
+      ],
+      "gov-projects": [
+        "창업 관련 도서",
+        "사업계획서 작성법 책",
+        "스타트업 경영 도서",
+        "노트북 사무용 추천",
+      ],
+      "ai-tools": [
+        "ChatGPT 활용법 책",
+        "AI 생산성 도서",
+        "듀얼 모니터",
+        "무선 마우스 로지텍",
+      ],
+      tutorials: [
+        "파이썬 입문서",
+        "코딩 독학 도서",
+        "모니터 암 거치대",
+        "노트북 거치대 알루미늄",
+      ],
+    } as Record<string, string[]>,
     disclaimer:
       "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
   },
