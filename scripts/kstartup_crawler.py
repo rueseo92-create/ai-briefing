@@ -96,28 +96,25 @@ def crawl_listing(search_keyword: str = "", max_pages: int = 2) -> list[KStartup
             print(f"  [K-Startup] 페이지 {page} 로드 실패: {e}")
             continue
 
-        # go_view(번호) 패턴으로 공고 추출
-        pbanc_ids = re.findall(r'go_view\((\d+)\)', html)
-
-        # 제목 추출: go_view() 다음의 텍스트
-        titles = re.findall(
-            r'go_view\(\d+\)[^>]*>([^<]+)</a>',
-            html
-        )
+        # go_view(번호) + 제목을 한 쌍으로 추출 (여러 패턴 시도)
+        # 패턴1: go_view(id)">제목</a>
+        pairs = re.findall(r'go_view\((\d+)\)[^>]*>\s*([^<]+?)\s*</a>', html)
 
         # D-day 추출
         d_days = re.findall(r'D-(\d+)', html)
 
-        # 마감일 추출 (YYYY.MM.DD 또는 YYYY-MM-DD)
-        deadlines = re.findall(r'(\d{4}[.\-]\d{2}[.\-]\d{2})', html)
-
         seen_ids = set()
-        for i, pbanc_sn in enumerate(pbanc_ids):
+        for i, (pbanc_sn, raw_title) in enumerate(pairs):
             if pbanc_sn in seen_ids:
                 continue
             seen_ids.add(pbanc_sn)
 
-            title = titles[i].strip() if i < len(titles) else f"공고 {pbanc_sn}"
+            title = raw_title.strip()
+            # 제목이 비어있거나 숫자만 있으면 상세 페이지에서 가져오기
+            if not title or title.isdigit() or len(title) < 5:
+                detail = crawl_detail(pbanc_sn)
+                title = detail.get("title", "") or f"K-Startup 사업 {pbanc_sn}"
+
             d_day = int(d_days[i]) if i < len(d_days) else 0
 
             # 마감일 계산
@@ -141,21 +138,50 @@ def crawl_listing(search_keyword: str = "", max_pages: int = 2) -> list[KStartup
 
 
 def crawl_detail(pbanc_sn: str) -> dict:
-    """공고 상세 페이지 크롤링"""
+    """공고 상세 페이지 크롤링 — 실제 사업명, 주관기관, 내용 추출"""
     url = f"https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?schM=view&pbancSn={pbanc_sn}"
     try:
         html = _fetch_url(url)
 
+        # 사업명/제목 추출 (여러 패턴 시도)
+        title = ""
+        # 패턴1: <h3> 또는 <h4> 안의 사업명
+        title_match = re.search(r'<h[34][^>]*>\s*([^<]{5,}?)\s*</h[34]>', html)
+        if title_match:
+            title = title_match.group(1).strip()
+        # 패턴2: "사업명" 라벨 옆의 값
+        if not title:
+            title_match = re.search(r'사업명[^<]*<[^>]*>\s*([^<]+)', html)
+            if title_match:
+                title = title_match.group(1).strip()
+        # 패턴3: <title> 태그에서
+        if not title:
+            title_match = re.search(r'<title>([^<]+)</title>', html)
+            if title_match:
+                raw = title_match.group(1).strip()
+                # "K-Startup > ..." 같은 prefix 제거
+                if ">" in raw:
+                    title = raw.split(">")[-1].strip()
+                else:
+                    title = raw
+
         # 주관기관
-        org_match = re.search(r'주관기관[^<]*<[^>]*>([^<]+)', html)
+        org_match = re.search(r'주관기관[^<]*<[^>]*>\s*([^<]+)', html)
         organization = org_match.group(1).strip() if org_match else ""
 
         # 공고일
-        date_match = re.search(r'공고일[^<]*<[^>]*>(\d{4}[.\-]\d{2}[.\-]\d{2})', html)
+        date_match = re.search(r'공고일[^<]*<[^>]*>\s*(\d{4}[.\-]\d{2}[.\-]\d{2})', html)
         posted_date = date_match.group(1).strip() if date_match else ""
 
+        # 지원 대상
+        eligibility_match = re.search(r'지원\s*대상[^<]*<[^>]*>\s*([^<]+)', html)
+        eligibility = eligibility_match.group(1).strip() if eligibility_match else ""
+
+        # 지원 내용
+        support_match = re.search(r'지원\s*내용[^<]*<[^>]*>\s*([^<]+)', html)
+        support = support_match.group(1).strip() if support_match else ""
+
         # 본문 텍스트 (태그 제거)
-        # 상세 내용 영역 추출
         content_match = re.search(r'<div[^>]*class="[^"]*view[^"]*"[^>]*>(.*?)</div>', html, re.DOTALL)
         content_text = ""
         if content_match:
@@ -163,8 +189,11 @@ def crawl_detail(pbanc_sn: str) -> dict:
             content_text = re.sub(r'\s+', ' ', content_text).strip()
 
         return {
+            "title": title,
             "organization": organization,
             "posted_date": posted_date,
+            "eligibility": eligibility,
+            "support": support,
             "content": content_text[:2000],
         }
     except Exception as e:

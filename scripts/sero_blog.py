@@ -237,10 +237,32 @@ def collect_topics(topic: str = "AI", count: int = 5, source: str = "all") -> li
             else:
                 anns = kstartup_crawler.crawl_recent(days=7, max_results=5)
             for ann in anns:
+                # 상세 페이지에서 추가 정보 가져오기
+                detail = kstartup_crawler.crawl_detail(ann.pbanc_sn)
+                detail_title = detail.get("title", "")
+                org = detail.get("organization", "")
+                eligibility = detail.get("eligibility", "")
+                support = detail.get("support", "")
+
+                # 실제 사업명 우선 사용
+                real_title = detail_title if detail_title and len(detail_title) > 5 else ann.title
+
+                # 요약에 실제 정보 포함
+                summary_parts = []
+                if org:
+                    summary_parts.append(f"주관: {org}")
+                if ann.deadline:
+                    summary_parts.append(f"마감: {ann.deadline} (D-{ann.d_day})")
+                if eligibility:
+                    summary_parts.append(f"대상: {eligibility[:100]}")
+                if support:
+                    summary_parts.append(f"지원: {support[:100]}")
+                summary = " | ".join(summary_parts) if summary_parts else f"마감: {ann.deadline} (D-{ann.d_day})"
+
                 topics.append(TopicData(
-                    title=ann.title,
+                    title=real_title,
                     category="gov-projects",
-                    summary=ann.summary or f"마감: {ann.deadline} (D-{ann.d_day})",
+                    summary=summary,
                     source_name="K-Startup",
                     source_url=ann.url,
                     source_type="government",
