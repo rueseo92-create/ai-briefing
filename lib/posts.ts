@@ -56,7 +56,12 @@ export function getAllPosts(): PostMeta[] {
       } as PostMeta;
     })
     .filter((p) => p.published)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    .sort((a, b) => {
+      const dateDiff = new Date(b.date).getTime() - new Date(a.date).getTime();
+      if (dateDiff !== 0) return dateDiff;
+      // 같은 날짜면 slug 역순 (최신 파일이 위로)
+      return b.slug.localeCompare(a.slug);
+    });
 
   return posts;
 }

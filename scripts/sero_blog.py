@@ -602,7 +602,7 @@ def create_mdx_file(post: BlogPost) -> Path:
     mdx = f"""---
 title: "{post.title}"
 description: "{post.description}"
-date: "{datetime.now().strftime('%Y-%m-%d')}"
+date: "{datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}"
 category: "{post.category}"
 tags: {json.dumps(post.tags, ensure_ascii=False)}
 thumbnail: ""
