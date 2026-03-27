@@ -9,7 +9,7 @@ on:
       count:
         description: '생성할 글 수'
         required: false
-        default: '10'
+        default: '3'
 
 permissions:
   contents: write
@@ -38,7 +38,7 @@ jobs:
           BLOG_SITE_URL: https://coupang-blog-rho.vercel.app
         run: |
           cd scripts
-          python daily_publish.py --count ${{ github.event.inputs.count || '10' }}
+          python daily_publish.py --count ${{ github.event.inputs.count || '3' }}
 
       - name: Commit and push
         run: |
