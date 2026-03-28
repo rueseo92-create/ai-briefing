@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { siteConfig } from "@/lib/config";
 import "./globals.css";
 
@@ -101,14 +102,16 @@ export default function RootLayout({
             />
           </>
         )}
-        {/* Google AdSense */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1902054355965964"
-          crossOrigin="anonymous"
-        />
       </head>
       <body className="bg-background text-on-surface antialiased font-body">
+        {/* Google AdSense */}
+        {process.env.NEXT_PUBLIC_ADSENSE_ID && (
+          <Script
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
+            strategy="afterInteractive"
+            crossOrigin="anonymous"
+          />
+        )}
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />
