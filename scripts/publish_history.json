@@ -95,7 +95,25 @@
       "category": "tutorials",
       "date": "2026-03-28",
       "slug": "2026-03-28-ai-blog-automation-mastery-2026"
+    },
+    {
+      "title": "Claude AI 사용 가이드",
+      "category": "ai-tools",
+      "date": "2026-03-29",
+      "slug": "2026-03-29-claude-ai-usage-guide-2026"
+    },
+    {
+      "title": "데이터 바우처 지원사업",
+      "category": "gov-projects",
+      "date": "2026-03-29",
+      "slug": "2026-03-29-data-voucher-application-guide"
+    },
+    {
+      "title": "AI 음성 합성 활용법",
+      "category": "tutorials",
+      "date": "2026-03-29",
+      "slug": "2026-03-29-ai-voice-synthesis-amazing-uses"
     }
   ],
-  "last_run": "2026-03-28 (3/3 성공, 382초)"
+  "last_run": "2026-03-29 (3/3 성공, 388초)"
 }
