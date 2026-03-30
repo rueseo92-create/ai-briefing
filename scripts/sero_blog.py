@@ -187,33 +187,74 @@ def _safe_json_parse(text: str) -> Optional[dict]:
 
 
 def _fix_markdown_tables(content: str) -> str:
-    """마크다운 표가 깨지지 않도록 후처리"""
+    """마크다운 표가 깨지지 않도록 후처리
+    - 표 행 사이 빈 줄 제거 (표 분리 방지)
+    - 중복 구분선 제거
+    - 구분선 없으면 헤더 뒤에 자동 삽입
+    - 표 앞뒤에 빈 줄 보장
+    """
     lines = content.split("\n")
-    fixed = []
-    for i, line in enumerate(lines):
-        stripped = line.strip()
-        # 표 시작 감지 (| 로 시작하는 줄)
+    result = []
+    i = 0
+    while i < len(lines):
+        stripped = lines[i].strip()
+        # 표 블록 시작 감지
         if stripped.startswith("|") and stripped.endswith("|"):
-            # 표 앞에 빈 줄이 없으면 추가
-            if i > 0 and fixed and fixed[-1].strip() != "":
-                fixed.append("")
-            fixed.append(line)
-            # 헤더 구분선 검증: |---|---| 패턴
-            if i + 1 < len(lines):
-                next_line = lines[i + 1].strip()
-                # 구분선이 아닌데 다음이 표 데이터면 구분선 삽입
-                if next_line.startswith("|") and not re.match(r'^\|[\s\-:|]+\|$', next_line):
-                    cols = stripped.count("|") - 1
-                    if cols > 0:
-                        separator = "|" + "|".join(["------"] * cols) + "|"
-                        fixed.append(separator)
+            # 표 전체를 먼저 수집 (빈 줄 건너뛰며)
+            table_rows = []
+            j = i
+            while j < len(lines):
+                s = lines[j].strip()
+                if s.startswith("|") and s.endswith("|"):
+                    table_rows.append(s)
+                    j += 1
+                elif s == "":
+                    # 빈 줄 뒤에 또 표 행이 오면 같은 표로 간주
+                    k = j + 1
+                    while k < len(lines) and lines[k].strip() == "":
+                        k += 1
+                    if k < len(lines) and lines[k].strip().startswith("|") and lines[k].strip().endswith("|"):
+                        j = k  # 빈 줄 건너뛰기
+                    else:
+                        break
+                else:
+                    break
+            i = j
+
+            # 표 정리: 헤더 + 구분선 1개 + 데이터 행들
+            is_sep = lambda r: bool(re.match(r'^\|[\s\-:|]+\|$', r))
+            header = None
+            separator = None
+            data_rows = []
+            for row in table_rows:
+                if is_sep(row):
+                    if separator is None and header is not None:
+                        separator = row
+                    # 중복 구분선은 무시
+                elif header is None:
+                    header = row
+                else:
+                    data_rows.append(row)
+
+            if header:
+                # 표 앞 빈 줄 보장
+                if result and result[-1].strip() != "":
+                    result.append("")
+                result.append(header)
+                # 구분선 없으면 자동 생성
+                if separator is None:
+                    cols = header.count("|") - 1
+                    separator = "|" + "|".join(["------"] * max(cols, 1)) + "|"
+                result.append(separator)
+                result.extend(data_rows)
+                # 표 뒤 빈 줄 보장
+                result.append("")
+            else:
+                result.extend(table_rows)
         else:
-            # 표 바로 다음 줄에 빈 줄이 없으면 추가
-            if (i > 0 and lines[i-1].strip().startswith("|") and
-                    lines[i-1].strip().endswith("|") and stripped != ""):
-                fixed.append("")
-            fixed.append(line)
-    return "\n".join(fixed)
+            result.append(lines[i])
+            i += 1
+    return "\n".join(result)
 
 
 def _generate_english_slug(title: str, fallback: str) -> str:
