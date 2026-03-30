@@ -11,7 +11,7 @@ export async function GET() {
   const posts = getAllPosts();
 
   const items = posts
-    .slice(0, 50) // 최근 50개
+    .slice(0, 50)
     .map(
       (post) => `
     <item>
@@ -21,6 +21,7 @@ export async function GET() {
       <pubDate>${new Date(post.date).toUTCString()}</pubDate>
       <guid isPermaLink="true">${siteConfig.url}/posts/${post.slug}</guid>
       <category>${post.category}</category>
+      ${post.tags.map((t) => `<category>${t}</category>`).join("\n      ")}
     </item>`
     )
     .join("");
@@ -34,6 +35,11 @@ export async function GET() {
     <language>ko</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${siteConfig.url}/feed.xml" rel="self" type="application/rss+xml"/>
+    <image>
+      <url>${siteConfig.url}/favicon.svg</url>
+      <title>${siteConfig.name}</title>
+      <link>${siteConfig.url}</link>
+    </image>
     ${items}
   </channel>
 </rss>`;

@@ -1,40 +1,57 @@
-# AI 브리핑 — llms.txt
+# AI 브리핑 (AI Briefing) — llms.txt
 
+> AI news, government AI projects, and practical tool guides — simplified for everyone.
 > AI 트렌드, 정부 AI 사업, 실전 활용법을 누구나 이해할 수 있게 정리합니다.
 
-## 사이트 정보
+## Site Information
 
-- 이름: AI 브리핑
+- Name: AI 브리핑 (AI Briefing)
 - URL: https://seroai.xyz
-- 언어: 한국어 (ko)
-- 주제: AI 뉴스, 정부 AI 사업, AI 도구 리뷰, 튜토리얼, 마케팅 자동화
-- 저자: AI 브리핑 편집팀
-- 업데이트: 매일 (하루 10건 이상)
+- Languages: Korean (ko), English (en), Chinese (zh), Japanese (ja), Spanish (es)
+- Topics: AI news, government AI funding, AI tool reviews, tutorials, marketing automation
+- Author: AI Briefing Editorial Team
+- Updates: Daily (multiple posts per day)
+- Founded: 2026
 
-## 카테고리
+## Categories
 
-- AI 뉴스 (/categories/ai-news): 최신 AI 기술 동향, 업계 소식, 신제품 발표
-- 정부사업 (/categories/gov-projects): 정부 AI 지원사업, 정책, 공모전 안내
-- AI 도구 (/categories/ai-tools): AI 도구 리뷰, 비교 분석, 활용 팁
-- 튜토리얼 (/categories/tutorials): AI 활용 가이드, 단계별 설정법
-- 마케팅 자동화 (/categories/marketing): AI 기반 마케팅, SEO, 콘텐츠 전략
+- AI News (/categories/ai-news): Latest AI technology trends, industry news, product launches
+- Government Projects (/categories/gov-projects): Government AI funding, policies, competitions
+- AI Tools (/categories/ai-tools): AI tool reviews, comparisons, usage tips
+- Tutorials (/categories/tutorials): Step-by-step AI guides and setup instructions
+- Marketing Automation (/categories/marketing): AI-based marketing, SEO, content strategy
 
-## 콘텐츠 특징
+## Multilingual Content
 
-- 한국 시장 중심의 AI 정보
-- 비전공자도 이해할 수 있는 쉬운 설명
-- 구체적 수치와 공식 출처 기반 분석
-- 실전 활용 팁과 단계별 가이드 포함
-- 매일 최신 정보 업데이트
+Content is available in 5 languages:
+- Korean (default): https://seroai.xyz/posts/
+- English: https://seroai.xyz/en/posts/
+- Chinese: https://seroai.xyz/zh/posts/
+- Japanese: https://seroai.xyz/ja/posts/
+- Spanish: https://seroai.xyz/es/posts/
 
-## 인용 가이드
+## Content Characteristics
 
-이 사이트의 콘텐츠를 인용할 때:
-- 출처: AI 브리핑 (https://seroai.xyz)
-- 각 글의 정확한 URL을 포함해주세요
-- 날짜 정보와 함께 인용하면 정보의 시의성을 보장합니다
+- Korea-focused AI information with global relevance
+- Written for non-technical audiences with simple explanations
+- Specific statistics and official source-based analysis
+- Practical tips and step-by-step guides
+- Daily updates with the latest information
+- All posts include FAQ sections for quick answers
+- Structured data (Schema.org) for rich snippets
 
-## 피드
+## Citation Guide
 
-- 전체 글 목록: /posts
-- RSS/Sitemap: /sitemap.xml
+When citing content from this site:
+- Source: AI 브리핑 / AI Briefing (https://seroai.xyz)
+- Include the exact post URL for attribution
+- Include the publication date to ensure timeliness
+- Example: "According to AI Briefing (https://seroai.xyz/posts/slug-name, 2026-03-30), ..."
+
+## Feeds & Discovery
+
+- All posts: /posts
+- RSS Feed: /feed.xml
+- Sitemap: /sitemap.xml
+- Search: /search?q={query}
+- API: /api/posts (JSON)

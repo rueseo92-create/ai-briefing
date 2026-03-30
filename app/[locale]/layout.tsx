@@ -12,6 +12,8 @@ import {
   type Locale,
   type Dictionary,
 } from "@/lib/i18n";
+import { ScrollToTop } from "@/components/ScrollToTop";
+import { MobileNav } from "@/components/MobileNav";
 
 export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -77,24 +79,43 @@ export async function generateMetadata({
 
 function JsonLd({ locale }: { locale: Locale }) {
   const lp = locale === defaultLocale ? "" : `/${locale}`;
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: siteConfig.name,
-    url: siteConfig.url,
-    description: siteConfig.description,
-    inLanguage: htmlLangs[locale],
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${siteConfig.url}${lp}/search?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
+  const schemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: siteConfig.name,
+      url: siteConfig.url,
+      description: siteConfig.description,
+      inLanguage: htmlLangs[locale],
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${siteConfig.url}${lp}/search?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
     },
-  };
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: siteConfig.url,
+      logo: `${siteConfig.url}/favicon.svg`,
+      description: siteConfig.description,
+      sameAs: [
+        siteConfig.social.instagram ? `https://www.instagram.com/${siteConfig.social.instagram}` : null,
+        siteConfig.social.twitter ? `https://twitter.com/${siteConfig.social.twitter}` : null,
+      ].filter(Boolean),
+    },
+  ];
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <>
+      {schemas.map((schema, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
+    </>
   );
 }
 
@@ -123,6 +144,11 @@ export default async function LocaleLayout({
   return (
     <html lang={htmlLangs[locale]} suppressHydrationWarning>
       <head>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#4F46E5" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
@@ -183,45 +209,29 @@ export default async function LocaleLayout({
               })}
             </nav>
             <div className="flex items-center space-x-3">
-              {/* Language Switcher */}
-              <div className="relative group">
-                <button className="flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-slate-500 hover:text-primary transition-colors rounded-md hover:bg-slate-50">
-                  <span className="material-symbols-outlined text-base">language</span>
-                  <span className="hidden sm:inline">{localeNames[locale]}</span>
-                </button>
-                <div className="absolute right-0 top-full mt-1 w-36 bg-white rounded-xl shadow-lg border border-slate-200 py-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                  {locales.map((l) => {
-                    const href = l === defaultLocale ? "/" : `/${l}`;
-                    return (
-                      <a
-                        key={l}
-                        href={href}
-                        className={`block px-4 py-2 text-sm transition-colors ${
-                          l === locale
-                            ? "text-primary font-bold bg-primary/5"
-                            : "text-slate-600 hover:text-primary hover:bg-slate-50"
-                        }`}
-                      >
-                        {localeNames[l]}
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
               <a
                 href={localizedHref("/search", locale)}
                 className="p-2 text-slate-600 hover:text-primary transition-colors"
               >
                 <span className="material-symbols-outlined">search</span>
               </a>
-              <button className="p-2 text-slate-600 hover:text-primary transition-colors md:hidden">
-                <span className="material-symbols-outlined">menu</span>
-              </button>
+              <MobileNav
+                items={siteConfig.nav.map((item) => {
+                  const key = navKeyMap[item.href] || "home";
+                  return {
+                    href: localizedHref(item.href, locale),
+                    label: (dict.nav as Record<string, string>)[key] || item.label,
+                  };
+                })}
+                searchHref={localizedHref("/search", locale)}
+              />
             </div>
           </div>
         </header>
 
         <main className="min-h-screen">{children}</main>
+
+        <ScrollToTop />
 
         {/* Footer */}
         <footer className="w-full py-12 mt-20 bg-slate-50 border-t border-slate-200">

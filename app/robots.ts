@@ -17,6 +17,22 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "Yeti", // 네이버 봇
         allow: "/",
       },
+      {
+        userAgent: "Bingbot",
+        allow: "/",
+      },
+      {
+        userAgent: "ChatGPT-User", // OpenAI
+        allow: "/",
+      },
+      {
+        userAgent: "PerplexityBot",
+        allow: "/",
+      },
+      {
+        userAgent: "ClaudeBot", // Anthropic
+        allow: "/",
+      },
     ],
     sitemap: `${siteConfig.url}/sitemap.xml`,
   };

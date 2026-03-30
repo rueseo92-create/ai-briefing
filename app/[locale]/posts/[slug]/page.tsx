@@ -1,11 +1,14 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { getPost, getAllSlugs, getRelatedPosts } from "@/lib/posts";
+import { getPost, getAllPosts, getAllSlugs, getRelatedPosts } from "@/lib/posts";
 import { siteConfig, getCategory } from "@/lib/config";
 import { breadcrumbSchema, articleSchema, faqSchema, ogImageUrl } from "@/lib/seo";
 import { PostCard } from "@/components/PostCard";
 import { SourceCard } from "@/components/SourceCard";
 import { CoupangLinkAd } from "@/components/CoupangAd";
+import { ReadingProgress } from "@/components/ReadingProgress";
+import { TableOfContents } from "@/components/TableOfContents";
+import { ShareButtons } from "@/components/ShareButtons";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { getDictionary, localizedHref, locales, defaultLocale, type Locale } from "@/lib/i18n";
@@ -18,10 +21,10 @@ export function generateStaticParams() {
 }
 
 export function generateMetadata({ params }: { params: { locale: string; slug: string } }): Metadata {
+  const locale = (params.locale || defaultLocale) as Locale;
   const post = getPost(params.slug);
   if (!post) return {};
   const { meta } = post;
-  const locale = (params.locale || defaultLocale) as Locale;
   const lp = locale === defaultLocale ? "" : `/${locale}`;
   const url = `${siteConfig.url}${lp}/posts/${meta.slug}`;
 
@@ -72,6 +75,15 @@ export default async function PostPage({ params }: { params: { locale: string; s
   const category = getCategory(meta.category);
   const readingTime = estimateReadingTime(content);
 
+  // Prev/Next navigation
+  const allPosts = getAllPosts();
+  const currentIdx = allPosts.findIndex((p) => p.slug === params.slug);
+  const prevPost = currentIdx < allPosts.length - 1 ? allPosts[currentIdx + 1] : null;
+  const nextPost = currentIdx > 0 ? allPosts[currentIdx - 1] : null;
+
+  const lp = locale === defaultLocale ? "" : `/${locale}`;
+  const postUrl = `${siteConfig.url}${lp}/posts/${meta.slug}`;
+
   const diffConfig: Record<string, { label: string; color: string }> = {
     beginner: { label: dict.post.beginner, color: "bg-emerald-100 text-emerald-700" },
     intermediate: { label: dict.post.intermediate, color: "bg-amber-100 text-amber-700" },
@@ -102,6 +114,9 @@ export default async function PostPage({ params }: { params: { locale: string; s
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       {faqJsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />}
+
+      <ReadingProgress />
+      <TableOfContents />
 
       <article className="pt-28 pb-20" data-category={meta.category}>
         {/* Breadcrumbs */}
@@ -142,26 +157,21 @@ export default async function PostPage({ params }: { params: { locale: string; s
             </div>
           )}
 
-          {/* Korean content notice for non-Korean locales */}
-          {locale !== "ko" && dict.post.koreanContentNotice && (
-            <div className="flex items-center gap-2 rounded-lg bg-amber-50 px-4 py-2.5 border border-amber-100 mb-6 text-sm text-amber-700">
-              <span className="material-symbols-outlined text-base">translate</span>
-              {dict.post.koreanContentNotice}
+          <div className="flex items-center justify-between pb-6 border-b border-slate-200/50">
+            <div className="flex items-center gap-4 text-sm text-on-surface-variant">
+              <div className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-base">calendar_today</span>
+                <time>{meta.date}</time>
+              </div>
+              <span className="w-1 h-1 bg-slate-300 rounded-full" />
+              <div className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-base">schedule</span>
+                <span>{readingTime}{dict.post.readingTime}</span>
+              </div>
+              <span className="w-1 h-1 bg-slate-300 rounded-full hidden sm:block" />
+              <span className="font-medium hidden sm:inline">{siteConfig.author}</span>
             </div>
-          )}
-
-          <div className="flex items-center gap-4 text-sm text-on-surface-variant pb-6 border-b border-slate-200/50">
-            <div className="flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-base">calendar_today</span>
-              <time>{meta.date}</time>
-            </div>
-            <span className="w-1 h-1 bg-slate-300 rounded-full" />
-            <div className="flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-base">schedule</span>
-              <span>{readingTime}{dict.post.readingTime}</span>
-            </div>
-            <span className="w-1 h-1 bg-slate-300 rounded-full" />
-            <span className="font-medium">{siteConfig.author}</span>
+            <ShareButtons url={postUrl} title={meta.title} description={meta.description} />
           </div>
         </header>
 
@@ -217,7 +227,7 @@ export default async function PostPage({ params }: { params: { locale: string; s
           <div className="max-w-4xl mx-auto px-6 mt-10">
             <div className="flex flex-wrap gap-2">
               {meta.tags.map((tag) => (
-                <span key={tag} className="px-4 py-2 rounded-full bg-slate-50 border border-slate-100 text-sm text-on-surface-variant">#{tag}</span>
+                <a key={tag} href={lh(`/search?tag=${encodeURIComponent(tag)}`)} className="px-4 py-2 rounded-full bg-slate-50 border border-slate-100 text-sm text-on-surface-variant hover:border-primary hover:text-primary transition-all">#{tag}</a>
               ))}
             </div>
           </div>
@@ -227,6 +237,32 @@ export default async function PostPage({ params }: { params: { locale: string; s
           <div className="max-w-4xl mx-auto px-6 mt-10">
             <CoupangLinkAd keywords={["삼성 갤럭시북4 프로", "맥북 에어 M3", "로지텍 MX Master 3S", "LG 울트라와이드 모니터"]} title={dict.post.coupangDevTitle} />
           </div>
+        )}
+
+        {/* Prev / Next Navigation */}
+        {(prevPost || nextPost) && (
+          <nav className="max-w-4xl mx-auto px-6 mt-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {prevPost ? (
+                <a href={lh(`/posts/${prevPost.slug}`)} className="group flex items-start gap-3 p-5 rounded-xl border border-slate-200 hover:border-primary/30 hover:bg-primary/[0.02] transition-all">
+                  <span className="material-symbols-outlined text-slate-400 group-hover:text-primary mt-0.5">arrow_back</span>
+                  <div className="min-w-0">
+                    <p className="text-xs text-slate-400 mb-1">Previous</p>
+                    <p className="text-sm font-semibold text-on-surface truncate group-hover:text-primary transition-colors">{prevPost.title}</p>
+                  </div>
+                </a>
+              ) : <div />}
+              {nextPost ? (
+                <a href={lh(`/posts/${nextPost.slug}`)} className="group flex items-start gap-3 p-5 rounded-xl border border-slate-200 hover:border-primary/30 hover:bg-primary/[0.02] transition-all text-right sm:justify-end">
+                  <div className="min-w-0">
+                    <p className="text-xs text-slate-400 mb-1">Next</p>
+                    <p className="text-sm font-semibold text-on-surface truncate group-hover:text-primary transition-colors">{nextPost.title}</p>
+                  </div>
+                  <span className="material-symbols-outlined text-slate-400 group-hover:text-primary mt-0.5">arrow_forward</span>
+                </a>
+              ) : <div />}
+            </div>
+          </nav>
         )}
 
         {related.length > 0 && (
