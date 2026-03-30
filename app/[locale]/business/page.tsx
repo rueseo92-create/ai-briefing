@@ -3,6 +3,7 @@ import Image from "next/image";
 import { siteConfig } from "@/lib/config";
 import { getAllPosts } from "@/lib/posts";
 import { getDictionary, localizedHref, defaultLocale, type Locale } from "@/lib/i18n";
+import InquiryForm from "@/components/InquiryForm";
 
 export const metadata: Metadata = {
   title: "직접 하기 어려우시다면 | AI 브리핑",
@@ -54,11 +55,11 @@ export default async function BusinessPage({ params }: { params: { locale: strin
                 <span className="material-symbols-outlined text-base">arrow_downward</span>
               </a>
               <a
-                href="mailto:contact@seroai.xyz"
+                href="#inquiry"
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-colors border border-white/20 backdrop-blur-sm text-sm"
               >
-                <span className="material-symbols-outlined text-base">mail</span>
-                바로 문의하기
+                <span className="material-symbols-outlined text-base">send</span>
+                바로 견적 요청
               </a>
             </div>
           </div>
@@ -205,7 +206,7 @@ export default async function BusinessPage({ params }: { params: { locale: strin
               진행은 이렇게 됩니다
             </h2>
             <p className="text-on-surface-variant">
-              복잡하지 않아요. 메일 한 통이면 시작됩니다.
+              복잡하지 않아요. 클릭 몇 번이면 시작됩니다.
             </p>
           </div>
 
@@ -213,10 +214,10 @@ export default async function BusinessPage({ params }: { params: { locale: strin
             {[
               {
                 step: "01",
-                icon: "mail",
-                title: "메일로 문의",
-                desc: "\"이런 걸 하고 싶어요\" 정도만 보내주세요. 형식 없어도 됩니다.",
-                detail: "현재 상황, 원하시는 것, 예산 범위 등 편하게 적어주시면 돼요.",
+                icon: "touch_app",
+                title: "서비스 선택 & 견적 요청",
+                desc: "원하는 서비스와 예산 범위를 클릭하고, 이메일만 입력하면 끝.",
+                detail: "아래 견적 요청 폼에서 30초면 완료됩니다.",
                 img: "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=400&q=80",
               },
               {
@@ -295,135 +296,20 @@ export default async function BusinessPage({ params }: { params: { locale: strin
         </div>
       </section>
 
-      {/* ── Pricing Tiers ── */}
-      <section className="py-24 bg-slate-50">
+      {/* ── Inquiry Form ── */}
+      <section id="inquiry" className="py-24 bg-slate-50 scroll-mt-20">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
-            <p className="text-sm text-primary font-bold mb-3 tracking-wider uppercase">Pricing</p>
+            <p className="text-sm text-primary font-bold mb-3 tracking-wider uppercase">견적 요청</p>
             <h2 className="text-3xl lg:text-4xl font-extrabold text-on-surface font-headline mb-4">
-              필요한 만큼만, 합리적으로
+              클릭만으로 견적 요청 완료
             </h2>
             <p className="text-on-surface-variant max-w-lg mx-auto">
-              원하시는 서비스 범위에 따라 금액이 달라집니다. 아래는 대략적인 기준이에요.
+              서비스와 예산을 선택하고 이메일만 입력하면 맞춤 견적을 보내드립니다.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Starter */}
-            <div className="rounded-2xl border border-slate-200/80 bg-white p-7 flex flex-col">
-              <div className="mb-5">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider">
-                  <span className="material-symbols-outlined text-sm">tune</span>
-                  Starter
-                </span>
-              </div>
-              <h3 className="text-2xl font-extrabold text-on-surface font-headline mb-1">50만원~</h3>
-              <p className="text-xs text-slate-400 mb-5">단일 서비스 기준</p>
-              <ul className="space-y-3 text-sm text-on-surface-variant flex-1">
-                {["블로그/웹사이트 기본 구축", "SEO 기본 세팅 (메타태그, 사이트맵)", "AI 글 자동 발행 기본 세팅", "1개월 사후 지원 포함"].map((t) => (
-                  <li key={t} className="flex items-start gap-2">
-                    <span className="material-symbols-outlined text-emerald-500 text-base mt-0.5">check_circle</span>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-              <a
-                href="mailto:contact@seroai.xyz?subject=Starter 문의"
-                className="mt-8 inline-flex items-center justify-center gap-2 px-6 py-3 bg-slate-100 text-on-surface font-bold rounded-xl hover:bg-slate-200 transition-colors text-sm"
-              >
-                견적 문의
-              </a>
-            </div>
-
-            {/* Pro — 추천 */}
-            <div className="rounded-2xl border-2 border-primary bg-white p-7 flex flex-col relative shadow-lg shadow-indigo-100">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-primary text-white text-[10px] font-bold uppercase tracking-wider rounded-full">
-                Most Popular
-              </div>
-              <div className="mb-5">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-primary text-xs font-bold uppercase tracking-wider">
-                  <span className="material-symbols-outlined text-sm">star</span>
-                  Pro
-                </span>
-              </div>
-              <h3 className="text-2xl font-extrabold text-on-surface font-headline mb-1">150만원~</h3>
-              <p className="text-xs text-slate-400 mb-5">풀 패키지 기준</p>
-              <ul className="space-y-3 text-sm text-on-surface-variant flex-1">
-                {["맞춤 블로그/웹사이트 구축", "SEO + AEO + GEO 풀 최적화", "AI 콘텐츠 자동화 파이프라인", "수익화 세팅 (애드센스, 제휴)", "2개월 사후 지원 포함"].map((t) => (
-                  <li key={t} className="flex items-start gap-2">
-                    <span className="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-              <a
-                href="mailto:contact@seroai.xyz?subject=Pro 패키지 문의"
-                className="mt-8 inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors text-sm"
-              >
-                견적 문의
-              </a>
-            </div>
-
-            {/* Enterprise */}
-            <div className="rounded-2xl border border-slate-200/80 bg-white p-7 flex flex-col">
-              <div className="mb-5">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider">
-                  <span className="material-symbols-outlined text-sm">domain</span>
-                  Enterprise
-                </span>
-              </div>
-              <h3 className="text-2xl font-extrabold text-on-surface font-headline mb-1">별도 협의</h3>
-              <p className="text-xs text-slate-400 mb-5">대규모 / 장기 계약</p>
-              <ul className="space-y-3 text-sm text-on-surface-variant flex-1">
-                {["다중 사이트 / 다국어 운영", "전용 AI 모델 파인튜닝", "월간 콘텐츠 운영 대행", "전담 매니저 배정", "SLA 기반 유지보수 계약"].map((t) => (
-                  <li key={t} className="flex items-start gap-2">
-                    <span className="material-symbols-outlined text-slate-400 text-base mt-0.5">check_circle</span>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-              <a
-                href="mailto:contact@seroai.xyz?subject=Enterprise 문의"
-                className="mt-8 inline-flex items-center justify-center gap-2 px-6 py-3 bg-slate-100 text-on-surface font-bold rounded-xl hover:bg-slate-200 transition-colors text-sm"
-              >
-                별도 상담
-              </a>
-            </div>
-          </div>
-
-          <p className="text-center text-xs text-slate-400 mt-8">
-            * 금액은 프로젝트 범위에 따라 조정됩니다. 정확한 견적은 문의 후 안내드려요.
-          </p>
-        </div>
-      </section>
-
-      {/* ── CTA ── */}
-      <section className="relative py-24 overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1920&q=80"
-          alt="Team collaboration"
-          fill
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-slate-900/85" />
-        <div className="relative max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl lg:text-4xl font-extrabold text-white font-headline mb-4">
-            어떤 걸 만들고 싶으세요?
-          </h2>
-          <p className="text-white/50 text-sm mb-10 max-w-md mx-auto leading-relaxed">
-            원하시는 서비스와 규모를 알려주시면<br />
-            맞춤 견적을 빠르게 보내드립니다.
-          </p>
-          <a
-            href="mailto:contact@seroai.xyz?subject=견적 문의"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-100 transition-colors shadow-xl text-sm"
-          >
-            <span className="material-symbols-outlined text-lg">mail</span>
-            견적 문의하기
-          </a>
-          <p className="mt-6 text-white/30 text-xs">
-            보통 하루 안에 맞춤 견적을 보내드려요
-          </p>
+          <InquiryForm />
         </div>
       </section>
     </div>
