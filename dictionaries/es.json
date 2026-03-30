@@ -5,14 +5,12 @@
   },
   "nav": {
     "home": "Inicio",
-    "allPosts": "Todos",
-    "aiNews": "Noticias IA",
-    "sideHustle": "Side Hustle",
+    "sideHustle": "AI Side Hustle",
     "aiTools": "Herramientas IA",
-    "digitalNomad": "Nómada Digital",
-    "marketing": "Marketing",
-    "business": "Negocios",
-    "about": "Acerca de"
+    "aiNews": "Noticias IA",
+    "marketing": "AI Marketing",
+    "agency": "Agencia AI Marketing",
+    "about": "Sobre Nosotros"
   },
   "home": {
     "latest": "Latest",

@@ -86,7 +86,7 @@ export default async function BusinessPage({ params }: { params: { locale: strin
                 title: "AI 블로그 글 자동 발행",
                 blog: "블로그에 방법 다 있어요",
                 agency: "매일 자동으로 SEO 최적화된 글이 올라가게 세팅해드려요",
-                link: "/categories/digital-nomad",
+                link: "/categories/marketing",
                 img: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600&q=80",
               },
               {
@@ -100,9 +100,9 @@ export default async function BusinessPage({ params }: { params: { locale: strin
               {
                 icon: "web",
                 title: "블로그 / 웹사이트 구축",
-                blog: "Next.js + Vercel 배포하는 법도 튜토리얼에 있어요",
+                blog: "Next.js + Vercel 배포하는 법도 AI 도구 카테고리에 있어요",
                 agency: "기획부터 디자인, 배포, 도메인 연결까지 통째로 만들어드려요",
-                link: "/categories/digital-nomad",
+                link: "/categories/ai-tools",
                 img: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&q=80",
               },
               {

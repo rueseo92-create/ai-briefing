@@ -5,14 +5,12 @@
   },
   "nav": {
     "home": "首页",
-    "allPosts": "全部文章",
-    "aiNews": "AI新闻",
     "sideHustle": "AI副业",
     "aiTools": "AI工具",
-    "digitalNomad": "数字游民",
-    "marketing": "营销自动化",
-    "business": "商业服务",
-    "about": "关于"
+    "aiNews": "AI新闻",
+    "marketing": "AI营销",
+    "agency": "AI营销代理",
+    "about": "公司介绍"
   },
   "home": {
     "latest": "Latest",

@@ -5,14 +5,12 @@
   },
   "nav": {
     "home": "ホーム",
-    "allPosts": "全記事",
-    "aiNews": "AIニュース",
     "sideHustle": "AI副業",
     "aiTools": "AIツール",
-    "digitalNomad": "デジタルノマド",
-    "marketing": "マーケティング",
-    "business": "ビジネス",
-    "about": "紹介"
+    "aiNews": "AIニュース",
+    "marketing": "AIマーケティング",
+    "agency": "AIマーケティング代行",
+    "about": "会社紹介"
   },
   "home": {
     "latest": "Latest",

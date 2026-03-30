@@ -23,24 +23,21 @@ export const siteConfig = {
 
   // 카테고리
   categories: [
-    { slug: "ai-news", name: "AI 뉴스", emoji: "🤖" },
     { slug: "side-hustle", name: "AI 부업", emoji: "💰" },
     { slug: "ai-tools", name: "AI 도구", emoji: "🛠️" },
-    { slug: "digital-nomad", name: "디지털노마드", emoji: "🌍" },
-    { slug: "marketing", name: "마케팅 자동화", emoji: "📈" },
+    { slug: "ai-news", name: "AI 뉴스", emoji: "🤖" },
+    { slug: "marketing", name: "AI 마케팅", emoji: "📈" },
   ],
 
   // 네비게이션
   nav: [
     { href: "/", label: "홈" },
-    { href: "/posts", label: "전체 글" },
-    { href: "/categories/ai-news", label: "AI 뉴스" },
     { href: "/categories/side-hustle", label: "AI 부업" },
     { href: "/categories/ai-tools", label: "AI 도구" },
-    { href: "/categories/digital-nomad", label: "디지털노마드" },
-    { href: "/categories/marketing", label: "마케팅" },
-    { href: "/business", label: "사업 소개" },
-    { href: "/about", label: "소개" },
+    { href: "/categories/ai-news", label: "AI 뉴스" },
+    { href: "/categories/marketing", label: "AI 마케팅" },
+    { href: "/business", label: "AI 마케팅대행" },
+    { href: "/about", label: "회사소개" },
   ],
 
   // 쿠팡 파트너스

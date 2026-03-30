@@ -122,13 +122,11 @@ function JsonLd({ locale }: { locale: Locale }) {
 // ── Nav key 매핑 ──
 const navKeyMap: Record<string, string> = {
   "/": "home",
-  "/posts": "allPosts",
-  "/categories/ai-news": "aiNews",
   "/categories/side-hustle": "sideHustle",
   "/categories/ai-tools": "aiTools",
-  "/categories/digital-nomad": "digitalNomad",
+  "/categories/ai-news": "aiNews",
   "/categories/marketing": "marketing",
-  "/business": "business",
+  "/business": "agency",
   "/about": "about",
 };
 
