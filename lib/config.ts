@@ -7,7 +7,7 @@ export const siteConfig = {
   name: "AI 브리핑",
   description:
     "AI 트렌드, 정부 AI 사업, 실전 활용법을 누구나 이해할 수 있게 정리합니다",
-  url: "https://coupang-blog-rho.vercel.app",
+  url: "https://seroai.xyz",
   author: "AI 브리핑",
   locale: "ko_KR",
 
