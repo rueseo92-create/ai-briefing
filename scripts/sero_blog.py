@@ -1,14 +1,19 @@
 """
-sero_blog.py - AI 브리핑 블로그 자동화 파이프라인 v3
+sero_blog.py - AI 브리핑 블로그 자동화 파이프라인 v4 (토큰 최적화)
 
 파이프라인:
-  1. AI 뉴스/정부사업 크롤링 (gov_crawler)
-  2. 키워드 스코어링 (Google 검색 최적화)
-  3. SEO 최적화 글 생성 (Claude API)
-  4. SEO 감사 & 교정 (Claude API 2차 패스)
-  5. MDX 파일 생성 (Next.js 블로그 포맷)
-  6. Git push → Vercel 자동 배포
-  7. 성과 기록 (Google Sheets)
+  1. 토픽 수집 (크롤링 + Claude)
+  2. SEO 최적화 글 생성 (Claude API — 단일 호출)
+  3. 프로그래밍 품질 보정 + SEO 감사 (API 호출 없음)
+  4. MDX 파일 생성 (Next.js 블로그 포맷)
+  5. Git push → Vercel 자동 배포
+
+토큰 최적화:
+  - 슬러그 생성: API → 프로그래밍 방식 (API 호출 제거)
+  - SEO 리뷰 2차 패스: API → 프로그래밍 품질 보정 (API 호출 제거)
+  - 글 생성 max_tokens: 16,384 → 8,192
+  - 토픽 생성 max_tokens: 4,096 → 2,048
+  - 포스트당 API 호출: 3회 → 1회 (67% 절감)
 
 .env 필요:
   ANTHROPIC_API_KEY=sk-ant-...
@@ -212,27 +217,76 @@ def _fix_markdown_tables(content: str) -> str:
 
 
 def _generate_english_slug(title: str, fallback: str) -> str:
-    """한글 제목 → SEO 친화적 영문 슬러그"""
-    try:
-        resp = claude.messages.create(
-            model=CLAUDE_MODEL,
-            max_tokens=100,
-            messages=[{
-                "role": "user",
-                "content": f'Translate this Korean blog title to a short English URL slug (3-6 words, lowercase, hyphens, no special chars). Output ONLY the slug.\n\nTitle: "{title}"',
-            }],
-        )
-        slug = resp.content[0].text.strip().lower()
-        slug = re.sub(r'[^a-z0-9\s-]', '', slug).strip()
-        slug = re.sub(r'[\s]+', '-', slug)
-        slug = re.sub(r'-+', '-', slug).strip('-')
+    """한글 제목 → SEO 친화적 영문 슬러그 (API 호출 없이 프로그래밍 방식)"""
+    # 제목에서 영문/숫자만 추출
+    eng_parts = re.findall(r'[a-zA-Z0-9]+', title)
+    if len(eng_parts) >= 2:
+        slug = "-".join(eng_parts[:6]).lower()
         if len(slug) >= 5:
             return slug
-    except Exception:
-        pass
+    # 한국어 키워드 → 영문 매핑 테이블
+    _KR_TO_EN = {
+        "사용법": "guide", "활용법": "guide", "가이드": "guide", "방법": "how-to",
+        "비교": "comparison", "추천": "best", "무료": "free", "최신": "latest",
+        "도구": "tools", "뉴스": "news", "부업": "side-hustle", "자동화": "automation",
+        "마케팅": "marketing", "수익": "income", "시작": "getting-started",
+        "입문": "beginner", "실전": "practical", "완벽": "complete",
+        "리뷰": "review", "분석": "analysis", "전략": "strategy", "팁": "tips",
+        "프롬프트": "prompt", "블로그": "blog", "코딩": "coding", "개발": "dev",
+        "번역": "translation", "이미지": "image", "영상": "video", "음성": "voice",
+        "검색": "search", "최적화": "optimization", "SEO": "seo",
+        "노마드": "nomad", "원격": "remote", "프리랜서": "freelance",
+    }
+    parts = []
+    for kr, en in _KR_TO_EN.items():
+        if kr in title and en not in parts:
+            parts.append(en)
+        if len(parts) >= 4:
+            break
+    if parts:
+        slug = "-".join(parts)
+        if len(slug) >= 5:
+            return slug
+    # 최종 폴백
     fallback_slug = re.sub(r'[^a-zA-Z0-9\s-]', '', fallback).strip().replace(' ', '-').lower()
     fallback_slug = re.sub(r'-+', '-', fallback_slug).strip('-')
     return fallback_slug if len(fallback_slug) >= 3 else f"post-{random.randint(1000, 9999)}"
+
+
+def _programmatic_polish(content: str, category: str) -> str:
+    """AI API 없이 프로그래밍 방식으로 콘텐츠 품질 보정 (토큰 절약)"""
+    # 1. 마크다운 볼드(**) 제거
+    content = re.sub(r'\*\*(.+?)\*\*', r'\1', content)
+    # 2. 취소선(~~) 제거
+    content = re.sub(r'~~(.+?)~~', r'\1', content)
+    # 3. 물결표(~) → 하이픈(-) (범위 표현)
+    content = re.sub(r'(\d+)~(\d+)', r'\1-\2', content)
+    # 4. H2 섹션 사이에 수평선(---) 자동 삽입
+    lines = content.split("\n")
+    result = []
+    prev_was_h2_section = False
+    for line in lines:
+        if line.strip().startswith("## "):
+            if prev_was_h2_section and result and result[-1].strip() != "---":
+                result.append("")
+                result.append("---")
+                result.append("")
+            prev_was_h2_section = True
+        result.append(line)
+    content = "\n".join(result)
+    # 5. 내부 링크 부족 시 자동 추가
+    internal_links = re.findall(r'\]\(/(?:posts|categories)/', content)
+    if len(internal_links) < 2:
+        cats = {"ai-news": "AI 뉴스", "side-hustle": "AI 부업", "ai-tools": "AI 도구", "marketing": "AI 마케팅"}
+        others = [k for k in cats if k != category][:2]
+        link_block = "\n\n---\n\n"
+        for slug in others:
+            link_block += f"[{cats[slug]} 더 보기](/categories/{slug}) | "
+        link_block = link_block.rstrip(" | ")
+        content += link_block
+    # 6. 마크다운 표 후처리
+    content = _fix_markdown_tables(content)
+    return content
 
 
 # ──────────────────────────────────────────────
@@ -246,7 +300,7 @@ def collect_topics(topic: str = "AI", count: int = 5, source: str = "all") -> li
         count: 토픽 수
         source: 소스 ("all", "kstartup", "gov", "claude")
     """
-    print(f"[1/7] 토픽 수집 중... (주제: {topic}, 소스: {source})")
+    print(f"[1/5] 토픽 수집 중... (주제: {topic}, 소스: {source})")
     topics = []
 
     # K-Startup 크롤링
@@ -389,7 +443,7 @@ SEO 기준:
         try:
             response = claude.messages.create(
                 model=CLAUDE_MODEL,
-                max_tokens=4096,
+                max_tokens=2048,
                 messages=[{"role": "user", "content": prompt}],
             )
             text = response.content[0].text.strip()
@@ -558,7 +612,7 @@ def generate_blog_post(topic: TopicData) -> BlogPost:
         print(f"  [경고] 알 수 없는 카테고리 '{topic.category}' → ai-news로 변경")
         topic.category = "ai-news"
 
-    print(f"[2/7] 블로그 글 생성 중... (토픽: {topic.title})")
+    print(f"[2/5] 블로그 글 생성 중... (토픽: {topic.title})")
 
     prompt_content = BLOG_PROMPT.format(
         title=topic.title,
@@ -569,10 +623,10 @@ def generate_blog_post(topic: TopicData) -> BlogPost:
     )
 
     data = None
-    for attempt in range(3):
+    for attempt in range(2):
         response = claude.messages.create(
             model=CLAUDE_MODEL,
-            max_tokens=16384,
+            max_tokens=8192,
             messages=[{"role": "user", "content": prompt_content}],
         )
         text = response.content[0].text.strip()
@@ -592,13 +646,13 @@ def generate_blog_post(topic: TopicData) -> BlogPost:
                 print(f"  [경고] 본문이 중간에 끊김 감지, 재시도...")
                 continue
             break
-        print(f"  [재시도 {attempt+1}/3] JSON 파싱 실패, 다시 생성...")
+        print(f"  [재시도 {attempt+1}/2] JSON 파싱 실패, 다시 생성...")
 
     if data is None or "content" not in data:
-        raise RuntimeError(f"3회 시도 후에도 JSON 생성 실패: {topic.title}")
+        raise RuntimeError(f"2회 시도 후에도 JSON 생성 실패: {topic.title}")
 
-    # 마크다운 표 후처리 (깨진 표 수정)
-    data["content"] = _fix_markdown_tables(data["content"])
+    # 프로그래밍 품질 보정 (API 없이 — 토큰 절약)
+    data["content"] = _programmatic_polish(data["content"], topic.category)
 
     # 소스 링크 처리 (가짜 URL 필터링)
     sources = []
@@ -641,96 +695,9 @@ def generate_blog_post(topic: TopicData) -> BlogPost:
     return post
 
 
-# ──────────────────────────────────────────────
-# Step 3: SEO 감사 & 교정
-# ──────────────────────────────────────────────
-REVIEW_PROMPT = """다음 블로그 글의 SEO·GEO를 검수하고 교정해주세요.
-
-메인 키워드: {keyword}
-현재 키워드 밀도: {density_status}
-
-원본 글:
-{content}
-
-검수 항목:
-[SEO 기본]
-1. 키워드 밀도 1~3% 유지
-2. 첫 100자에 핵심 키워드 존재 확인
-3. 각 H2 소제목에 키워드 변형 포함
-4. 비전공자도 이해할 수 있는 쉬운 설명
-5. FAQ 섹션 존재 확인 (### Q1./A1. 형식, 구글 리치 스니펫)
-6. H2 3개 이상, H3 1개 이상
-7. 내부 링크 2개 이상 (/categories/ 또는 /posts/ 형태)
-
-[GEO 최적화]
-8. 통계·수치: 150~200자마다 구체적 숫자 포함 (최소 4개)
-9. 답변 캡슐: > 핵심 답변: 형태의 인용 가능한 간결한 답변 (최소 2개)
-10. 출처 인용: 본문 내 "(출처: OOO)" 형태 신뢰도 표시 (최소 2개)
-11. 엔티티 관계: 핵심 개념 간 관계 명시 서술
-12. E-E-A-T 신호: 경험·전문성을 드러내는 표현 포함
-
-[콘텐츠 디자인]
-13. 인용블록(>) 최소 3개
-14. 표(Table) 최소 1개
-15. 수평선(---) H2 섹션 사이 삽입
-
-교정 시 부족한 GEO 요소를 자연스럽게 보강해주세요.
-
-절대 금지 사항:
-- 마크다운 볼드(**텍스트**) 사용 금지 — 본문에 ** 기호를 넣지 마세요
-- ~~취소선~~ 사용 금지
-- 물결표(~) 사용 금지 — 범위는 하이픈(-) 사용 (예: "2-4주", "50-100자")
-- 교정 흔적(수정 전/후 표시) 남기지 마세요
-- 깨끗한 최종 본문만 출력하세요
-
-교정된 전체 본문만 마크다운으로 출력. JSON 아님."""
-
-
-def review_and_polish(post: BlogPost) -> str:
-    """Claude API로 SEO 감사 + 교정"""
-    print("[3/7] SEO 감사 & 교정 중...")
-
-    density = analyze_keyword_density(post.content, post.main_keyword)
-    print(f"  → 키워드 밀도: {density['density']:.1f}% ({density['status']})")
-
-    for attempt in range(2):
-        response = claude.messages.create(
-            model=CLAUDE_MODEL,
-            max_tokens=16384,
-            messages=[{
-                "role": "user",
-                "content": REVIEW_PROMPT.format(
-                    keyword=post.main_keyword,
-                    content=post.content,
-                    density_status=f"{density['density']:.1f}% - {density['status']}",
-                ),
-            }],
-        )
-
-        polished = response.content[0].text.strip()
-        stop_reason = response.stop_reason
-
-        # 잘림 감지
-        if stop_reason != "end_turn":
-            print(f"  [경고] SEO 리뷰 응답이 잘렸습니다 (stop_reason={stop_reason}), 재시도...")
-            continue
-
-        # 본문 잘림 추가 검증
-        if polished and not polished.rstrip()[-1] in ".다요죠세습까!?\n*)`":
-            print(f"  [경고] 리뷰 본문이 중간에 끊김 감지, 재시도...")
-            continue
-
-        print(f"  → 교정 완료 ({len(polished)}자)")
-        return polished
-
-    # 2회 시도 후에도 잘리면 원본 유지
-    print(f"  [주의] 리뷰 잘림 지속, 원본 본문 유지 ({len(post.content)}자)")
-    return post.content
-
-
 def run_seo_audit(post: BlogPost) -> BlogPost:
     """SEO 감사 실행"""
-    print("[4/7] SEO 점수 산출 중...")
+    print("[3/5] SEO 점수 산출 중...")
 
     content = post.content
     # 통계/수치 패턴: 숫자+단위 조합
@@ -876,7 +843,7 @@ def _pick_thumbnail(slug: str, category: str) -> str:
 # ──────────────────────────────────────────────
 def create_mdx_file(post: BlogPost) -> Path:
     """Next.js 블로그 호환 MDX 파일 생성"""
-    print("[5/7] MDX 파일 생성 중...")
+    print("[4/5] MDX 파일 생성 중...")
 
     filename = f"{post.slug[:80]}.mdx"
 
@@ -917,7 +884,7 @@ sources:{sources_yaml if sources_yaml else " []"}
 # ──────────────────────────────────────────────
 def deploy(filepath: Path) -> bool:
     """Git commit & push"""
-    print("[6/7] 배포 중...")
+    print("[5/5] 배포 중...")
     try:
         subprocess.run(["git", "add", str(filepath)], cwd=str(BLOG_REPO), check=True, capture_output=True)
         subprocess.run(["git", "commit", "-m", f"feat: 새 글 - {filepath.stem}"], cwd=str(BLOG_REPO), check=True, capture_output=True)
@@ -977,7 +944,7 @@ def run_pipeline(
     """
     pipeline_start = time.time()
     print("=" * 60)
-    print(f"AI 브리핑 파이프라인 v3")
+    print(f"AI 브리핑 파이프라인 v4 (토큰 최적화)")
     print(f"   주제: {topic} | 생성: {count}편 | 발행: {publish}")
     print(f"   소스: {source}")
     print(f"   모드: {'Dry-run' if dry_run else 'Full'}")
@@ -994,14 +961,11 @@ def run_pipeline(
         print(f"{'─' * 40}")
 
         try:
-            # 2. 글 생성
+            # 2. 글 생성 + 프로그래밍 품질 보정 (단일 API 호출)
             post = generate_blog_post(topic_data)
             post.published = publish
 
-            # 3. SEO 교정
-            post.content = review_and_polish(post)
-
-            # 4. SEO 감사
+            # 3. SEO 감사 (API 호출 없음 — 프로그래밍 방식)
             post = run_seo_audit(post)
 
             # 5. 파일 생성

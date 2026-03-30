@@ -462,14 +462,11 @@ def run_daily(slot: str = "auto", count: int = None, dry_run: bool = False):
                     difficulty="beginner",
                 )
 
-            # 글 생성
+            # 글 생성 + 프로그래밍 품질 보정 (단일 API 호출)
             post = sero_blog.generate_blog_post(topic_data)
             post.published = True
 
-            # SEO 교정
-            post.content = sero_blog.review_and_polish(post)
-
-            # SEO 감사
+            # SEO 감사 (API 호출 없음)
             post = sero_blog.run_seo_audit(post)
 
             # MDX 파일 생성
