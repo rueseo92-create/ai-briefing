@@ -111,7 +111,7 @@ export const siteConfig = {
 
   // Google Analytics
   analytics: {
-    gaId: "", // G-XXXXXXXXXX
+    gaId: "G-01E31GWTCD",
   },
 
   // 법적 고지
