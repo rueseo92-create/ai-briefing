@@ -134,6 +134,93 @@ export default async function BusinessPage({ params }: { params: { locale: strin
         </div>
       </section>
 
+      {/* ── How it works ── */}
+      <section className="max-w-4xl mx-auto px-6 mb-24">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl font-extrabold text-on-surface font-headline mb-3">
+            진행은 이렇게 됩니다
+          </h2>
+          <p className="text-on-surface-variant text-sm">
+            복잡하지 않아요. 메일 한 통이면 시작됩니다.
+          </p>
+        </div>
+
+        <div className="relative">
+          {/* 연결선 */}
+          <div className="hidden md:block absolute top-8 left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-0.5 bg-slate-200" />
+
+          <div className="grid md:grid-cols-4 gap-8">
+            {[
+              {
+                step: "01",
+                icon: "mail",
+                title: "메일로 문의",
+                desc: "\"이런 걸 하고 싶어요\" 정도만 보내주세요. 형식 없어도 됩니다.",
+                detail: "현재 상황, 원하시는 것, 예산 범위 등 편하게 적어주시면 돼요.",
+              },
+              {
+                step: "02",
+                icon: "description",
+                title: "분석 & 제안",
+                desc: "보내주신 내용을 바탕으로 현재 상태를 분석하고, 맞춤 제안서를 드려요.",
+                detail: "견적 + \"직접 하시려면 이렇게 하면 됩니다\" 가이드도 같이 드려요.",
+              },
+              {
+                step: "03",
+                icon: "construction",
+                title: "구축 & 세팅",
+                desc: "합의된 범위대로 작업합니다. 중간중간 진행 상황을 공유드려요.",
+                detail: "블로그 구축, AI 파이프라인 세팅, SEO 적용 등 실제 작업 단계예요.",
+              },
+              {
+                step: "04",
+                icon: "rocket_launch",
+                title: "운영 & 인수인계",
+                desc: "완성된 시스템을 넘겨드리고, 직접 운영할 수 있도록 가이드해드려요.",
+                detail: "자동화 시스템은 넘긴 후에도 알아서 돌아갑니다. 유지보수도 가능해요.",
+              },
+            ].map((item) => (
+              <div key={item.step} className="relative text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-4 relative z-10 bg-white border border-slate-200">
+                  <span className="material-symbols-outlined text-primary text-2xl">{item.icon}</span>
+                </div>
+                <div className="text-[10px] font-bold text-primary tracking-wider mb-2">STEP {item.step}</div>
+                <h3 className="font-extrabold text-on-surface font-headline mb-2">{item.title}</h3>
+                <p className="text-sm text-on-surface-variant leading-relaxed mb-2">{item.desc}</p>
+                <p className="text-xs text-slate-400 leading-relaxed">{item.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 보충 설명 */}
+        <div className="mt-12 grid sm:grid-cols-3 gap-4">
+          {[
+            {
+              icon: "timer",
+              title: "소요 기간",
+              desc: "간단한 블로그 세팅은 1~2주, 자동화 파이프라인 포함 시 2~4주 정도 걸려요.",
+            },
+            {
+              icon: "sync",
+              title: "수정 & 피드백",
+              desc: "작업 중 피드백 반영은 무제한이에요. 만족하실 때까지 조정합니다.",
+            },
+            {
+              icon: "support_agent",
+              title: "사후 지원",
+              desc: "인수인계 후 1개월간 무료 지원. 이후에도 유지보수 계약이 가능해요.",
+            },
+          ].map((item) => (
+            <div key={item.title} className="rounded-xl border border-slate-200 p-5">
+              <span className="material-symbols-outlined text-primary text-lg mb-2 block">{item.icon}</span>
+              <h4 className="text-sm font-bold text-on-surface mb-1">{item.title}</h4>
+              <p className="text-xs text-on-surface-variant leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── Pricing Philosophy ── */}
       <section className="max-w-3xl mx-auto px-6 mb-24">
         <div className="rounded-2xl bg-gradient-to-br from-slate-50 to-indigo-50/30 border border-slate-200/80 p-8 lg:p-12">
