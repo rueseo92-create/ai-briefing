@@ -1,0 +1,154 @@
+---
+title: "SEO·AEO·GEO 완전 가이드 ③ robots.txt, sitemap, llms.txt 기술 세팅"
+description: "검색엔진과 AI 크롤러를 위한 기술적 SEO 파일 설정법을 알려드립니다. robots.txt, sitemap.xml, feed.xml, llms.txt 작성법과 Next.js 적용 코드를 포함합니다."
+date: "2026-03-30T18:20:00"
+category: "tutorials"
+tags: ["기술적SEO", "robots.txt", "sitemap", "llms.txt", "NextJS"]
+thumbnail: ""
+difficulty: "intermediate"
+tldr: "robots.txt로 크롤링을 허용하고, sitemap.xml로 페이지 목록을 알려주고, llms.txt로 AI 크롤러에게 사이트 정보를 제공합니다. 이 세 파일이 기술적 SEO의 핵심입니다."
+published: true
+sources:
+  - name: "Google robots.txt 사양"
+    url: "https://developers.google.com/search/docs/crawling-indexing/robots/intro"
+    type: "official"
+  - name: "llms.txt 표준 제안"
+    url: "https://llmstxt.org"
+    type: "official"
+  - name: "Next.js 공식 문서 - Metadata"
+    url: "https://nextjs.org/docs/app/api-reference/file-conventions/metadata"
+    type: "official"
+---
+
+서치 콘솔에 등록했다면, 이제 검색엔진과 AI 크롤러가 사이트를 **제대로 읽을 수 있는 환경**을 만들어야 합니다. 이 글에서는 기술적 SEO의 핵심 파일 **4가지**를 다룹니다.
+
+> **핵심 답변:** 기술적 SEO 파일은 robots.txt(크롤링 규칙), sitemap.xml(페이지 목록), feed.xml(RSS 피드), llms.txt(AI 크롤러용 요약) 4가지입니다. Next.js에서는 모두 자동 또는 반자동으로 생성할 수 있습니다.
+
+---
+
+## robots.txt — 크롤링 허용 설정
+
+robots.txt는 검색엔진 크롤러에게 "어디를 읽어도 되고, 어디는 안 되는지" 알려주는 파일입니다. 2026년에는 AI 크롤러(GPTBot, Claude-Web 등)도 고려해야 합니다.
+
+### 권장 robots.txt 설정
+
+```
+User-agent: *
+Allow: /
+
+# AI 크롤러도 허용
+User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: Claude-Web
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+
+Sitemap: https://seroai.xyz/sitemap.xml
+```
+
+> **꿀팁:** AI 크롤러를 차단하면 ChatGPT, Perplexity 등에서 블로그 콘텐츠가 인용되지 않습니다. GEO를 위해 반드시 허용해두세요.
+
+### 주요 AI 크롤러 목록
+
+| 크롤러 | 서비스 | 권장 설정 |
+|--------|--------|-----------|
+| GPTBot | ChatGPT/OpenAI | Allow |
+| ChatGPT-User | ChatGPT 브라우징 | Allow |
+| Claude-Web | Claude/Anthropic | Allow |
+| PerplexityBot | Perplexity AI | Allow |
+| Googlebot | 구글 검색 | Allow |
+| Yeti | 네이버 검색 | Allow |
+
+---
+
+## sitemap.xml — 모든 페이지 목록 제공
+
+사이트맵은 검색엔진에게 블로그의 **모든 페이지 URL과 업데이트 날짜**를 알려주는 파일입니다. 구글 공식 문서에 따르면, 사이트맵을 제출한 사이트는 색인 속도가 **평균 4배** 빨라집니다 (출처: Google Search Central, 2026).
+
+### Next.js에서 자동 생성하기
+
+```typescript
+// app/sitemap.ts
+export default async function sitemap() {
+  const posts = getAllPosts(); // 모든 포스트 가져오기
+  return [
+    { url: 'https://seroai.xyz', lastModified: new Date() },
+    { url: 'https://seroai.xyz/posts', lastModified: new Date() },
+    ...posts.map(post => ({
+      url: `https://seroai.xyz/posts/${post.slug}`,
+      lastModified: new Date(post.date),
+    })),
+  ];
+}
+```
+
+> **핵심:** Next.js App Router에서 `app/sitemap.ts`를 만들면 **빌드 시 자동으로** sitemap.xml이 생성됩니다. 새 글을 발행하고 배포하면 자동 업데이트되어 별도 관리가 필요 없습니다.
+
+---
+
+## feed.xml (RSS) — 구독 및 네이버 제출용
+
+RSS 피드는 블로그 글을 구독할 수 있는 표준 형식입니다. 네이버 서치 어드바이저에 **필수 제출 항목**이기도 합니다. RSS를 제출하면 네이버가 새 글을 **더 빠르게** 인식합니다.
+
+### RSS 생성 방법
+
+```bash
+npm install feed
+```
+
+> **핵심 답변:** feed.xml은 네이버 서치 어드바이저에 필수 제출해야 하는 파일입니다. `feed` 패키지로 자동 생성하고, Next.js Route Handler(`app/feed.xml/route.ts`)에서 제공하면 됩니다.
+
+---
+
+## llms.txt — AI 크롤러를 위한 사이트 요약 (GEO 핵심)
+
+llms.txt는 **2025년에 제안된 새로운 표준**으로, AI 크롤러에게 사이트의 핵심 정보를 요약해서 알려주는 파일입니다. robots.txt가 "어디를 읽어라"라면, llms.txt는 **"우리 사이트는 이런 곳이다"**라고 설명하는 역할입니다.
+
+### 권장 llms.txt 구조
+
+```markdown
+# 사이트 이름
+> 한 줄 소개
+
+## 주요 콘텐츠
+- 카테고리 1: 설명
+- 카테고리 2: 설명
+
+## 사이트 정보
+- URL: https://seroai.xyz
+- 언어: 한국어
+- 업데이트 주기: 매일
+- RSS: /feed.xml
+- 사이트맵: /sitemap.xml
+```
+
+> **핵심:** llms.txt는 `public/llms.txt`에 배포하면 됩니다. AI 크롤러가 이 파일을 읽고 사이트를 더 잘 이해하게 되어, **AI 답변에서 인용될 확률이 높아**집니다.
+
+---
+
+## 기술적 SEO 파일 체크리스트
+
+| 파일 | 위치 | 용도 | 필수 여부 |
+|------|------|------|-----------|
+| robots.txt | /public/ | 크롤링 규칙 설정 | 필수 |
+| sitemap.xml | /app/sitemap.ts | 페이지 목록 제공 | 필수 |
+| feed.xml | /app/feed.xml/ | RSS 구독/네이버 제출 | 필수 |
+| llms.txt | /public/ | AI 크롤러 안내 | 강력 권장 |
+
+---
+
+## 자주 묻는 질문
+
+### Q1. robots.txt에서 AI 크롤러를 차단하면 어떻게 되나요?
+A1. ChatGPT, Perplexity 등 AI 서비스에서 블로그 콘텐츠가 인용되지 않습니다. 트래픽 유입 기회를 잃게 되므로, GEO를 원한다면 반드시 허용해야 합니다.
+
+### Q2. llms.txt는 꼭 만들어야 하나요?
+A2. 필수는 아니지만 **강력 권장**입니다. AI 크롤러가 사이트 구조를 더 잘 파악하게 되어, 관련 질문에 대한 답변에서 인용될 가능성이 높아집니다. 작성에 **5분**이면 충분합니다.
+
+### Q3. sitemap.xml에 모든 페이지를 넣어야 하나요?
+A3. 검색에 노출하고 싶은 페이지만 넣으면 됩니다. 404 페이지, 관리자 페이지 등은 제외하세요. Next.js의 자동 생성을 사용하면 `app` 디렉토리의 공개 페이지만 자동으로 포함됩니다.
+
+다음 글에서는 [구조화 데이터와 AEO 콘텐츠 전략](/posts/2026-03-30-seo-aeo-geo-guide-4-schema-aeo)을 다룹니다. [이전 글: 서치 콘솔 등록](/posts/2026-03-30-seo-aeo-geo-guide-2-search-console)
