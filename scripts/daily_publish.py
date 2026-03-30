@@ -79,6 +79,18 @@ TOPIC_POOL = {
         "노코드 AI 앱 만들기",
         "AI로 영어 공부하기",
     ],
+    "marketing": [
+        "이메일 마케팅 자동화 전략",
+        "SNS 마케팅 자동화 도구 비교",
+        "AI 마케팅 자동화 플랫폼 추천",
+        "퍼포먼스 마케팅 자동화 가이드",
+        "CRM 마케팅 자동화 도입법",
+        "콘텐츠 마케팅 자동화 워크플로우",
+        "리타겟팅 광고 자동화 설정법",
+        "AI 챗봇 마케팅 자동화",
+        "마케팅 퍼널 자동화 구축",
+        "SEO 자동화 도구 활용법",
+    ],
 }
 
 # 발행 이력 추적 (중복 방지)
@@ -114,12 +126,13 @@ def select_daily_topics(count: int = 10) -> list[dict]:
     history = load_history()
     recent_titles = {p["title"] for p in history["published"]}
 
-    # 카테고리별 배분: ai-news 3, gov-projects 3, ai-tools 2, tutorials 2
+    # 카테고리별 배분: ai-news 2, gov-projects 2, ai-tools 2, tutorials 2, marketing 2
     distribution = {
-        "ai-news": 3,
-        "gov-projects": 3,
+        "ai-news": 2,
+        "gov-projects": 2,
         "ai-tools": 2,
         "tutorials": 2,
+        "marketing": 2,
     }
 
     # count에 맞게 비례 배분 조정

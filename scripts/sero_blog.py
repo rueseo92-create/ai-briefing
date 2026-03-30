@@ -49,6 +49,7 @@ CATEGORIES = {
     "gov-projects": {"name": "정부사업", "emoji": "🏛️"},
     "ai-tools": {"name": "AI 도구", "emoji": "🛠️"},
     "tutorials": {"name": "튜토리얼", "emoji": "📚"},
+    "marketing": {"name": "마케팅 자동화", "emoji": "📈"},
 }
 
 claude = anthropic.Anthropic()
@@ -346,6 +347,7 @@ def _generate_topics_claude(topic: str, count: int) -> list[TopicData]:
 - gov-projects: 정부 AI 지원사업, 공모전, 보조금 (현재 모집 중인 것만)
 - ai-tools: ChatGPT, Claude, Midjourney 등 AI 도구 최신 업데이트/비교
 - tutorials: AI 활용법 단계별 가이드 (2026년 최신 버전 기준)
+- marketing: AI 기반 마케팅 자동화 전략, 도구, 퍼널, CRM, 이메일/SNS 자동화
 
 제목 작성 (후킹 필수!):
 - 클릭을 유도하는 강력한 후킹 제목 (50자 이내)
@@ -366,7 +368,7 @@ SEO 기준:
   "topics": [
     {{
       "title": "블로그 제목 (60자 이하, SEO 최적화, 2026년 포함)",
-      "category": "ai-news/gov-projects/ai-tools/tutorials",
+      "category": "ai-news/gov-projects/ai-tools/tutorials/marketing",
       "summary": "핵심 내용 2-3줄 (2026년 기준)",
       "difficulty": "beginner/intermediate/advanced",
       "tags": ["태그1", "태그2", "태그3", "태그4"]

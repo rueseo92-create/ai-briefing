@@ -27,6 +27,7 @@ export const siteConfig = {
     { slug: "gov-projects", name: "정부사업", emoji: "🏛️" },
     { slug: "ai-tools", name: "AI 도구", emoji: "🛠️" },
     { slug: "tutorials", name: "튜토리얼", emoji: "📚" },
+    { slug: "marketing", name: "마케팅 자동화", emoji: "📈" },
   ],
 
   // 네비게이션
@@ -36,6 +37,7 @@ export const siteConfig = {
     { href: "/categories/ai-news", label: "AI 뉴스" },
     { href: "/categories/gov-projects", label: "정부사업" },
     { href: "/categories/ai-tools", label: "AI 도구" },
+    { href: "/categories/marketing", label: "마케팅 자동화" },
     { href: "/about", label: "소개" },
   ],
 
@@ -76,6 +78,12 @@ export const siteConfig = {
         "카멜 모니터암 거치대",
         "앱코 해커 기계식 키보드",
       ],
+      marketing: [
+        "마케팅 자동화 도서",
+        "디지털 마케팅 도서",
+        "삼성 갤럭시탭 S9",
+        "로지텍 MX Keys S 키보드",
+      ],
     } as Record<string, string[]>,
     // 태그 → 상품 키워드 매핑 (글 내용과 연관된 상품)
     tagProductMap: {
@@ -91,6 +99,11 @@ export const siteConfig = {
       "노트북": "삼성 갤럭시북4 프로",
       "GPT": "GPT-4 API 활용 도서",
       "AI": "AI 2024 트렌드 도서",
+      "마케팅": "디지털 마케팅 도서",
+      "이메일": "이메일 마케팅 도서",
+      "CRM": "CRM 마케팅 자동화 도서",
+      "SNS": "SNS 마케팅 도서",
+      "광고": "구글 광고 도서",
     } as Record<string, string>,
     disclaimer:
       "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
