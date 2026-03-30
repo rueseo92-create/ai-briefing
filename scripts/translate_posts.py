@@ -29,9 +29,6 @@ CLAUDE_MODEL = "claude-sonnet-4-20250514"
 POSTS_DIR = Path(os.environ.get("BLOG_REPO_PATH", str(Path(__file__).parent.parent))) / "content" / "posts"
 LANGUAGES = {
     "en": "English",
-    "ja": "Japanese (日本語)",
-    "zh": "Simplified Chinese (简体中文)",
-    "es": "Spanish (Español)",
 }
 
 client = anthropic.Anthropic()

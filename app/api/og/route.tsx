@@ -13,7 +13,6 @@ const categoryColors: Record<string, string> = {
   "ai-news": "#6366F1",
   "side-hustle": "#059669",
   "ai-tools": "#0891B2",
-  "digital-nomad": "#7C3AED",
   marketing: "#D97706",
 };
 

@@ -47,14 +47,14 @@ SLOT_CONFIG = {
     "lunch": {
         "hours": (11, 14),      # 11:00~13:59 KST
         "count": 2,
-        "distribution": {"ai-tools": 1, "digital-nomad": 1},
+        "distribution": {"ai-tools": 1, "side-hustle": 1},
         "seo_angle": "사용법, 활용 가이드, 추천",
         "label": "점심 (12:30)",
     },
     "evening": {
         "hours": (17, 20),      # 17:00~19:59 KST
         "count": 3,
-        "distribution": {"marketing": 1, "digital-nomad": 1, "ai-tools": 1},
+        "distribution": {"marketing": 1, "side-hustle": 1, "ai-tools": 1},
         "seo_angle": "비교 분석, 리뷰, 실전 팁",
         "label": "저녁 (18:00)",
     },
@@ -107,18 +107,6 @@ TOPIC_POOL = {
         "AI 데이터 분석 도구",
         "무료 AI 도구 모음",
     ],
-    "digital-nomad": [
-        "디지털 노마드 시작하기 가이드",
-        "원격근무로 해외 생활하기",
-        "디지털 노마드 비자 국가 추천",
-        "노마드 라이프 필수 도구",
-        "해외에서 원격 근무하는 법",
-        "디지털 노마드 세금 처리법",
-        "노마드 프리랜서 수입원 만들기",
-        "위치 독립적 직업 TOP 10",
-        "디지털 노마드 생활비 비교",
-        "원격근무 생산성 올리는 법",
-    ],
     "marketing": [
         "이메일 마케팅 자동화 전략",
         "SNS 마케팅 자동화 도구 비교",
@@ -140,7 +128,6 @@ SEO_MODIFIERS = {
     "ai-news": ["속보", "이번 주", "최신", "긴급", "단독"],
     "side-hustle": ["월 100만원", "무자본", "초보자", "수익 인증", "자동화"],
     "ai-tools": ["무료", "추천 TOP", "직접 써보니", "비교", "초보자용"],
-    "digital-nomad": ["해외 생활", "원격근무", "비자 정보", "생활비 비교", "필수 팁"],
     "marketing": ["ROI 200%", "자동화 비법", "매출 2배", "실전 사례", "무료 도구"],
 }
 
@@ -199,10 +186,9 @@ def select_daily_topics(count: int = 10, slot: str = None) -> list[dict]:
         distribution = dict(SLOT_CONFIG[slot]["distribution"])
     else:
         distribution = {
-            "ai-news": 2,
-            "side-hustle": 2,
+            "ai-news": 3,
+            "side-hustle": 3,
             "ai-tools": 2,
-            "digital-nomad": 2,
             "marketing": 2,
         }
         # count에 맞게 비례 배분 조정

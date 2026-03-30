@@ -1,29 +1,20 @@
-export const locales = ["ko", "en", "zh", "ja", "es"] as const;
+export const locales = ["ko", "en"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "ko";
 
 export const localeNames: Record<Locale, string> = {
   ko: "한국어",
   en: "English",
-  zh: "中文",
-  ja: "日本語",
-  es: "Español",
 };
 
 export const ogLocales: Record<Locale, string> = {
   ko: "ko_KR",
   en: "en_US",
-  zh: "zh_CN",
-  ja: "ja_JP",
-  es: "es_ES",
 };
 
 export const htmlLangs: Record<Locale, string> = {
   ko: "ko",
   en: "en",
-  zh: "zh-CN",
-  ja: "ja",
-  es: "es",
 };
 
 // Dictionary 타입
@@ -99,9 +90,6 @@ export interface Dictionary {
 const dictionaries: Record<Locale, () => Promise<Dictionary>> = {
   ko: () => import("@/dictionaries/ko.json").then((m) => m.default),
   en: () => import("@/dictionaries/en.json").then((m) => m.default),
-  zh: () => import("@/dictionaries/zh.json").then((m) => m.default),
-  ja: () => import("@/dictionaries/ja.json").then((m) => m.default),
-  es: () => import("@/dictionaries/es.json").then((m) => m.default),
 };
 
 export async function getDictionary(locale: Locale): Promise<Dictionary> {

@@ -18,9 +18,6 @@ const difficultyColor: Record<string, string> = {
 const diffLabels: Record<Locale, Record<string, string>> = {
   ko: { beginner: "입문", intermediate: "중급", advanced: "심화" },
   en: { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" },
-  zh: { beginner: "入门", intermediate: "中级", advanced: "高级" },
-  ja: { beginner: "入門", intermediate: "中級", advanced: "上級" },
-  es: { beginner: "Principiante", intermediate: "Intermedio", advanced: "Avanzado" },
 };
 
 export function PostCard({ post, compact, featured, locale = defaultLocale }: PostCardProps) {

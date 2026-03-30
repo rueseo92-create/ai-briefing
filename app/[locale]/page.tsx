@@ -10,7 +10,6 @@ const catColors: Record<string, { bg: string; text: string }> = {
   "ai-news": { bg: "bg-indigo-500", text: "text-indigo-500" },
   "side-hustle": { bg: "bg-emerald-600", text: "text-emerald-600" },
   "ai-tools": { bg: "bg-cyan-600", text: "text-cyan-600" },
-  "digital-nomad": { bg: "bg-violet-600", text: "text-violet-600" },
   marketing: { bg: "bg-amber-600", text: "text-amber-600" },
 };
 

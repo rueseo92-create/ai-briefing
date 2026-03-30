@@ -201,7 +201,7 @@ def crawl_ai_news_claude(topic: str = "AI", count: int = 5) -> list[GovProject]:
     {{
       "title": "한국어로 된 블로그 제목 (60자 이하)",
       "summary": "핵심 내용 3줄 요약",
-      "category": "ai-news 또는 side-hustle 또는 ai-tools 또는 digital-nomad 또는 marketing",
+      "category": "ai-news 또는 side-hustle 또는 ai-tools 또는 marketing",
       "source_name": "출처 이름 (예: OpenAI 공식 블로그)",
       "source_url": "실제 출처 URL (알 수 있으면)",
       "source_type": "government 또는 news 또는 official 또는 paper",

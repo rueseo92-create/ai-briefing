@@ -71,13 +71,7 @@ export const siteConfig = {
         "삼성 T7 외장SSD 1TB",
         "아이패드 에어 M2",
       ],
-      "digital-nomad": [
-        "디지털 노마드 도서",
-        "맥북 에어 M3",
-        "보스 QC45 노이즈캔슬링 헤드폰",
-        "샘소나이트 노트북 백팩",
-      ],
-      marketing: [
+        marketing: [
         "마케팅 자동화 도서",
         "디지털 마케팅 도서",
         "삼성 갤럭시탭 S9",

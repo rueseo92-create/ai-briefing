@@ -10,7 +10,7 @@ import { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/posts";
 import { siteConfig } from "@/lib/config";
 
-const LOCALES = ["ko", "en", "zh", "ja", "es"] as const;
+const LOCALES = ["ko", "en"] as const;
 const BASE = siteConfig.url;
 
 function localUrl(path: string, locale: string): string {

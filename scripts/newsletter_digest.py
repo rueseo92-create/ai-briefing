@@ -55,7 +55,6 @@ CATEGORY_LABELS = {
     "ai-news": "AI 뉴스",
     "side-hustle": "AI 부업",
     "ai-tools": "AI 도구",
-    "digital-nomad": "디지털노마드",
     "marketing": "마케팅",
     "business": "비즈니스",
 }

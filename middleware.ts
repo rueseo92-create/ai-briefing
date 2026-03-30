@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const locales = ["ko", "en", "zh", "ja", "es"];
+const locales = ["ko", "en"];
 const defaultLocale = "ko";
 
 // 정적 파일 및 API 경로 패턴
