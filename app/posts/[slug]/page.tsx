@@ -227,7 +227,7 @@ export default function PostPage({ params }: { params: { slug: string } }) {
         {/* Article Body */}
         <div className="max-w-4xl mx-auto px-6">
           <div className="prose max-w-none">
-            <MDXRemote source={content} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
+            <MDXRemote source={content} options={{ mdxOptions: { remarkPlugins: [[remarkGfm, { singleTilde: false }]] } }} />
           </div>
         </div>
 
