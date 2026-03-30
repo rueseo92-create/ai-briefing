@@ -9,7 +9,7 @@
     "aiNews": "AIニュース",
     "sideHustle": "AI副業",
     "aiTools": "AIツール",
-    "tutorials": "チュートリアル",
+    "digitalNomad": "デジタルノマド",
     "marketing": "マーケティング",
     "business": "ビジネス",
     "about": "紹介"
@@ -23,14 +23,14 @@
     "firstPostSoon": "最初の記事がまもなく公開されます。",
     "popularKeywords": "人気キーワード",
     "newsletter": "AIブリーフィングニュースレター",
-    "newsletterDesc": "毎週AIトレンドと政府事業情報をお届けします。",
+    "newsletterDesc": "毎週AIトレンドと副業・自動化収益情報をお届けします。",
     "emailPlaceholder": "メールアドレスを入力",
     "subscribe": "購読する",
     "noSpam": "スパムなし。いつでも解除可能です。",
     "aboutThisBlog": "このブログについて",
     "aboutItems": [
       "AIニュースをわかりやすく整理",
-      "政府AI事業・助成金情報のクローリング",
+      "AI副業・デジタルノマド・自動化収益ガイド",
       "実践的なAIツール活用ガイド",
       "Google検索最適化(SEO)コンテンツ"
     ],
@@ -53,7 +53,7 @@
   "search": {
     "title": "検索",
     "description": "キーワードまたはタグで記事を検索",
-    "placeholder": "検索ワードを入力（例：ChatGPT、AI自動化、政府事業）",
+    "placeholder": "検索ワードを入力（例：ChatGPT、AI副業、自動化）",
     "button": "検索",
     "popularKeywords": "人気キーワード",
     "results": "検索結果{n}件",

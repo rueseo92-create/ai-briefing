@@ -55,7 +55,7 @@ CATEGORIES = {
     "ai-news": {"name": "AI 뉴스", "emoji": "🤖"},
     "side-hustle": {"name": "AI 부업", "emoji": "💰"},
     "ai-tools": {"name": "AI 도구", "emoji": "🛠️"},
-    "tutorials": {"name": "튜토리얼", "emoji": "📚"},
+    "digital-nomad": {"name": "디지털노마드", "emoji": "🌍"},
     "marketing": {"name": "마케팅 자동화", "emoji": "📈"},
 }
 
@@ -282,7 +282,7 @@ def collect_topics(topic: str = "AI", count: int = 5, source: str = "all") -> li
 
                 topics.append(TopicData(
                     title=real_title,
-                    category="gov-projects",
+                    category="side-hustle",
                     summary=summary,
                     source_name="K-Startup",
                     source_url=ann.url,
@@ -356,9 +356,9 @@ def _generate_topics_claude(topic: str, count: int) -> list[TopicData]:
 토픽 유형 (골고루 섞어서):
 - ai-news: AI 업계 최신 뉴스, 모델 출시, 기업 동향 (이번 주 뉴스)
 - ai-tools: ChatGPT, Claude, Midjourney 등 AI 도구 최신 업데이트/비교/활용법
-- tutorials: AI 활용법 단계별 가이드 (2026년 최신 버전 기준)
+- digital-nomad: 디지털노마드 라이프스타일, 원격근무, 해외 거주, 위치 독립 가이드
 - marketing: AI 기반 마케팅 자동화 전략, 도구, 퍼널, CRM, 이메일/SNS 자동화
-- side-hustle: AI 부업, 디지털노마드, 자동화 수익, 프리랜서 가이드, 패시브 인컴
+- side-hustle: AI 부업, 자동화 수익, 프리랜서 가이드, 패시브 인컴
 
 제목 작성 (후킹 필수!):
 - 클릭을 유도하는 강력한 후킹 제목 (50자 이내)
@@ -379,7 +379,7 @@ SEO 기준:
   "topics": [
     {{
       "title": "블로그 제목 (60자 이하, SEO 최적화, 2026년 포함)",
-      "category": "ai-news/ai-tools/tutorials/marketing",
+      "category": "ai-news/ai-tools/digital-nomad/marketing/side-hustle",
       "summary": "핵심 내용 2-3줄 (2026년 기준)",
       "difficulty": "beginner/intermediate/advanced",
       "tags": ["태그1", "태그2", "태그3", "태그4"]

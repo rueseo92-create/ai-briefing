@@ -9,7 +9,7 @@
     "aiNews": "AI新闻",
     "sideHustle": "AI副业",
     "aiTools": "AI工具",
-    "tutorials": "教程",
+    "digitalNomad": "数字游民",
     "marketing": "营销自动化",
     "business": "商业服务",
     "about": "关于"
@@ -23,14 +23,14 @@
     "firstPostSoon": "第一篇文章即将上线。",
     "popularKeywords": "热门关键词",
     "newsletter": "AI简报电子报",
-    "newsletterDesc": "每周AI趋势与政府项目信息，发送到您的邮箱。",
+    "newsletterDesc": "每周AI趋势与副业·自动化收益信息，发送到您的邮箱。",
     "emailPlaceholder": "请输入邮箱地址",
     "subscribe": "订阅",
     "noSpam": "无垃圾邮件，随时可退订。",
     "aboutThisBlog": "关于本博客",
     "aboutItems": [
       "用简单语言整理AI新闻",
-      "政府AI事业/补贴信息抓取",
+      "AI副业·数字游民·自动化收益指南",
       "实用AI工具使用指南",
       "Google搜索优化(SEO)内容"
     ],
@@ -53,7 +53,7 @@
   "search": {
     "title": "搜索",
     "description": "按关键词或标签搜索文章",
-    "placeholder": "请输入搜索词（如：ChatGPT、AI自动化、政府项目）",
+    "placeholder": "请输入搜索词（如：ChatGPT、AI副业、自动化）",
     "button": "搜索",
     "popularKeywords": "热门关键词",
     "results": "共{n}条结果",

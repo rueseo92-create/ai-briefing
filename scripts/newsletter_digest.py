@@ -53,9 +53,9 @@ NEWSLETTER_FROM = os.environ.get("NEWSLETTER_FROM", "AI Briefing <newsletter@ser
 
 CATEGORY_LABELS = {
     "ai-news": "AI 뉴스",
-    "gov-projects": "정부사업",
+    "side-hustle": "AI 부업",
     "ai-tools": "AI 도구",
-    "tutorials": "튜토리얼",
+    "digital-nomad": "디지털노마드",
     "marketing": "마케팅",
     "business": "비즈니스",
 }

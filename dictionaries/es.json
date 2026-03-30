@@ -9,7 +9,7 @@
     "aiNews": "Noticias IA",
     "sideHustle": "Side Hustle",
     "aiTools": "Herramientas IA",
-    "tutorials": "Tutoriales",
+    "digitalNomad": "Nómada Digital",
     "marketing": "Marketing",
     "business": "Negocios",
     "about": "Acerca de"
@@ -23,14 +23,14 @@
     "firstPostSoon": "El primer artículo llegará pronto.",
     "popularKeywords": "Palabras clave populares",
     "newsletter": "Newsletter AI Briefing",
-    "newsletterDesc": "Tendencias de IA y proyectos gubernamentales semanalmente en tu correo.",
+    "newsletterDesc": "Tendencias de IA y side hustles semanalmente en tu correo.",
     "emailPlaceholder": "Ingresa tu correo electrónico",
     "subscribe": "Suscribirse",
     "noSpam": "Sin spam. Cancela en cualquier momento.",
     "aboutThisBlog": "Sobre este blog",
     "aboutItems": [
       "Noticias de IA explicadas de forma sencilla",
-      "Info de proyectos/subsidios gubernamentales de IA",
+      "Guías de side hustles y nómada digital con IA",
       "Guías prácticas de herramientas IA",
       "Contenido optimizado para Google SEO"
     ],
@@ -53,7 +53,7 @@
   "search": {
     "title": "Buscar",
     "description": "Busca artículos por palabra clave o etiqueta",
-    "placeholder": "Buscar (ej: ChatGPT, automatización IA, proyectos gov)",
+    "placeholder": "Buscar (ej: ChatGPT, AI side hustle, automatización)",
     "button": "Buscar",
     "popularKeywords": "Palabras clave populares",
     "results": "{n} resultados",

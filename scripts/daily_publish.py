@@ -47,22 +47,22 @@ SLOT_CONFIG = {
     "lunch": {
         "hours": (11, 14),      # 11:00~13:59 KST
         "count": 2,
-        "distribution": {"ai-tools": 1, "tutorials": 1},
+        "distribution": {"ai-tools": 1, "digital-nomad": 1},
         "seo_angle": "사용법, 활용 가이드, 추천",
         "label": "점심 (12:30)",
     },
     "evening": {
         "hours": (17, 20),      # 17:00~19:59 KST
         "count": 3,
-        "distribution": {"marketing": 1, "tutorials": 1, "ai-tools": 1},
+        "distribution": {"marketing": 1, "digital-nomad": 1, "ai-tools": 1},
         "seo_angle": "비교 분석, 리뷰, 실전 팁",
         "label": "저녁 (18:00)",
     },
     "night": {
         "hours": (20, 24),      # 20:00~23:59 KST
         "count": 2,
-        "distribution": {"gov-projects": 2},
-        "seo_angle": "심층 분석, 지원사업 안내, 신청 방법",
+        "distribution": {"side-hustle": 2},
+        "seo_angle": "심층 분석, 부업 가이드, 수익화 전략",
         "label": "야간 (21:30)",
     },
 }
@@ -83,17 +83,17 @@ TOPIC_POOL = {
         "AI 윤리와 안전성 논의",
         "국내 AI 기업 동향",
     ],
-    "gov-projects": [
-        "모두의 창업 프로젝트",
-        "K-Startup 창업지원 사업",
-        "정부 AI 바우처 지원사업",
-        "디지털 뉴딜 AI 사업",
-        "중소기업 AI 도입 지원",
-        "AI 인재양성 정부사업",
-        "지역 창업 지원 프로그램",
-        "TIPS 프로그램 안내",
-        "청년 창업 지원사업",
-        "데이터 바우처 지원사업",
+    "side-hustle": [
+        "AI 부업으로 월 100만원 만들기",
+        "ChatGPT로 수익 내는 방법",
+        "AI 자동화 부업 아이디어",
+        "디지털 노마드 수입원 만들기",
+        "AI 콘텐츠 판매 부업",
+        "프리랜서 AI 활용 수익화",
+        "AI 번역 부업 시작하기",
+        "자동화 수익 파이프라인 구축",
+        "AI 이미지 판매 부업",
+        "패시브 인컴 AI 활용법",
     ],
     "ai-tools": [
         "ChatGPT 활용법",
@@ -107,17 +107,17 @@ TOPIC_POOL = {
         "AI 데이터 분석 도구",
         "무료 AI 도구 모음",
     ],
-    "tutorials": [
-        "AI 프롬프트 엔지니어링",
-        "ChatGPT API 활용 튜토리얼",
-        "AI로 블로그 자동화하기",
-        "AI 이미지 생성 입문",
-        "업무 자동화 AI 활용법",
-        "AI로 데이터 분석하기",
-        "AI 챗봇 만들기 가이드",
-        "AI 음성 합성 활용법",
-        "노코드 AI 앱 만들기",
-        "AI로 영어 공부하기",
+    "digital-nomad": [
+        "디지털 노마드 시작하기 가이드",
+        "원격근무로 해외 생활하기",
+        "디지털 노마드 비자 국가 추천",
+        "노마드 라이프 필수 도구",
+        "해외에서 원격 근무하는 법",
+        "디지털 노마드 세금 처리법",
+        "노마드 프리랜서 수입원 만들기",
+        "위치 독립적 직업 TOP 10",
+        "디지털 노마드 생활비 비교",
+        "원격근무 생산성 올리는 법",
     ],
     "marketing": [
         "이메일 마케팅 자동화 전략",
@@ -138,9 +138,9 @@ TOPIC_POOL = {
 # ──────────────────────────────────────────────
 SEO_MODIFIERS = {
     "ai-news": ["속보", "이번 주", "최신", "긴급", "단독"],
-    "gov-projects": ["신청방법", "마감임박", "최대 3억", "자격요건", "2026년"],
+    "side-hustle": ["월 100만원", "무자본", "초보자", "수익 인증", "자동화"],
     "ai-tools": ["무료", "추천 TOP", "직접 써보니", "비교", "초보자용"],
-    "tutorials": ["완벽 가이드", "5분 만에", "따라하기", "실전", "무료 강의"],
+    "digital-nomad": ["해외 생활", "원격근무", "비자 정보", "생활비 비교", "필수 팁"],
     "marketing": ["ROI 200%", "자동화 비법", "매출 2배", "실전 사례", "무료 도구"],
 }
 
@@ -200,9 +200,9 @@ def select_daily_topics(count: int = 10, slot: str = None) -> list[dict]:
     else:
         distribution = {
             "ai-news": 2,
-            "gov-projects": 2,
+            "side-hustle": 2,
             "ai-tools": 2,
-            "tutorials": 2,
+            "digital-nomad": 2,
             "marketing": 2,
         }
         # count에 맞게 비례 배분 조정
@@ -433,7 +433,7 @@ def run_daily(slot: str = "auto", count: int = None, dry_run: bool = False):
         mod = f" [{t.get('seo_modifier', '')}]" if t.get("seo_modifier") else ""
         print(f"  {i+1}. [{t['category']}] {t['topic']}{mod}")
 
-    # K-Startup 최신 공고 크롤링 (gov-projects 카테고리에 사용)
+    # K-Startup 최신 공고 크롤링 (side-hustle 카테고리에 사용)
     kstartup_topics = []
     if sero_blog.KSTARTUP_ENABLED:
         try:
@@ -442,7 +442,7 @@ def run_daily(slot: str = "auto", count: int = None, dry_run: bool = False):
             for ann in anns:
                 kstartup_topics.append(sero_blog.TopicData(
                     title=ann.title,
-                    category="gov-projects",
+                    category="side-hustle",
                     summary=f"마감: {ann.deadline} (D-{ann.d_day})",
                     source_name="K-Startup",
                     source_url=ann.url,
@@ -461,8 +461,8 @@ def run_daily(slot: str = "auto", count: int = None, dry_run: bool = False):
         print(f"{'─' * 50}")
 
         try:
-            # gov-projects + K-Startup 실제 데이터 우선
-            if topic_info["category"] == "gov-projects" and kstartup_idx < len(kstartup_topics):
+            # side-hustle + K-Startup 실제 데이터 우선
+            if topic_info["category"] == "side-hustle" and kstartup_idx < len(kstartup_topics):
                 topic_data = kstartup_topics[kstartup_idx]
                 kstartup_idx += 1
                 print(f"  -> K-Startup 실제 데이터 사용: {topic_data.title}")

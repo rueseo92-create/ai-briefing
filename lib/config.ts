@@ -26,7 +26,7 @@ export const siteConfig = {
     { slug: "ai-news", name: "AI 뉴스", emoji: "🤖" },
     { slug: "side-hustle", name: "AI 부업", emoji: "💰" },
     { slug: "ai-tools", name: "AI 도구", emoji: "🛠️" },
-    { slug: "tutorials", name: "튜토리얼", emoji: "📚" },
+    { slug: "digital-nomad", name: "디지털노마드", emoji: "🌍" },
     { slug: "marketing", name: "마케팅 자동화", emoji: "📈" },
   ],
 
@@ -37,7 +37,8 @@ export const siteConfig = {
     { href: "/categories/ai-news", label: "AI 뉴스" },
     { href: "/categories/side-hustle", label: "AI 부업" },
     { href: "/categories/ai-tools", label: "AI 도구" },
-    { href: "/categories/marketing", label: "마케팅 자동화" },
+    { href: "/categories/digital-nomad", label: "디지털노마드" },
+    { href: "/categories/marketing", label: "마케팅" },
     { href: "/business", label: "사업 소개" },
     { href: "/about", label: "소개" },
   ],
@@ -73,11 +74,11 @@ export const siteConfig = {
         "삼성 T7 외장SSD 1TB",
         "아이패드 에어 M2",
       ],
-      tutorials: [
-        "혼자 공부하는 파이썬",
+      "digital-nomad": [
+        "디지털 노마드 도서",
         "맥북 에어 M3",
-        "카멜 모니터암 거치대",
-        "앱코 해커 기계식 키보드",
+        "보스 QC45 노이즈캔슬링 헤드폰",
+        "샘소나이트 노트북 백팩",
       ],
       marketing: [
         "마케팅 자동화 도서",
