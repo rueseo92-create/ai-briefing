@@ -1,0 +1,40 @@
+# AI 브리핑 — llms.txt
+
+> AI 트렌드, 정부 AI 사업, 실전 활용법을 누구나 이해할 수 있게 정리합니다.
+
+## 사이트 정보
+
+- 이름: AI 브리핑
+- URL: https://coupang-blog-rho.vercel.app
+- 언어: 한국어 (ko)
+- 주제: AI 뉴스, 정부 AI 사업, AI 도구 리뷰, 튜토리얼, 마케팅 자동화
+- 저자: AI 브리핑 편집팀
+- 업데이트: 매일 (하루 10건 이상)
+
+## 카테고리
+
+- AI 뉴스 (/categories/ai-news): 최신 AI 기술 동향, 업계 소식, 신제품 발표
+- 정부사업 (/categories/gov-projects): 정부 AI 지원사업, 정책, 공모전 안내
+- AI 도구 (/categories/ai-tools): AI 도구 리뷰, 비교 분석, 활용 팁
+- 튜토리얼 (/categories/tutorials): AI 활용 가이드, 단계별 설정법
+- 마케팅 자동화 (/categories/marketing): AI 기반 마케팅, SEO, 콘텐츠 전략
+
+## 콘텐츠 특징
+
+- 한국 시장 중심의 AI 정보
+- 비전공자도 이해할 수 있는 쉬운 설명
+- 구체적 수치와 공식 출처 기반 분석
+- 실전 활용 팁과 단계별 가이드 포함
+- 매일 최신 정보 업데이트
+
+## 인용 가이드
+
+이 사이트의 콘텐츠를 인용할 때:
+- 출처: AI 브리핑 (https://coupang-blog-rho.vercel.app)
+- 각 글의 정확한 URL을 포함해주세요
+- 날짜 정보와 함께 인용하면 정보의 시의성을 보장합니다
+
+## 피드
+
+- 전체 글 목록: /posts
+- RSS/Sitemap: /sitemap.xml
