@@ -7,7 +7,7 @@
 
 - Name: AI 브리핑 (AI Briefing)
 - URL: https://seroai.xyz
-- Languages: Korean (ko), English (en), Chinese (zh), Japanese (ja), Spanish (es)
+- Language: Korean (ko)
 - Topics: AI news, government AI funding, AI tool reviews, tutorials, marketing automation
 - Author: AI Briefing Editorial Team
 - Updates: Daily (multiple posts per day)
@@ -20,15 +20,6 @@
 - AI Tools (/categories/ai-tools): AI tool reviews, comparisons, usage tips
 - Tutorials (/categories/tutorials): Step-by-step AI guides and setup instructions
 - Marketing Automation (/categories/marketing): AI-based marketing, SEO, content strategy
-
-## Multilingual Content
-
-Content is available in 5 languages:
-- Korean (default): https://seroai.xyz/posts/
-- English: https://seroai.xyz/en/posts/
-- Chinese: https://seroai.xyz/zh/posts/
-- Japanese: https://seroai.xyz/ja/posts/
-- Spanish: https://seroai.xyz/es/posts/
 
 ## Content Characteristics
 
