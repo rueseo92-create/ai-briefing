@@ -18,6 +18,8 @@ sero_blog.py - AI 브리핑 블로그 자동화 파이프라인 v3
 """
 
 import os
+import sys
+import io
 import json
 import re
 import subprocess
@@ -29,6 +31,11 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Optional
+
+# Windows cp949 인코딩 문제 해결 — 이모지 등 유니코드 출력 지원
+if sys.stdout.encoding != "utf-8":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 import anthropic
 from dotenv import load_dotenv
