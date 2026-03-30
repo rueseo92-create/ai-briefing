@@ -1,0 +1,552 @@
+---
+title: "Midjourney 초보 가이드 — 가입부터 고퀄리티 이미지 만드는 프롬프트까지"
+description: "Midjourney 가입, 요금제, 기본 사용법부터 고퀄리티 이미지를 만드는 프롬프트 작성법까지 초보자 완벽 가이드."
+date: "2026-03-31T10:00:00"
+category: "tutorials"
+tags: ["Midjourney", "AI이미지생성", "프롬프트작성법", "AI아트", "이미지생성AI", "미드저니사용법", "AI디자인", "Midjourney프롬프트"]
+thumbnail: "https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=800&q=80"
+difficulty: "beginner"
+tldr: "Midjourney는 Discord 기반 AI 이미지 생성 도구로, 텍스트 프롬프트만으로 고퀄리티 이미지를 만들 수 있습니다. 가입부터 요금제 선택, 핵심 명령어, 파라미터 활용, 그리고 실전 프롬프트 작성법까지 이 가이드 하나면 충분합니다."
+published: true
+sources:
+  - name: "Midjourney 공식 웹사이트"
+    url: "https://www.midjourney.com"
+    type: "official"
+  - name: "Midjourney 공식 문서"
+    url: "https://docs.midjourney.com"
+    type: "official"
+  - name: "Discord 공식 사이트"
+    url: "https://discord.com"
+    type: "official"
+  - name: "OpenAI DALL-E"
+    url: "https://openai.com/dall-e-3"
+    type: "official"
+  - name: "Stability AI"
+    url: "https://stability.ai"
+    type: "official"
+---
+
+# Midjourney 초보 가이드 — 가입부터 고퀄리티 이미지 만드는 프롬프트까지
+
+AI로 이미지를 만들어보고 싶은데, 어디서부터 시작해야 할지 막막하신가요? Midjourney는 텍스트 한 줄만 입력하면 놀라운 퀄리티의 이미지를 생성해주는 AI 도구입니다. 이 가이드에서는 완전 초보자도 바로 따라할 수 있도록, 가입부터 프롬프트 작성까지 모든 과정을 단계별로 안내합니다.
+
+> 핵심 답변: Midjourney는 Discord 기반 AI 이미지 생성 도구로, `/imagine` 명령어에 원하는 이미지를 텍스트로 설명하면 됩니다. "주제 + 스타일 + 분위기 + 기술 파라미터" 구조로 프롬프트를 작성하면 고퀄리티 이미지를 만들 수 있습니다.
+
+---
+
+## Midjourney란 무엇인가?
+
+Midjourney는 David Holz가 설립한 독립 연구소에서 만든 AI 이미지 생성 서비스입니다. 사용자가 텍스트 프롬프트(prompt)를 입력하면, AI가 이를 해석해서 이미지를 생성합니다. 처음에는 Discord 채팅 플랫폼을 통해서만 사용할 수 있었고, 이후 웹 인터페이스도 제공하고 있습니다.
+
+### Midjourney의 핵심 특징
+
+| 항목 | 내용 |
+|------|------|
+| 개발사 | Midjourney, Inc. |
+| 접근 방식 | Discord 봇 + 웹 인터페이스 (midjourney.com) |
+| 핵심 기능 | 텍스트-투-이미지 생성, 이미지 변형, 이미지 합성 |
+| 현재 버전 | V6 (2026년 3월 기준) |
+| 지원 언어 | 영어 프롬프트 권장 (다국어 일부 지원) |
+| 이미지 해상도 | 최대 2048×2048px (업스케일 시) |
+| 생성 속도 | 기본 약 30~60초, Fast 모드 약 15~30초 |
+
+다른 AI 이미지 생성 도구(DALL-E, Stable Diffusion 등)와 비교했을 때, Midjourney는 특히 **예술적 퀄리티**와 **심미적 완성도**에서 높은 평가를 받고 있습니다. 사진처럼 사실적인 이미지, 판타지 일러스트, 제품 목업 등 다양한 스타일에 강합니다.
+
+---
+
+## 가입 및 설치 방법 (단계별 가이드)
+
+Midjourney를 시작하려면 Discord 계정이 필요합니다. 아래 단계를 따라하세요.
+
+### 1단계: Discord 가입
+
+1. discord.com에 접속합니다.
+2. "Download for Windows" (또는 Mac/Linux) 버튼을 클릭하거나, 웹 브라우저에서 바로 사용합니다.
+3. 이메일, 사용자명, 비밀번호를 입력하고 계정을 생성합니다.
+4. 이메일 인증을 완료합니다.
+
+> 이미 Discord 계정이 있다면 이 단계는 건너뛰세요.
+
+### 2단계: Midjourney 구독
+
+1. midjourney.com에 접속합니다.
+2. "Sign In" 버튼을 클릭하고 Discord 계정으로 로그인합니다.
+3. 요금제를 선택하고 결제합니다 (구독제만 제공, 무료 체험은 제한적).
+4. 결제 완료 후 Midjourney Discord 서버에 자동 초대됩니다.
+
+### 3단계: 이미지 생성 시작
+
+**Discord에서 사용하는 경우:**
+1. Midjourney Discord 서버의 `#newbies` 채널에 입장합니다.
+2. 채팅창에 `/imagine` 을 입력합니다.
+3. `prompt:` 필드에 원하는 이미지 설명을 영어로 입력합니다.
+4. Enter를 누르면 약 30~60초 후 이미지 4장이 생성됩니다.
+
+**웹 인터페이스에서 사용하는 경우:**
+1. midjourney.com에 로그인합니다.
+2. "Create" 탭에서 프롬프트를 입력합니다.
+3. 설정(비율, 스타일 등)을 조절하고 생성합니다.
+
+> 팁: Discord DM에서 Midjourney Bot에게 직접 메시지를 보내면 다른 사용자의 프롬프트와 섞이지 않고 개인 작업이 가능합니다.
+
+---
+
+## 요금제 비교 — 나에게 맞는 플랜 선택하기
+
+Midjourney는 구독제로 운영됩니다. 2026년 3월 기준 요금제는 다음과 같습니다.
+
+| 항목 | Basic | Standard | Pro | Mega |
+|------|-------|----------|-----|------|
+| 월 요금 | $10 | $30 | $60 | $120 |
+| 연간 결제 시 월 요금 | $8 | $24 | $48 | $96 |
+| Fast GPU 시간 | 약 3.3시간/월 | 약 15시간/월 | 약 30시간/월 | 약 60시간/월 |
+| Relax 모드 | 미제공 | 무제한 | 무제한 | 무제한 |
+| 스텔스 모드 | 미제공 | 미제공 | 제공 | 제공 |
+| 동시 생성 작업 | 3개 | 3개 | 12개 (Fast) | 12개 (Fast) |
+| 상업적 사용 | 가능 | 가능 | 가능 | 가능 |
+
+### 요금제 선택 가이드
+
+- **Basic ($10/월)**: 취미로 가끔 이미지를 만드는 분. 한 달에 약 200장 내외 생성 가능.
+- **Standard ($30/월)**: 주기적으로 이미지를 생성하는 크리에이터. Relax 모드로 무제한 생성 가능.
+- **Pro ($60/월)**: 업무용으로 대량 생성이 필요하거나, 프롬프트를 비공개(스텔스 모드)하고 싶은 분.
+- **Mega ($120/월)**: 에이전시나 팀 단위로 대량 작업하는 전문가.
+
+> 처음 시작한다면 **Basic 플랜**으로 충분합니다. 사용량이 늘어나면 언제든 업그레이드 가능합니다. Relax 모드가 필요하면 Standard부터 고려하세요.
+
+---
+
+## 기본 명령어 완전 정복
+
+Midjourney의 핵심 명령어를 알아보겠습니다. Discord에서 `/`를 입력하면 사용 가능한 명령어 목록이 나타납니다.
+
+### /imagine — 이미지 생성의 핵심
+
+가장 중요한 명령어입니다. 텍스트 프롬프트를 기반으로 이미지를 생성합니다.
+
+```
+/imagine prompt: a cozy coffee shop interior with warm lighting, watercolor style
+```
+
+실행 결과로 4장의 이미지 그리드가 생성됩니다. 각 이미지 아래에 다음 버튼이 나타납니다:
+
+- **U1~U4**: 해당 이미지를 고해상도로 업스케일
+- **V1~V4**: 해당 이미지를 기반으로 변형 생성
+- **🔄**: 동일 프롬프트로 완전히 새로운 4장 생성
+
+### /describe — 이미지를 프롬프트로 변환
+
+이미지를 업로드하면 AI가 해당 이미지를 분석해서 프롬프트 텍스트 4개를 제안해줍니다.
+
+```
+/describe [이미지 업로드]
+```
+
+이 기능은 **프롬프트 작성법을 배울 때 매우 유용**합니다. 마음에 드는 이미지를 /describe로 분석하면 어떤 키워드가 효과적인지 파악할 수 있습니다.
+
+### /blend — 이미지 합성
+
+2~5개의 이미지를 업로드하면 서로 섞어서 새로운 이미지를 만들어줍니다.
+
+```
+/blend [이미지1] [이미지2]
+```
+
+예를 들어 풍경 사진과 수채화 그림을 합성하면, 수채화 스타일의 풍경 이미지가 생성됩니다.
+
+### /vary — 이미지 변형
+
+생성된 이미지의 특정 부분을 변형하거나 전체적인 느낌을 바꿀 수 있습니다.
+
+- **Vary (Strong)**: 큰 변화를 주면서 변형
+- **Vary (Subtle)**: 미세한 차이만 주면서 변형
+- **Vary (Region)**: 특정 영역만 선택해서 변형 (인페인팅)
+
+### 기타 유용한 명령어
+
+| 명령어 | 기능 | 사용 예시 |
+|--------|------|-----------|
+| `/settings` | 기본 설정 변경 | 모델 버전, 스타일, 품질 기본값 설정 |
+| `/info` | 계정 정보 확인 | 남은 GPU 시간, 구독 상태 확인 |
+| `/subscribe` | 구독 관리 | 요금제 변경, 결제 정보 확인 |
+| `/prefer suffix` | 기본 파라미터 설정 | 매번 같은 파라미터를 입력하지 않아도 됨 |
+| `/shorten` | 프롬프트 최적화 | 긴 프롬프트에서 불필요한 부분 파악 |
+
+---
+
+## 프롬프트 작성법 기초 — 고퀄리티 이미지의 비결
+
+Midjourney 프롬프트는 **단순한 문장이 아니라 구조화된 지시**입니다. 좋은 프롬프트를 작성하는 4가지 핵심 요소를 알아보겠습니다.
+
+### 프롬프트 구조: 4가지 핵심 요소
+
+```
+[주제/대상] + [스타일/매체] + [분위기/조명] + [기술 파라미터]
+```
+
+| 요소 | 설명 | 예시 키워드 |
+|------|------|-------------|
+| 주제/대상 | 무엇을 그릴 것인가 | a samurai warrior, a mountain landscape, a modern living room |
+| 스타일/매체 | 어떤 느낌으로 그릴 것인가 | oil painting, digital art, photograph, watercolor, anime style |
+| 분위기/조명 | 어떤 감정과 빛을 줄 것인가 | dramatic lighting, golden hour, moody atmosphere, soft pastel |
+| 기술 파라미터 | 기술적 세부 설정 | --ar 16:9, --v 6, --style raw, --chaos 20 |
+
+### 구체적일수록 좋은 결과
+
+**나쁜 프롬프트:**
+```
+a cat
+```
+
+**보통 프롬프트:**
+```
+a cute cat sitting on a windowsill
+```
+
+**좋은 프롬프트:**
+```
+a fluffy orange tabby cat sitting on a sunlit windowsill, soft bokeh background with green plants, warm afternoon light, photograph, shot on Canon EOS R5, 85mm lens, shallow depth of field --ar 3:2 --v 6
+```
+
+차이가 느껴지시나요? 구체적인 디테일을 추가할수록 AI가 의도를 정확하게 파악하고, 원하는 이미지에 가까운 결과물을 생성합니다.
+
+### 프롬프트 작성 팁 7가지
+
+1. **영어로 작성하세요**: Midjourney는 영어 프롬프트에 최적화되어 있습니다. 한국어도 일부 지원하지만 결과 품질이 떨어질 수 있습니다.
+2. **명사와 형용사 위주로**: "I want a picture of..." 같은 문장보다 키워드 나열이 효과적입니다.
+3. **순서가 중요합니다**: 앞에 있는 키워드일수록 AI가 더 중요하게 반영합니다.
+4. **구체적인 카메라/렌즈 언급**: 사진 스타일을 원할 때 "shot on Fujifilm X-T5, 35mm lens"처럼 구체적으로 명시하면 사실적 결과를 얻습니다.
+5. **아티스트 스타일 참조**: "in the style of Studio Ghibli", "inspired by Art Nouveau" 등 스타일 참조가 가능합니다.
+6. **부정 프롬프트 활용**: `--no` 파라미터로 원하지 않는 요소를 제거합니다. 예: `--no text, watermark`
+7. **`/describe`로 역공학**: 마음에 드는 이미지를 분석해서 어떤 키워드가 효과적인지 학습하세요.
+
+---
+
+## 고퀄리티 프롬프트 예시 10가지
+
+실전에서 바로 사용할 수 있는 프롬프트 예시를 카테고리별로 정리했습니다. 각 프롬프트를 복사해서 `/imagine`에 붙여넣기 하면 됩니다.
+
+### 1. 인물 사진 (Portrait)
+
+```
+portrait of a young Korean woman in a traditional hanbok, standing in a bamboo forest, soft natural light filtering through leaves, shallow depth of field, editorial photography, shot on Sony A7IV, 85mm f/1.4 --ar 2:3 --v 6
+```
+
+**포인트**: 인물 사진은 조명(natural light, studio light), 렌즈(85mm, 50mm), 배경 디테일을 구체적으로 명시할수록 퀄리티가 올라갑니다.
+
+### 2. 풍경 (Landscape)
+
+```
+breathtaking aerial view of Jeju Island volcanic coastline at sunrise, dramatic ocean waves crashing against dark basalt cliffs, golden light, mist rising from the sea, landscape photography, ultra wide angle, 4K --ar 16:9 --v 6
+```
+
+**포인트**: 풍경은 시간대(sunrise, golden hour, blue hour), 날씨(mist, clouds), 촬영 각도(aerial view, low angle)가 핵심입니다.
+
+### 3. 제품 (Product Photography)
+
+```
+minimalist product photography of a matte black ceramic coffee mug on a marble surface, single stem of dried flower beside it, soft diffused studio lighting, clean white background, commercial photography --ar 4:5 --v 6 --style raw
+```
+
+**포인트**: 제품 사진은 배경(clean white, marble surface), 조명(studio lighting, soft box), 스타일(minimalist, commercial)을 명확히 지정합니다.
+
+### 4. 로고 디자인 (Logo)
+
+```
+minimalist geometric logo design for a tech startup called "NexaFlow", abstract flowing lines forming the letter N, gradient from deep blue to electric cyan, clean vector style, white background, professional brand identity --v 6
+```
+
+**포인트**: 로고는 스타일(minimalist, geometric, abstract), 색상(gradient, monochrome), 배경(white background)을 지정합니다. 단, 텍스트 렌더링은 아직 완벽하지 않으므로 후편집이 필요할 수 있습니다.
+
+### 5. 일러스트 (Illustration)
+
+```
+whimsical children's book illustration of a little fox reading a book under a giant mushroom in an enchanted forest, fireflies glowing softly, pastel color palette, hand-drawn watercolor style, storybook aesthetic --ar 4:3 --v 6
+```
+
+**포인트**: 일러스트는 매체(watercolor, digital painting, pen and ink)와 색감(pastel, vibrant, muted)이 분위기를 결정합니다.
+
+### 6. 인테리어 (Interior Design)
+
+```
+modern Scandinavian living room interior, large floor-to-ceiling windows with city view, light oak floors, white walls, minimalist furniture, monstera plant in corner, warm afternoon sunlight casting shadows, architectural photography --ar 16:9 --v 6
+```
+
+**포인트**: 인테리어는 디자인 스타일(Scandinavian, Industrial, Japanese minimalist), 가구 디테일, 조명 상태를 구체적으로 서술합니다.
+
+### 7. 음식 (Food Photography)
+
+```
+overhead shot of Korean bibimbap in a hot stone bowl, vibrant colorful vegetables arranged beautifully, runny egg yolk on top, steam rising, dark wooden table background, food photography, natural window light --ar 1:1 --v 6
+```
+
+**포인트**: 음식 사진은 촬영 앵글(overhead, 45-degree), 질감 묘사(steam rising, runny egg), 배경(wooden table, marble)이 중요합니다.
+
+### 8. 판타지 아트 (Fantasy Art)
+
+```
+epic fantasy castle perched on a floating island above the clouds, waterfalls cascading into the void below, dragon flying in the distance, magical aurora in the twilight sky, highly detailed digital painting, concept art style --ar 16:9 --v 6 --chaos 15
+```
+
+**포인트**: 판타지는 상상력을 최대한 발휘하세요. `--chaos` 값을 올리면 더 독창적인 결과가 나옵니다.
+
+### 9. 패션 (Fashion Photography)
+
+```
+high fashion editorial photo, model wearing avant-garde oversized coat in neon green, walking through a rain-soaked Tokyo street at night, neon signs reflecting on wet pavement, cinematic lighting, shot on medium format Hasselblad --ar 2:3 --v 6
+```
+
+**포인트**: 패션은 의상 디테일, 배경 장소, 촬영 장비, 분위기(editorial, street style, haute couture)를 조합합니다.
+
+### 10. 추상 아트 (Abstract Art)
+
+```
+abstract fluid art composition, swirling metallic gold and deep navy blue paint, organic flowing forms, marble ink texture, extreme macro photography, luxurious and elegant mood --ar 1:1 --v 6 --style raw --chaos 30
+```
+
+**포인트**: 추상 아트는 색상 조합, 질감(fluid, geometric, fractured), `--chaos` 파라미터로 예측 불가능한 결과를 유도합니다.
+
+---
+
+## 파라미터 가이드 — 이미지를 세밀하게 조절하기
+
+파라미터는 프롬프트 뒤에 `--` 형태로 추가하며, 이미지 생성 결과를 세밀하게 조절합니다.
+
+### 핵심 파라미터 총정리
+
+| 파라미터 | 기능 | 사용법 | 예시 |
+|----------|------|--------|------|
+| `--ar` | 이미지 비율 | `--ar 가로:세로` | `--ar 16:9` (와이드), `--ar 2:3` (세로), `--ar 1:1` (정사각형) |
+| `--v` | 모델 버전 | `--v 숫자` | `--v 6` (최신), `--v 5.2` |
+| `--style` | 스타일 모드 | `--style raw` | `--style raw` (AI 해석 최소화, 프롬프트에 충실) |
+| `--chaos` | 결과 다양성 | `--chaos 0~100` | `--chaos 0` (일관적), `--chaos 50` (다양), `--chaos 100` (예측불가) |
+| `--no` | 제외 요소 | `--no 키워드` | `--no text, watermark, blurry` |
+| `--q` | 품질 | `--q .25 / .5 / 1` | `--q 1` (기본, 최고 품질) |
+| `--s` | 스타일화 정도 | `--s 0~1000` | `--s 0` (프롬프트에 충실), `--s 750` (Midjourney 스타일 강화) |
+| `--seed` | 시드 값 | `--seed 숫자` | `--seed 12345` (동일 시드 = 유사 결과) |
+| `--tile` | 타일 패턴 | `--tile` | 반복 패턴 이미지 생성 시 사용 |
+| `--iw` | 이미지 가중치 | `--iw 0~2` | 이미지 참조 시 참조 이미지의 영향력 조절 |
+
+### 비율(--ar) 활용 가이드
+
+용도별 권장 비율을 정리했습니다.
+
+| 용도 | 추천 비율 | 이유 |
+|------|-----------|------|
+| 인스타그램 피드 | `--ar 1:1` 또는 `--ar 4:5` | 인스타 최적 비율 |
+| 유튜브 썸네일 | `--ar 16:9` | 영상 썸네일 표준 |
+| 핀터레스트 | `--ar 2:3` | 세로형 콘텐츠 최적 |
+| 블로그 헤더 | `--ar 16:9` 또는 `--ar 3:1` | 와이드 배너형 |
+| 스마트폰 배경화면 | `--ar 9:16` | 세로 전체화면 |
+| A4 인쇄물 | `--ar 210:297` 또는 약 `--ar 5:7` | A4 비율 근사 |
+| 정사각형 프로필 | `--ar 1:1` | SNS 프로필 이미지 |
+
+### --chaos 파라미터 이해하기
+
+`--chaos` 값에 따른 결과 차이를 알아보겠습니다.
+
+| chaos 값 | 결과 특성 | 추천 상황 |
+|-----------|-----------|-----------|
+| 0 (기본) | 4장 모두 비슷한 결과 | 특정 스타일을 정확히 원할 때 |
+| 10~30 | 적당한 변형 | 약간의 다양성을 원할 때 |
+| 30~60 | 상당한 변형 | 영감을 얻고 싶을 때 |
+| 60~100 | 예측 불가능한 결과 | 창의적 실험, 새로운 아이디어 탐색 |
+
+---
+
+## Midjourney vs DALL-E vs Stable Diffusion 비교
+
+AI 이미지 생성 도구 3대장을 비교해보겠습니다.
+
+| 항목 | Midjourney | DALL-E 3 | Stable Diffusion |
+|------|-----------|----------|-----------------|
+| 개발사 | Midjourney, Inc. | OpenAI | Stability AI |
+| 접근 방식 | Discord + 웹 | ChatGPT 통합 / API | 로컬 설치 또는 웹 서비스 |
+| 가격 | $10~$120/월 | ChatGPT Plus $20/월 포함 | 오픈소스 무료 (GPU 필요) |
+| 사용 난이도 | 중간 (프롬프트 학습 필요) | 쉬움 (대화형) | 어려움 (설치·설정 필요) |
+| 이미지 퀄리티 | 예술적·심미적으로 우수 | 프롬프트 정확도 높음 | 설정에 따라 천차만별 |
+| 커스터마이징 | 파라미터로 세밀 조절 | 제한적 | 매우 자유로움 (모델, LoRA 등) |
+| 텍스트 렌더링 | 보통 | 우수 | 보통~우수 (모델에 따라) |
+| 상업적 사용 | 유료 구독 시 가능 | 가능 (이용약관 확인) | 모델 라이선스에 따라 다름 |
+| NSFW 필터 | 엄격 | 엄격 | 해제 가능 (로컬) |
+| 실시간 편집 | 인페인팅 지원 | 편집 기능 제공 | ControlNet 등 다양 |
+| 커뮤니티 | Discord 중심, 활발 | ChatGPT 사용자 기반 | GitHub, Reddit, Civitai 등 매우 활발 |
+
+### 어떤 도구를 선택해야 할까?
+
+- **Midjourney**: 예술적이고 아름다운 이미지가 필요할 때. 디자이너, 크리에이터, 마케터에게 추천.
+- **DALL-E 3**: 프롬프트를 정확하게 반영하는 이미지가 필요할 때. ChatGPT와 함께 쓰면 편리. 초보자에게 가장 쉬움.
+- **Stable Diffusion**: 완전한 자유도와 커스터마이징이 필요할 때. 개발자, 연구자, 대량 생성이 필요한 경우. 초기 학습 곡선이 가파름.
+
+---
+
+## 상업적 사용과 저작권 — 꼭 알아야 할 사항
+
+Midjourney로 생성한 이미지의 저작권과 상업적 사용에 대해 정리합니다.
+
+### 유료 구독자의 권리
+
+Midjourney 유료 구독자는 생성한 이미지에 대해 다음과 같은 권리를 가집니다:
+
+- **상업적 사용 가능**: 유료 플랜 구독자는 생성한 이미지를 상업적으로 사용할 수 있습니다.
+- **연매출 제한**: 연매출 $1,000,000 이상인 기업은 Pro 플랜 이상을 사용해야 합니다.
+- **소유권**: Midjourney가 라이선스를 부여하는 형태이며, 완전한 저작권 소유는 법적으로 아직 논의 중인 영역입니다.
+
+### 주의사항
+
+| 항목 | 내용 |
+|------|------|
+| 공개 여부 | Basic/Standard 플랜에서 생성한 이미지는 Midjourney 갤러리에 공개됨 |
+| 비공개 생성 | Pro/Mega 플랜의 스텔스 모드에서만 비공개 가능 |
+| 타인의 이미지 | 다른 사용자의 생성물을 무단 상업 이용 불가 |
+| 유명인 초상 | 실존 인물의 이미지 생성은 초상권 문제 발생 가능 |
+| AI 저작권 법률 | 국가별로 AI 생성물의 저작권 인정 여부가 다름 — 한국은 아직 명확한 판례 없음 |
+
+> 중요: 상업적으로 중요한 프로젝트에 AI 이미지를 사용할 때는 반드시 최신 이용약관(midjourney.com/terms-of-service)을 확인하세요. AI 저작권 관련 법률은 빠르게 변화하고 있습니다.
+
+---
+
+## 자주 하는 실수 5가지와 해결법
+
+초보자가 Midjourney를 사용하면서 흔히 겪는 실수와 그 해결 방법을 정리했습니다.
+
+### 실수 1: 프롬프트가 너무 짧거나 모호함
+
+**문제**: "a beautiful woman"처럼 너무 짧은 프롬프트는 AI가 임의로 해석해서 원하는 결과가 나오지 않습니다.
+
+**해결**: 주제 + 스타일 + 분위기 + 디테일을 구체적으로 추가합니다.
+
+```
+Before: a beautiful woman
+After: portrait of an elegant Korean woman in her 30s, wearing a navy blue blazer, confident smile, natural makeup, soft studio lighting, professional headshot, clean gray background --ar 2:3 --v 6
+```
+
+### 실수 2: 한국어 프롬프트 사용
+
+**문제**: 한국어로 프롬프트를 작성하면 의도와 다른 결과가 나오는 경우가 많습니다.
+
+**해결**: 항상 영어로 작성하세요. 영어가 어렵다면 ChatGPT나 번역 도구를 활용해서 프롬프트를 영어로 변환하는 방법이 효과적입니다.
+
+### 실수 3: 비율(--ar) 설정을 잊음
+
+**문제**: 비율을 지정하지 않으면 기본 1:1 정사각형으로 생성됩니다. 목적에 맞지 않는 비율은 이미지 활용도를 떨어뜨립니다.
+
+**해결**: 용도를 먼저 정하고 비율을 설정합니다. 유튜브 썸네일이면 `--ar 16:9`, 인스타 스토리면 `--ar 9:16`을 먼저 추가합니다.
+
+### 실수 4: 텍스트를 이미지에 넣으려고 시도
+
+**문제**: Midjourney는 텍스트 렌더링이 완벽하지 않습니다. "SALE 50% OFF"를 이미지에 넣으려고 하면 글자가 깨지거나 이상하게 변형됩니다.
+
+**해결**: 이미지는 Midjourney로 생성하고, 텍스트는 Canva, Figma, Photoshop 등 별도 도구에서 추가하세요.
+
+### 실수 5: 생성된 이미지를 그대로만 사용
+
+**문제**: 첫 번째 생성 결과에 만족하지 못하면서도 반복 생성만 합니다.
+
+**해결**: Midjourney의 후처리 기능을 적극 활용하세요.
+
+- **Vary (Region)**: 특정 부분만 수정 가능
+- **Zoom Out**: 이미지 바깥 영역 확장
+- **Pan**: 특정 방향으로 이미지 확장
+- **Upscale**: 해상도 높이기
+
+프롬프트를 조금씩 수정하며 반복하는 것(iteration)이 고퀄리티 결과물의 비결입니다.
+
+---
+
+## 실전 워크플로우 — 처음부터 끝까지
+
+하나의 이미지를 완성하는 전체 과정을 단계별로 알아보겠습니다.
+
+### Step 1: 목적 정의
+
+"블로그 헤더 이미지: 코딩하는 사람의 작업 환경"
+
+### Step 2: 키워드 브레인스토밍
+
+- 주제: developer workspace, coding setup, laptop, dual monitors
+- 스타일: photograph, cinematic
+- 분위기: warm lighting, cozy, productive atmosphere
+- 기술: --ar 16:9, --v 6
+
+### Step 3: 첫 번째 프롬프트 생성
+
+```
+/imagine prompt: developer workspace with dual monitors displaying code, mechanical keyboard, warm desk lamp, coffee cup, cozy home office atmosphere, cinematic photography, soft warm lighting --ar 16:9 --v 6
+```
+
+### Step 4: 결과 평가 및 반복
+
+- 4장 중 가장 마음에 드는 이미지 선택
+- V 버튼으로 변형 생성 또는 프롬프트 수정
+- 필요시 Vary (Region)으로 특정 부분 수정
+
+### Step 5: 최종 업스케일 및 저장
+
+- U 버튼으로 업스케일
+- 이미지를 다운로드
+- 필요시 후편집 도구에서 텍스트 추가, 색보정 등 마무리
+
+---
+
+## Midjourney 커뮤니티 활용하기
+
+Midjourney를 혼자 배우는 것보다 커뮤니티를 활용하면 훨씬 빠르게 실력이 늘어납니다.
+
+### 추천 커뮤니티 및 리소스
+
+| 플랫폼 | 활용법 |
+|--------|--------|
+| Midjourney Discord 서버 | 다른 사용자의 프롬프트와 결과물 실시간 확인 |
+| midjourney.com/explore | 인기 이미지 갤러리에서 프롬프트 참고 |
+| Reddit (r/midjourney) | 팁, 트릭, 비교 분석 공유 |
+| YouTube | 프롬프트 작성법 튜토리얼 영상 |
+| Prompthero (prompthero.com) | 프롬프트 공유 커뮤니티 |
+
+### 실력 향상을 위한 연습 방법
+
+1. **매일 1개 프롬프트 도전**: 매일 하나씩 새로운 주제로 이미지를 만들어보세요.
+2. **역공학 연습**: 마음에 드는 이미지를 `/describe`로 분석하고, 그 프롬프트로 다시 생성해봅니다.
+3. **파라미터 하나씩 실험**: 같은 프롬프트에 `--chaos`, `--s`, `--style raw` 등을 하나씩 바꿔가며 차이를 체감합니다.
+4. **테마별 시리즈 만들기**: 한 주제(예: "한국의 사계절")를 다양한 스타일로 만들어봅니다.
+
+---
+
+## 자주 묻는 질문 (FAQ)
+
+### Q: Midjourney 무료 체험이 있나요?
+
+2026년 3월 기준, Midjourney는 제한적인 무료 체험을 간헐적으로 제공하고 있습니다. 공식적으로 무료 플랜은 없으며, 최소 Basic 플랜($10/월) 구독이 필요합니다. 최신 정보는 midjourney.com에서 확인하세요.
+
+### Q: 프롬프트를 한국어로 쓰면 안 되나요?
+
+영어가 가장 정확한 결과를 냅니다. 한국어도 어느 정도 인식하지만, 의도와 다른 결과가 나올 확률이 높습니다. ChatGPT에 "다음 내용을 Midjourney 영어 프롬프트로 바꿔줘"라고 요청하는 방법을 추천합니다.
+
+### Q: 생성한 이미지를 인스타그램/블로그에 올려도 되나요?
+
+유료 구독자라면 상업적·비상업적 용도 모두 사용 가능합니다. 단, 실존 인물이나 유명 브랜드를 모방한 이미지는 별도 법적 이슈가 있을 수 있습니다.
+
+### Q: 하루에 몇 장까지 만들 수 있나요?
+
+장수 제한은 없고, GPU 시간 기준입니다. Basic 플랜 기준 약 200장, Standard 플랜은 Relax 모드로 무제한 생성이 가능합니다.
+
+### Q: DALL-E가 더 쉬운데 왜 Midjourney를 써야 하나요?
+
+DALL-E는 접근성이 더 좋지만, Midjourney는 예술적 품질에서 차별화됩니다. 특히 비주얼이 중요한 마케팅 자료, 포트폴리오, SNS 콘텐츠를 만들 때 Midjourney의 결과물이 더 완성도가 높은 경우가 많습니다. 용도에 따라 선택하면 됩니다.
+
+---
+
+## 마무리 — Midjourney는 도구일 뿐, 핵심은 당신의 상상력
+
+Midjourney는 강력한 AI 이미지 생성 도구이지만, 결국 어떤 이미지를 만들지 결정하는 것은 사용자의 상상력과 프롬프트 작성 능력입니다. 이 가이드에서 다룬 핵심을 다시 정리하면 다음과 같습니다.
+
+| 단계 | 핵심 내용 |
+|------|-----------|
+| 시작하기 | Discord 가입 → Midjourney 구독 → /imagine 명령어 |
+| 요금제 선택 | 초보자는 Basic($10/월), 활발한 사용은 Standard($30/월) |
+| 프롬프트 구조 | 주제 + 스타일 + 분위기 + 기술 파라미터 |
+| 파라미터 활용 | --ar(비율), --v(버전), --chaos(다양성), --no(제외), --style raw(원시) |
+| 퀄리티 향상 | 구체적으로 작성, 영어 사용, 반복 실험, /describe 활용 |
+| 저작권 | 유료 구독 시 상업적 사용 가능, 최신 약관 확인 필수 |
+
+첫 이미지를 만들어보는 것이 가장 중요합니다. 오늘 바로 Midjourney에 가입하고, 이 가이드의 프롬프트 예시를 하나 복사해서 시작해보세요. 프롬프트를 수정하고 반복하는 과정에서 자연스럽게 실력이 늘어날 것입니다.
