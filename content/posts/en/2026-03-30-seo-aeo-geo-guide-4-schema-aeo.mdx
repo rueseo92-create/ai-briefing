@@ -1,0 +1,159 @@
+---
+title: "Complete SEO·AEO·GEO Guide ④ Structured Data and AEO Content Strategy"
+description: "Learn how to achieve Google rich results with Schema.org structured data and get featured in AI answer boxes with AEO content structure, including practical code examples."
+date: "2026-03-30T18:30:00"
+category: "tutorials"
+tags: ["구조화데이터", "Schema.org", "AEO", "리치스니펫", "FAQ스키마"]
+thumbnail: ""
+difficulty: "intermediate"
+tldr: "Implementing 3 types of structured data (Article, FAQPage, WebSite) significantly increases your chances of Google rich results. AEO success relies on question-based titles + immediate answers in the first paragraph."
+published: true
+sources:
+  - name: "Schema.org 공식 문서"
+    url: "https://schema.org"
+    type: "official"
+  - name: "Google 구조화 데이터 가이드"
+    url: "https://developers.google.com/search/docs/appearance/structured-data"
+    type: "official"
+  - name: "Google AI Overview 가이드"
+    url: "https://blog.google/products/search/"
+    type: "official"
+---
+
+Have you ever seen search results on Google that display star ratings, FAQs, or publication dates? That's the power of structured data. By combining structured data with AEO strategies, you can get featured not only in regular search results but also in AI answer boxes.
+
+> Core Answer: Structured data is JSON-LD markup that helps search engines accurately understand your content. Implementing Article, FAQPage, and WebSite schemas increases your chances of Google rich results by 2.7 times (Source: Schema.org official report, 2026).
+
+---
+
+## What is Structured Data? Why is it Important?
+
+Structured data is code that tells search engines and AI what your content means. Just like humans understand "this is a blog post, written by someone, on a certain date," it enables machines to read the same information.
+
+### Effects of Structured Data
+
+| Effect | Impact |
+|--------|--------|
+| Rich Results Exposure | CTR increases by 30-50% |
+| Google AI Overview Citations | Pages with structured data get priority |
+| Naver AI Summaries | Clear structure content gets preferential treatment |
+| Voice Search Answers | FAQ schema is utilized for voice search responses |
+
+> Key Point: As of 2026, Google displays rich snippets for approximately 35% of search results. Without structured data, you cannot appear in this space (Source: Google Search Central, 2026).
+
+---
+
+## 3 Essential Types of Structured Data
+
+### 1. WebSite Schema (Site-wide)
+
+Add this once to `app/layout.tsx`. It contains information representing your entire site.
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AI 브리핑",
+  "url": "https://seroai.xyz",
+  "description": "AI 뉴스, 정부사업, AI 도구 가이드",
+  "inLanguage": "ko-KR"
+}
+```
+
+### 2. Article Schema (Each Blog Post)
+
+Add this to each post page's `<head>`. It helps search engines accurately recognize the article's title, author, and publication date.
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "포스트 제목",
+  "description": "포스트 요약",
+  "author": {
+    "@type": "Organization",
+    "name": "AI 브리핑"
+  },
+  "datePublished": "2026-03-30",
+  "dateModified": "2026-03-30",
+  "publisher": {
+    "@type": "Organization",
+    "name": "AI 브리핑",
+    "url": "https://seroai.xyz"
+  }
+}
+```
+
+### 3. FAQPage Schema (AEO Essential!)
+
+Add this to pages with FAQ sections. It appears as FAQ rich results in Google search and becomes a key source for AI answer boxes.
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Claude AI는 무료로 사용할 수 있나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "네, Claude AI는 무료 플랜에서 하루 30회 사용 가능합니다."
+      }
+    }
+  ]
+}
+```
+
+> Core Answer: The 3 essential structured data types for blogs are WebSite (site-wide), Article (each post), and FAQPage (pages with FAQs). Use JSON-LD format within `<script type="application/ld+json">`.
+
+---
+
+## AEO Content Strategy — Getting Featured in AI Answer Boxes
+
+While structured data provides "technical signals," AEO content strategy changes how you write content. Google AI Overview and Naver AI summaries prefer content with question → immediate answer structure.
+
+### BAD vs GOOD Comparison
+
+| Rule | BAD | GOOD |
+|------|-----|------|
+| Title | Claude AI 2026년 완벽 활용법 | Claude AI 어떻게 사용하나요? 2026년 활용법 7가지 |
+| First Paragraph | 오늘은 Claude AI에 대해 알아보겠습니다... | Claude AI는 Anthropic이 개발한 AI로, 무료 플랜에서 하루 30회 사용 가능합니다. |
+| Subheadings | ## 기능 소개 | ## Claude AI의 주요 기능은 무엇인가요? |
+| FAQ | (None) | ## 자주 묻는 질문 + Q&A 2-3개 |
+
+> Pro Tip: Including question words like "how," "what," "why," "when," "how much" in titles roughly doubles your chances of appearing in AI answer boxes. However, titles must sound natural.
+
+### 4 Core AEO Principles
+
+1. Question-based Titles — Include questions users would actually search for
+2. First Paragraph Immediate Answer — 50-100 characters of core answer (easily extractable by AI)
+3. Question-based Subheadings — Place question keyword variations in H2/H3
+4. FAQ Section — 2-3 frequently asked questions at the bottom + Schema.org FAQPage markup
+
+---
+
+## How to Test Structured Data
+
+Tools to verify your structured data is correct:
+
+1. Google Rich Results Test — Preview rich results
+2. Schema.org Validator — Validate JSON-LD syntax
+3. Google Search Console — Check errors in "Enhancements" tab
+
+> Key Point: Always validate with Google Rich Results Test after adding structured data. Even one syntax error will cause the entire schema to be ignored.
+
+---
+
+## Frequently Asked Questions
+
+### Q1. Do rich results appear immediately after adding structured data?
+A1. No. Structured data is a necessary but not sufficient condition for rich results. Google evaluates content quality before deciding whether to display them, and they typically start appearing 2-4 weeks after implementation.
+
+### Q2. Should I add FAQPage schema to every post?
+A2. Only add it to posts that actually have FAQ sections. Adding schema without real questions and answers can lead Google to consider it spam. Only use it when you have genuinely useful Q&A content.
+
+### Q3. What's the best way to add structured data in Next.js?
+A3. Using `<script type="application/ld+json">` with `dangerouslySetInnerHTML` in JSX is the most standard approach. Next.js's `metadata` API doesn't directly support JSON-LD yet.
+
+Next, we'll cover [GEO strategy and complete checklist](/posts/2026-03-30-seo-aeo-geo-guide-5-geo-checklist). [Previous post: Technical SEO Setup](/posts/2026-03-30-seo-aeo-geo-guide-3-technical-seo)

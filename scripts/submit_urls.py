@@ -13,7 +13,10 @@ import urllib.parse
 from pathlib import Path
 from datetime import datetime
 
-SITE_URL = "https://coupang-blog-rho.vercel.app"
+import os
+from dotenv import load_dotenv
+load_dotenv()
+SITE_URL = os.environ.get("BLOG_SITE_URL", "https://seroai.xyz")
 INDEXNOW_KEY = "d5566bb4311e4891bf4f30754b0d87d6"
 
 POSTS_DIR = Path(__file__).parent.parent / "content" / "posts"
@@ -74,17 +77,13 @@ def submit_indexnow(urls: list[str]) -> bool:
 
 
 def submit_google_sitemap():
-    """Google에 sitemap 알림"""
+    """Google에 sitemap 알림 (ping deprecated → GSC 안내)"""
     sitemap_url = f"{SITE_URL}/sitemap.xml"
-    print(f"[Google] Sitemap 알림: {sitemap_url}")
-    try:
-        # Google Search Console API 대신 직접 ping
-        url = f"https://www.google.com/ping?sitemap={urllib.parse.quote(sitemap_url, safe='')}"
-        req = urllib.request.Request(url)
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            print(f"  → HTTP {resp.status}")
-    except Exception as e:
-        print(f"  → Google ping 실패 (정상 - GSC에서 직접 제출 필요): {e}")
+    print(f"[Google] Sitemap: {sitemap_url}")
+    print("  → Google ping API는 2023년 deprecated됨")
+    print("  → Google Search Console에서 sitemap 직접 제출 필요:")
+    print("  → https://search.google.com/search-console")
+    print("  → sitemap.xml은 자동 생성되므로 GSC 등록만 하면 자동 색인됨")
 
 
 def submit_naver_sitemap():

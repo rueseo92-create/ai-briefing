@@ -349,10 +349,15 @@ def _generate_topics_claude(topic: str, count: int) -> list[TopicData]:
 - {one_week_ago} ~ {today} 사이에 발표/공개/업데이트된 내용 위주
 - 과거 연도(2024, 2025) 정보를 현재처럼 쓰지 말 것
 
+절대 금지 (할루시네이션 방지):
+- 존재하지 않는 정부사업, 지원금, 공모전을 만들어내지 말 것
+- 실제 확인되지 않은 URL을 만들지 말 것
+- 구체적 금액/마감일/선정 규모 등을 지어내지 말 것
+- "gov-projects" 카테고리는 사용 금지 (크롤링 데이터 기반으로만 생성됨)
+
 토픽 유형 (골고루 섞어서):
 - ai-news: AI 업계 최신 뉴스, 모델 출시, 기업 동향 (이번 주 뉴스)
-- gov-projects: 정부 AI 지원사업, 공모전, 보조금 (현재 모집 중인 것만)
-- ai-tools: ChatGPT, Claude, Midjourney 등 AI 도구 최신 업데이트/비교
+- ai-tools: ChatGPT, Claude, Midjourney 등 AI 도구 최신 업데이트/비교/활용법
 - tutorials: AI 활용법 단계별 가이드 (2026년 최신 버전 기준)
 - marketing: AI 기반 마케팅 자동화 전략, 도구, 퍼널, CRM, 이메일/SNS 자동화
 
@@ -375,7 +380,7 @@ SEO 기준:
   "topics": [
     {{
       "title": "블로그 제목 (60자 이하, SEO 최적화, 2026년 포함)",
-      "category": "ai-news/gov-projects/ai-tools/tutorials/marketing",
+      "category": "ai-news/ai-tools/tutorials/marketing",
       "summary": "핵심 내용 2-3줄 (2026년 기준)",
       "difficulty": "beginner/intermediate/advanced",
       "tags": ["태그1", "태그2", "태그3", "태그4"]
@@ -481,9 +486,16 @@ BLOG_PROMPT = """당신은 SEO·GEO(Generative Engine Optimization)에 특화된
 
 6. 분량: 2500~3500자
 
-7. 정보 기준
+7. 정보 정확성 (매우 중요! — 할루시네이션 절대 금지)
+   - 존재하지 않는 정부사업, 보조금, 공모전을 절대 만들어내지 말 것
+   - 구체적 지원금액, 마감일, 선정 규모를 지어내지 말 것
+   - 실제 확인되지 않은 URL을 절대 만들지 말 것
+   - 출처 URL은 반드시 실제 존재하는 공식 도메인의 메인 페이지만 사용
+     예: "https://openai.com", "https://www.msit.go.kr" (OK)
+     예: "https://msit.go.kr/ai-startup-2026" (금지 — 실제 존재 확인 불가)
+   - 확실하지 않은 정보는 "~로 알려져 있다", "~한 것으로 보인다"와 같은 추정 표현 사용
+   - 정부 정책/사업은 크롤링으로 확인된 경우에만 구체적으로 언급
    - 반드시 2026년 최신 정보만 작성 (과거 연도 정보 사용 금지)
-   - 날짜, 금액, 정책 등은 모두 2026년 기준으로 작성
    - "2024년", "2025년" 등 과거 데이터를 현재 정보처럼 쓰지 말 것
 
 8. 표(Table) 작성 규칙 — 중요!
@@ -500,10 +512,12 @@ BLOG_PROMPT = """당신은 SEO·GEO(Generative Engine Optimization)에 특화된
    - 셀 안에 파이프(|) 문자 사용 금지
    - 최소 1개 이상의 표를 포함할 것
 
-9. 참고 자료
-   - 본문에서 참조할 수 있는 출처 정보 포함
-   - 정부 사이트, 공식 문서, 뉴스 등
-   - 출처는 신뢰도 높은 기관 우선 (정부, 학술, 공식 보고서)
+9. 참고 자료 (출처 URL 규칙)
+   - sources의 URL은 반드시 실제 존재하는 공식 웹사이트의 메인 페이지 또는 알려진 경로만 사용
+   - 절대 URL을 지어내지 말 것. 확실하지 않으면 해당 기관의 메인 도메인만 제공
+   - 허용 예: "https://openai.com", "https://www.anthropic.com", "https://www.msit.go.kr"
+   - 금지 예: "https://msit.go.kr/specific-fake-path-2026" (존재 확인 불가능한 경로)
+   - 출처는 신뢰도 높은 기관 우선 (공식 사이트, 학술, 공식 보고서)
 
 반드시 아래 JSON만 출력:
 {{
@@ -522,8 +536,31 @@ BLOG_PROMPT = """당신은 SEO·GEO(Generative Engine Optimization)에 특화된
 }}"""
 
 
+def _validate_source_url(url: str) -> bool:
+    """출처 URL이 합리적인지 간단 검증 (가짜 경로 차단)"""
+    if not url or not url.startswith("http"):
+        return False
+    # 메인 도메인만 허용하거나 알려진 경로 패턴만 허용
+    # 너무 구체적인 가짜 경로 차단 (예: /ai-startup-2026, /voucher-2026)
+    suspicious_patterns = [
+        r"/ai-\w+-202[0-9]",  # /ai-something-2026 같은 만들어낸 경로
+        r"/voucher-202[0-9]",
+        r"/startup-202[0-9]",
+        r"/subsidy-202[0-9]",
+    ]
+    for pat in suspicious_patterns:
+        if re.search(pat, url):
+            return False
+    return True
+
+
 def generate_blog_post(topic: TopicData) -> BlogPost:
     """Claude API로 SEO 최적화 블로그 글 생성"""
+    # gov-projects 카테고리는 크롤링 데이터 없이 생성 불가
+    if topic.category == "gov-projects" and not topic.source_url:
+        print(f"  [차단] gov-projects는 크롤링 소스 없이 생성 불가: {topic.title}")
+        raise RuntimeError(f"gov-projects 카테고리는 크롤링된 source_url이 필요합니다: {topic.title}")
+
     print(f"[2/7] 블로그 글 생성 중... (토픽: {topic.title})")
 
     prompt_content = BLOG_PROMPT.format(
@@ -538,13 +575,25 @@ def generate_blog_post(topic: TopicData) -> BlogPost:
     for attempt in range(3):
         response = claude.messages.create(
             model=CLAUDE_MODEL,
-            max_tokens=8192,
+            max_tokens=16384,
             messages=[{"role": "user", "content": prompt_content}],
         )
         text = response.content[0].text.strip()
+        stop_reason = response.stop_reason
+
+        # 잘림 감지: end_turn이 아닌 경우 (max_tokens 등)
+        if stop_reason != "end_turn":
+            print(f"  [경고] 응답이 잘렸습니다 (stop_reason={stop_reason}), 재시도...")
+            continue
+
         text = re.sub(r"```json\s*|```", "", text).strip()
         data = _safe_json_parse(text)
         if data and "content" in data:
+            # 본문 잘림 추가 검증: 마지막 문자가 문장 종결인지 확인
+            content = data["content"].rstrip()
+            if content and not content[-1] in ".다요죠세습까!?\n":
+                print(f"  [경고] 본문이 중간에 끊김 감지, 재시도...")
+                continue
             break
         print(f"  [재시도 {attempt+1}/3] JSON 파싱 실패, 다시 생성...")
 
@@ -554,12 +603,16 @@ def generate_blog_post(topic: TopicData) -> BlogPost:
     # 마크다운 표 후처리 (깨진 표 수정)
     data["content"] = _fix_markdown_tables(data["content"])
 
-    # 소스 링크 처리
+    # 소스 링크 처리 (가짜 URL 필터링)
     sources = []
     for s in data.get("sources", []):
+        url = s.get("url", "")
+        if url and not _validate_source_url(url):
+            print(f"  [필터] 의심스러운 출처 URL 제거: {url}")
+            continue
         sources.append(SourceLink(
             name=s.get("name", "출처"),
-            url=s.get("url", ""),
+            url=url,
             type=s.get("type", "news"),
         ))
     # 크롤링 원본 출처 추가
@@ -643,22 +696,39 @@ def review_and_polish(post: BlogPost) -> str:
     density = analyze_keyword_density(post.content, post.main_keyword)
     print(f"  → 키워드 밀도: {density['density']:.1f}% ({density['status']})")
 
-    response = claude.messages.create(
-        model=CLAUDE_MODEL,
-        max_tokens=4096,
-        messages=[{
-            "role": "user",
-            "content": REVIEW_PROMPT.format(
-                keyword=post.main_keyword,
-                content=post.content,
-                density_status=f"{density['density']:.1f}% - {density['status']}",
-            ),
-        }],
-    )
+    for attempt in range(2):
+        response = claude.messages.create(
+            model=CLAUDE_MODEL,
+            max_tokens=16384,
+            messages=[{
+                "role": "user",
+                "content": REVIEW_PROMPT.format(
+                    keyword=post.main_keyword,
+                    content=post.content,
+                    density_status=f"{density['density']:.1f}% - {density['status']}",
+                ),
+            }],
+        )
 
-    polished = response.content[0].text.strip()
-    print(f"  → 교정 완료 ({len(polished)}자)")
-    return polished
+        polished = response.content[0].text.strip()
+        stop_reason = response.stop_reason
+
+        # 잘림 감지
+        if stop_reason != "end_turn":
+            print(f"  [경고] SEO 리뷰 응답이 잘렸습니다 (stop_reason={stop_reason}), 재시도...")
+            continue
+
+        # 본문 잘림 추가 검증
+        if polished and not polished.rstrip()[-1] in ".다요죠세습까!?\n*)`":
+            print(f"  [경고] 리뷰 본문이 중간에 끊김 감지, 재시도...")
+            continue
+
+        print(f"  → 교정 완료 ({len(polished)}자)")
+        return polished
+
+    # 2회 시도 후에도 잘리면 원본 유지
+    print(f"  [주의] 리뷰 잘림 지속, 원본 본문 유지 ({len(post.content)}자)")
+    return post.content
 
 
 def run_seo_audit(post: BlogPost) -> BlogPost:

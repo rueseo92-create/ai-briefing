@@ -1,0 +1,146 @@
+---
+title: "Guía completa de SEO·AEO·GEO ⑤ Estrategias GEO y checklist completo de configuración"
+description: "6 estrategias GEO para que ChatGPT, Claude y Perplexity citen tu blog, más un checklist completo de configuración SEO·AEO·GEO."
+date: "2026-03-30T18:40:00"
+category: "tutorials"
+tags: ["GEO", "AI최적화", "체크리스트", "ChatGPT인용", "블로그최적화"]
+thumbnail: ""
+difficulty: "intermediate"
+tldr: "GEO se centra en 6 estrategias clave: distribución de llms.txt, permitir crawlers de AI, insertar estadísticas, tablas comparativas, citar fuentes y estructura de respuestas inmediatas. Completa los 22 elementos del checklist para finalizar tu configuración SEO·AEO·GEO."
+published: true
+sources:
+  - name: "Princeton GEO 연구 논문"
+    url: "https://arxiv.org/abs/2311.09735"
+    type: "paper"
+  - name: "llms.txt 공식 사이트"
+    url: "https://llmstxt.org"
+    type: "official"
+  - name: "Perplexity AI 인용 가이드"
+    url: "https://docs.perplexity.ai"
+    type: "official"
+---
+
+¿Imagina que al hacer una pregunta a ChatGPT, tu artículo del blog aparezca citado en la respuesta? En 2026, esto se está convirtiendo en un nuevo canal de tráfico. Este artículo presenta estrategias GEO (Optimización de IA Generativa) y un checklist que resume toda la serie.
+
+> Respuesta clave: GEO es una estrategia para hacer que las IA como ChatGPT, Claude y Perplexity citen el contenido del blog al responder. Según la investigación de Princeton, aplicar GEO puede aumentar la tasa de citación por IA hasta un 40% (fuente: Princeton GEO Research, 2024).
+
+---
+
+## ¿Por qué es importante GEO?
+
+A partir de 2026, más de 1.800 millones de personas en todo el mundo utilizan chatbots de IA mensualmente (fuente: Statista, 2026). Si mi blog se incluye en el contenido que la IA referencia al responder sus preguntas, se crea una ruta de entrada completamente nueva.
+
+### Diferencias entre SEO tradicional vs GEO
+
+| Criterio | SEO | GEO |
+|----------|-----|-----|
+| Objetivo | Buscadores Google/Naver | ChatGPT/Claude/Perplexity |
+| Forma de exposición | Lista de enlaces | Citación en respuestas de IA |
+| Elementos clave | Palabras clave, backlinks | Estadísticas, fuentes, respuestas estructuradas |
+| Medición | Ranking de búsqueda, CTR | Número de citaciones por IA |
+| Dificultad de aplicación | Intermedio | Fácil (hábitos de escritura) |
+
+> Clave: GEO se centra más en cambios en la forma de escribir contenido que en implementaciones técnicas separadas. Si ya escribes buen contenido, solo necesitas agregar algunos hábitos.
+
+---
+
+## 6 estrategias clave de GEO
+
+### 1. Distribución de archivo llms.txt
+
+Resume la información clave del sitio en `public/llms.txt`. Los crawlers de IA leen este archivo para identificar las áreas de especialización del sitio. Consulta [configuración técnica de archivos SEO](/posts/2026-03-30-seo-aeo-geo-guide-3-technical-seo) para métodos detallados de creación.
+
+### 2. Permitir crawlers de IA
+
+Permite el crawling de GPTBot, Claude-Web y PerplexityBot en `robots.txt`. Si los bloqueas, los servicios de IA no podrán referenciar el contenido del blog.
+
+### 3. Insertar estadísticas/datos
+
+Incluir cifras específicas en los artículos aumenta la probabilidad de citación por IA en +30-40%. Por ejemplo:
+
+- "El tamaño del mercado de automatización de blogs con IA es aproximadamente 2.4 mil millones de dólares" (con fuente citada)
+- "Crecimiento del 35% interanual"
+- "Aproximadamente 8.5 millones de usuarios domésticos"
+
+> Respuesta clave: El tipo de contenido que la IA cita con más frecuencia son las oraciones que incluyen cifras específicas. Insertar una estadística cada 150-200 caracteres es un hábito básico de GEO.
+
+### 4. Tablas comparativas/información estructurada
+
+La IA extrae y cita mejor contenido estructurado como tablas comparativas A vs B, tablas de pros y contras, guías paso a paso. Utiliza activamente las tablas de markdown.
+
+### 5. Especificar fuentes y fechas
+
+Indicar claramente fechas de creación, modificación y fuentes de datos hace que la IA juzgue el contenido como de alta credibilidad. Incluye naturalmente el formato "(fuente: nombre de institución, año)" en el texto.
+
+### 6. Respuestas completas a preguntas en lenguaje natural
+
+Proporciona respuestas completas en el primer párrafo a preguntas como "¿Qué es OO?", "¿Cómo hacer OO?". La IA cita preferentemente oraciones de respuesta claras de 40-60 caracteres.
+
+---
+
+## Checklist completo de configuración
+
+Este es un checklist que resume todo el contenido de los 5 episodios de esta serie. Completa cada elemento para finalizar tu configuración SEO·AEO·GEO.
+
+### Registro en motores de búsqueda (7 elementos)
+
+1. Registro y verificación de propiedad en Google Search Console
+2. Envío de sitemap.xml a GSC
+3. Envío de feed.xml a GSC
+4. Registro y verificación de propiedad en Naver Search Advisor
+5. Envío de sitemap a Naver
+6. Envío de RSS a Naver
+7. Solicitud de recopilación de URL principal a Naver
+
+### Archivos técnicos SEO (5 elementos)
+
+1. Distribución de robots.txt (incluye crawlers de IA)
+2. Verificación de generación automática de sitemap.xml
+3. Verificación de generación de feed.xml (RSS)
+4. Distribución de llms.txt (para GEO)
+5. Metaetiquetas de cada página (title, description, og:image)
+
+### Datos estructurados (3 elementos)
+
+1. Schema WebSite (una vez en layout.tsx)
+2. Schema Article (cada post)
+3. Schema FAQPage (páginas con FAQ)
+
+### Contenido AEO/GEO (7 elementos)
+
+1. Cambiar títulos a formato de pregunta
+2. Estructura de respuesta inmediata de 50-100 caracteres en primer párrafo
+3. Subtítulos H2/H3 en formato de pregunta
+4. Agregar sección FAQ al final del artículo
+5. Incluir tablas comparativas/datos
+6. Especificar fechas de creación/modificación/fuentes
+7. Insertar estadísticas cada 150-200 caracteres
+
+> Clave: Son 22 elementos en total. El registro en motores de búsqueda y SEO técnico se hacen una sola vez, mientras que las reglas de contenido AEO/GEO deben aplicarse repetidamente cada vez que escribas.
+
+---
+
+## Lista completa de la serie
+
+| Ep. | Título | Contenido clave |
+|-----|--------|-----------------|
+| ① | [Resumen SEO·AEO·GEO](/posts/2026-03-30-seo-aeo-geo-guide-1-overview) | Diferencias y prioridades de las tres estrategias |
+| ② | [Registro Search Console](/posts/2026-03-30-seo-aeo-geo-guide-2-search-console) | Métodos de registro en Google/Naver Search Console |
+| ③ | [Configuración SEO técnico](/posts/2026-03-30-seo-aeo-geo-guide-3-technical-seo) | robots.txt, sitemap, llms.txt |
+| ④ | [Datos estructurados & AEO](/posts/2026-03-30-seo-aeo-geo-guide-4-schema-aeo) | Schema.org, estrategias de contenido AEO |
+| ⑤ | Estrategias GEO & checklist (artículo actual) | 6 estrategias GEO, checklist completo |
+
+---
+
+## Preguntas frecuentes
+
+### P1. ¿Los efectos aparecen inmediatamente al completar todo el checklist?
+R1. Los efectos SEO suelen empezar a aparecer después de 2-4 semanas. AEO después de 2-4 semanas de aplicar datos estructurados, y GEO después de que el contenido sea indexado por la IA. Lo más importante es publicar constantemente buen contenido.
+
+### P2. ¿GEO es efectivo también para blogs personales?
+R2. Sí, los blogs personales tienen ventajas en temas de nicho. Puedes convertirte en la única fuente que la IA puede citar para temas específicos que los grandes medios no cubren (ej: "Método de automatización de blogs Next.js").
+
+### P3. ¿Puedo optimizar para GEO artículos ya publicados?
+R3. Por supuesto. Puedes aplicar adición de estadísticas, especificación de fuentes, mejora de secciones FAQ, mejora de estructura de respuesta inmediata a artículos existentes. Después de modificar, solicita reindexación en Google Search Console para reflejarlo rápidamente.
+
+¡Si esta serie te fue útil, consulta más guías en [todos los tutoriales](/categories/tutorials)!

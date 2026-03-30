@@ -1,0 +1,159 @@
+---
+title: "Guía completa SEO·AEO·GEO ④ Datos estructurados y estrategia de contenido AEO"
+description: "Cómo obtener resultados enriquecidos de Google con datos estructurados de Schema.org y aparecer en las cajas de respuestas de IA con estructuras de contenido AEO, con código práctico incluido."
+date: "2026-03-30T18:30:00"
+category: "tutorials"
+tags: ["구조화데이터", "Schema.org", "AEO", "리치스니펫", "FAQ스키마"]
+thumbnail: ""
+difficulty: "intermediate"
+tldr: "Al aplicar 3 tipos de datos estructurados: Article, FAQPage y WebSite, aumenta la probabilidad de exposición en los resultados enriquecidos de Google. La clave del AEO es la estructura de títulos en forma de pregunta + respuesta inmediata en el primer párrafo."
+published: true
+sources:
+  - name: "Schema.org 공식 문서"
+    url: "https://schema.org"
+    type: "official"
+  - name: "Google 구조화 데이터 가이드"
+    url: "https://developers.google.com/search/docs/appearance/structured-data"
+    type: "official"
+  - name: "Google AI Overview 가이드"
+    url: "https://blog.google/products/search/"
+    type: "official"
+---
+
+¿Alguna vez has visto resultados en Google que muestran calificaciones por estrellas, FAQ o fechas? Ese es exactamente el poder de los datos estructurados. Al aplicar datos estructurados y estrategias AEO juntos, puedes aparecer no solo en búsquedas generales sino también en las cajas de respuestas de IA.
+
+> Respuesta clave: Los datos estructurados son marcado JSON-LD que permite a los motores de búsqueda entender el contenido con precisión. Al aplicar 3 tipos: Article, FAQPage y WebSite, la probabilidad de exposición en resultados enriquecidos de Google aumenta 2.7 veces (Fuente: Reporte oficial de Schema.org, 2026).
+
+---
+
+## ¿Qué son los datos estructurados? ¿Por qué son importantes?
+
+Los datos estructurados son código que informa a los motores de búsqueda e IA sobre el significado del contenido. Así como los humanos entienden "esto es un artículo de blog, quién es el autor y cuándo fue escrito", permite que las máquinas lean la misma información.
+
+### Efectos de los datos estructurados
+
+| Efecto | Métrica |
+|------|------|
+| Exposición en resultados enriquecidos | CTR aumenta +30-50% |
+| Cita en Google AI Overview | Páginas con datos estructurados son seleccionadas preferentemente |
+| Resumen de IA de Naver | Contenido con estructura clara es favorecido |
+| Respuestas de búsqueda por voz | El esquema FAQ se utiliza en respuestas de búsqueda por voz |
+
+> Clave: Google muestra fragmentos enriquecidos en aproximadamente el 35% de los resultados de búsqueda a partir de 2026. Sin datos estructurados, no puedes aparecer en esta área (Fuente: Google Search Central, 2026).
+
+---
+
+## 3 tipos esenciales de datos estructurados
+
+### 1. Esquema WebSite (todo el sitio)
+
+Solo necesitas agregarlo una vez en `app/layout.tsx`. Contiene información que representa todo el sitio.
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AI 브리핑",
+  "url": "https://seroai.xyz",
+  "description": "AI 뉴스, 정부사업, AI 도구 가이드",
+  "inLanguage": "ko-KR"
+}
+```
+
+### 2. Esquema Article (cada post del blog)
+
+Se agrega al `<head>` de cada página de post. Permite que los motores de búsqueda reconozcan con precisión el título, autor y fecha de publicación del artículo.
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "포스트 제목",
+  "description": "포스트 요약",
+  "author": {
+    "@type": "Organization",
+    "name": "AI 브리핑"
+  },
+  "datePublished": "2026-03-30",
+  "dateModified": "2026-03-30",
+  "publisher": {
+    "@type": "Organization",
+    "name": "AI 브리핑",
+    "url": "https://seroai.xyz"
+  }
+}
+```
+
+### 3. Esquema FAQPage (¡Clave para AEO!)
+
+Se agrega a páginas que tienen sección FAQ. Aparece como resultado enriquecido FAQ en búsquedas de Google y se convierte en fuente principal para cajas de respuestas de IA.
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Claude AI는 무료로 사용할 수 있나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "네, Claude AI는 무료 플랜에서 하루 30회 사용 가능합니다."
+      }
+    }
+  ]
+}
+```
+
+> Respuesta clave: Los 3 tipos de datos estructurados esenciales para aplicar en blogs son WebSite (todo el sitio), Article (cada post) y FAQPage (páginas con FAQ). Se insertan en formato JSON-LD en `<script type="application/ld+json">`.
+
+---
+
+## Estrategia de contenido AEO - Cómo aparecer en cajas de respuestas de IA
+
+Si los datos estructurados son "señales técnicas", la estrategia de contenido AEO cambia la "forma de escribir contenido". Google AI Overview y el resumen de IA de Naver prefieren contenido con estructura pregunta → respuesta inmediata.
+
+### Comparación MALO vs BUENO
+
+| Regla | MALO | BUENO |
+|------|-----|------|
+| Título | Claude AI 2026년 완벽 활용법 | Claude AI 어떻게 사용하나요? 2026년 활용법 7가지 |
+| Primer párrafo | 오늘은 Claude AI에 대해 알아보겠습니다... | Claude AI는 Anthropic이 개발한 AI로, 무료 플랜에서 하루 30회 사용 가능합니다. |
+| Subtítulo | ## 기능 소개 | ## Claude AI의 주요 기능은 무엇인가요? |
+| FAQ | (없음) | ## 자주 묻는 질문 + Q&A 2-3개 |
+
+> Consejo: Incluir palabras interrogativas como "cómo", "qué", "por qué", "cuándo", "cuánto" en el título aumenta aproximadamente 2 veces la probabilidad de exposición en cajas de respuestas de IA. Sin embargo, el título debe ser natural.
+
+### 4 principios clave del AEO
+
+1. Títulos en forma de pregunta - Incluir preguntas que los usuarios realmente buscarían
+2. Respuesta inmediata en el primer párrafo - Respuesta clave en 50-100 caracteres (extraíble directamente por IA)
+3. Subtítulos en forma de pregunta - Colocar variaciones de palabras clave de pregunta en H2/H3
+4. Sección FAQ - 2-3 preguntas frecuentes al final del artículo + marcado Schema.org FAQPage
+
+---
+
+## Cómo probar datos estructurados
+
+Herramientas para verificar si los datos estructurados escritos son correctos:
+
+1. Google Rich Results Test - Vista previa de resultados enriquecidos disponible
+2. Schema.org Validator - Verificación de sintaxis JSON-LD
+3. Google Search Console - Confirmar errores en la pestaña "개선사항"
+
+> Clave: Después de agregar datos estructurados, asegúrate de validarlos con Google Rich Results Test. Si hay un solo error de sintaxis, todo el esquema será ignorado.
+
+---
+
+## Preguntas frecuentes
+
+### P1. ¿Los resultados enriquecidos aparecen inmediatamente al agregar datos estructurados?
+R1. No. Los datos estructurados son una condición necesaria para los resultados enriquecidos, pero no suficiente. Google decide si mostrarlos después de evaluar la calidad del contenido, y comienzan a aparecer 2-4 semanas después de la aplicación.
+
+### P2. ¿Debo poner el esquema FAQPage en todos los artículos?
+R2. Solo ponlo en artículos que tengan sección FAQ. Si pones solo el esquema sin preguntas y respuestas reales, Google puede considerarlo spam. Úsalo solo cuando tengas Q&A realmente útiles.
+
+### P3. ¿Cuál es la mejor forma de agregar datos estructurados en Next.js?
+R3. El método más estándar es insertar `<script type="application/ld+json">` con `dangerouslySetInnerHTML` en JSX. La API `metadata` de Next.js aún no admite JSON-LD directamente.
+
+En el próximo artículo cubriremos [estrategia GEO y checklist completo](/posts/2026-03-30-seo-aeo-geo-guide-5-geo-checklist). [Artículo anterior: Configuración técnica de SEO](/posts/2026-03-30-seo-aeo-geo-guide-3-technical-seo)

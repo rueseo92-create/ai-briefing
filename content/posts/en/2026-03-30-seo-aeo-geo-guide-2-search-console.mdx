@@ -1,0 +1,122 @@
+---
+title: "Complete Guide to SEO·AEO·GEO ② How to Register with Google·Naver Search Console"
+description: "A step-by-step guide to the essential process of notifying search engines about your blog, from registering with Google Search Console and Naver Search Advisor to submitting sitemaps."
+date: "2026-03-30T18:10:00"
+category: "tutorials"
+tags: ["구글서치콘솔", "네이버서치어드바이저", "SEO", "사이트맵", "검색등록"]
+thumbnail: ""
+difficulty: "beginner"
+tldr: "By registering your site with Google Search Console and Naver Search Advisor and submitting sitemaps, search engines will begin crawling your blog. HTML meta tag verification is the most convenient ownership verification method."
+published: true
+sources:
+  - name: "Google Search Console 고객센터"
+    url: "https://support.google.com/webmasters"
+    type: "official"
+  - name: "네이버 서치 어드바이저 가이드"
+    url: "https://searchadvisor.naver.com/guide"
+    type: "official"
+---
+
+If you've created a blog but it doesn't appear when you search on Google or Naver, you need to directly notify search engines by saying "my site is here." This article provides a step-by-step guide to registering with Google Search Console and Naver Search Advisor.
+
+> Key Answer: By registering your site with Google Search Console and Naver Search Advisor and submitting sitemap.xml, search engines will recognize your blog and begin crawling. It typically takes 2-7 days from registration to indexing.
+
+---
+
+## How to Register with Google Search Console
+
+Google Search Console (GSC) is the essential first step for Google search visibility. As of 2026, Google holds approximately 91% of the global search market share (Source: StatCounter, 2026).
+
+### 7 Steps to GSC Registration
+
+1. Go to search.google.com/search-console and log in with your Google account
+2. Click "Add Property" → Select "URL prefix" → Enter `https://seroai.xyz`
+3. Verify ownership → Select "HTML tag" method (most convenient)
+4. Copy the meta tag code and add it to your Next.js `app/layout.tsx`
+
+> Pro Tip: In Next.js, adding a `verification` field to the `metadata` object is the cleanest approach.
+
+Code example:
+
+```typescript
+// app/layout.tsx
+export const metadata = {
+  verification: {
+    google: 'verification_code_from_GSC',
+  },
+};
+```
+
+5. Deploy to Vercel → Click 'Verify' in GSC
+6. Go to "Sitemaps" in the left menu → Submit `sitemap.xml`
+7. Also submit `feed.xml` (RSS feed)
+
+### What You Can Check in GSC
+
+| Item | Description |
+|------|------|
+| Search Performance | Clicks, impressions, CTR, average position |
+| Indexing | Number of pages recognized by Google |
+| Sitemaps | Processing status of submitted URLs |
+| Experience | Core Web Vitals scores |
+
+> Key Point: After GSC registration, using the "URL Inspection" tool to request indexing every time you publish a new post can speed up Google visibility by 2-3 days.
+
+---
+
+## How to Register with Naver Search Advisor
+
+If you're targeting the Korean market, Naver registration is essential. As of 2026, Naver holds approximately 28% of the Korean search market while Google holds about 62% (Source: InternetTrend, 2026). Naver traffic is too significant to ignore.
+
+### 8 Steps to Naver Search Advisor Registration
+
+1. Go to searchadvisor.naver.com → Log in with Naver
+2. "Register Site" → Enter `https://seroai.xyz`
+3. Verify ownership → Select "HTML tag" method
+4. Copy the meta tag and add it to layout.tsx
+
+```typescript
+// app/layout.tsx (Google + Naver together)
+export const metadata = {
+  verification: {
+    google: 'GSC_verification_code',
+    other: {
+      'naver-site-verification': 'Naver_verification_code',
+    },
+  },
+};
+```
+
+5. Deploy and click 'Verify' in Naver
+6. Request → Submit Sitemap → `sitemap.xml`
+7. Request → Submit RSS → `feed.xml`
+8. Request → Web Page Collection → Request collection of main URL
+
+> Key Answer: In Naver Search Advisor, you must submit sitemap, RSS, and web page collection requests. Submitting all three typically results in Naver visibility within 3-5 days on average.
+
+---
+
+## Post-Registration Checklist
+
+Once you've registered with both services, check the following:
+
+1. Sitemap Status — Confirm "Success" status in both GSC and Naver
+2. Index Status — After 3-7 days of registration, search `site:seroai.xyz` on Google to verify indexing
+3. Error Check — Check for crawling errors in the GSC "Pages" tab
+
+> Pro Tip: Using GSC's URL Inspection tool and Naver's web page collection request every time you publish new content can significantly speed up indexing.
+
+---
+
+## Frequently Asked Questions
+
+### Q1. My site doesn't appear in search results after Search Console registration?
+A1. Indexing takes 2-7 days. Check if your sitemap was submitted properly, try requesting individual page indexing with the URL Inspection tool, and verify that crawling isn't blocked in robots.txt.
+
+### Q2. Should I choose URL prefix or domain verification method?
+A2. URL prefix method is more convenient for personal blogs. The domain method requires DNS configuration which is complex, and all features are available with the URL prefix method.
+
+### Q3. How often should I update my sitemap?
+A3. If you use Next.js auto-generated sitemaps, they update automatically with every build. You don't need to resubmit separately as search engines check periodically.
+
+In the next article, we'll cover [Technical SEO File Setup (robots.txt, sitemap, llms.txt)](/posts/2026-03-30-seo-aeo-geo-guide-3-technical-seo). [Previous article: SEO·AEO·GEO Overview](/posts/2026-03-30-seo-aeo-geo-guide-1-overview)

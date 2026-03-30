@@ -1,0 +1,122 @@
+---
+title: "SEO·AEO·GEO 完全指南 ② Google·Naver 搜索控制台注册方法"
+description: "从Google Search Console和Naver搜索顾问注册到网站地图提交，逐步指导如何向搜索引擎介绍你的博客的必要过程。"
+date: "2026-03-30T18:10:00"
+category: "tutorials"
+tags: ["구글서치콘솔", "네이버서치어드바이저", "SEO", "사이트맵", "검색등록"]
+thumbnail: ""
+difficulty: "beginner"
+tldr: "在Google Search Console和Naver搜索顾问注册网站并提交网站地图后，搜索引擎就会开始爬取博客。所有权验证使用HTML元标签方式最简便。"
+published: true
+sources:
+  - name: "Google Search Console 고객센터"
+    url: "https://support.google.com/webmasters"
+    type: "official"
+  - name: "네이버 서치 어드바이저 가이드"
+    url: "https://searchadvisor.naver.com/guide"
+    type: "official"
+---
+
+如果创建了博客但在Google或Naver搜索不到的话？需要直接向搜索引擎告知"我的网站在这里"的过程。本文将逐步指导Google Search Console和Naver搜索顾问的注册方法。
+
+> 核心答案：在Google Search Console和Naver搜索顾问注册网站并提交sitemap.xml后，搜索引擎就会识别博客并开始爬取。注册后到索引通常需要2-7天时间。
+
+---
+
+## Google Search Console 注册方法
+
+Google Search Console（GSC）是Google搜索曝光的必要第一步。截至2026年，Google在全球搜索市场的占有率约为91%（来源：StatCounter, 2026）。
+
+### GSC 注册7步骤
+
+1. 访问search.google.com/search-console，使用Google账户登录
+2. 点击"添加资源"→选择"网址前缀"→输入`https://seroai.xyz`
+3. 所有权验证→选择"HTML标签"方式（最简便）
+4. 复制元标签代码并添加到Next.js `app/layout.tsx`中
+
+> 小贴士：在Next.js中，在`metadata`对象中添加`verification`字段是最简洁的方法。
+
+代码示例：
+
+```typescript
+// app/layout.tsx
+export const metadata = {
+  verification: {
+    google: 'GSC中获取的验证码',
+  },
+};
+```
+
+5. 部署到Vercel→在GSC点击"验证"
+6. 左侧菜单"站点地图"→提交`sitemap.xml`
+7. 同时提交`feed.xml`（RSS源）
+
+### GSC中可以确认的内容
+
+| 项目 | 说明 |
+|------|------|
+| 搜索效果 | 点击次数、展示次数、CTR、平均排名 |
+| 索引创建 | Google识别的页面数 |
+| 站点地图 | 已提交URL的处理状态 |
+| 体验 | Core Web Vitals分数 |
+
+> 核心：GSC注册后，每次发布新文章时使用"URL检查"工具请求索引，可以让Google曝光提前2-3天。
+
+---
+
+## Naver 搜索顾问注册方法
+
+如果目标是韩国市场，那么Naver注册是必须的。截至2026年，在韩国搜索市场中Naver占有率约为28%，Google约为62%（来源：InternetTrend, 2026）。Naver流量也是不可忽视的数字。
+
+### Naver 搜索顾问注册8步骤
+
+1. 访问searchadvisor.naver.com→Naver登录
+2. "网站注册"→输入`https://seroai.xyz`
+3. 所有权确认→选择"HTML标签"方式
+4. 复制元标签并添加到layout.tsx中
+
+```typescript
+// app/layout.tsx (Google + Naver同时)
+export const metadata = {
+  verification: {
+    google: 'GSC_验证码',
+    other: {
+      'naver-site-verification': 'Naver_验证码',
+    },
+  },
+};
+```
+
+5. 部署后在Naver点击"确认"
+6. 请求→站点地图提交→`sitemap.xml`
+7. 请求→RSS提交→`feed.xml`
+8. 请求→网页收集→主页URL收集请求
+
+> 核心答案：在Naver搜索顾问中，必须提交站点地图、RSS、网页收集全部内容。提交所有三项后，平均需要3-5天才能在Naver曝光。
+
+---
+
+## 注册后确认事项
+
+两个服务都注册完成后，请检查以下事项：
+
+1. 站点地图状态 — 在GSC和Naver中都确认显示"成功"
+2. 索引状态 — 注册后3-7天后用`site:seroai.xyz`在Google搜索确认索引
+3. 错误检查 — 在GSC"页面"标签确认没有爬取错误
+
+> 小贴士：每次发布新文章时使用GSC的URL检查工具和Naver的网页收集请求，可以大幅缩短索引速度。
+
+---
+
+## 常见问题
+
+### Q1. 注册搜索控制台后搜索不到怎么办？
+A1. 索引需要2-7天时间。请确认站点地图是否正常提交，并尝试使用URL检查工具请求单个页面索引。同时确认robots.txt中没有阻止爬取。
+
+### Q2. URL前缀和域名方式应该选择哪个？
+A2. 个人博客选择URL前缀方式更简便。域名方式需要DNS设置比较复杂，而使用URL前缀也能使用所有功能。
+
+### Q3. 站点地图需要多久更新一次？
+A3. 如果使用Next.js的自动生成站点地图，每次构建时都会自动更新。无需单独重新提交，搜索引擎会定期检查。
+
+下一篇文章将介绍[技术性SEO文件设置（robots.txt, sitemap, llms.txt）](/posts/2026-03-30-seo-aeo-geo-guide-3-technical-seo)。[上一篇：SEO·AEO·GEO概述](/posts/2026-03-30-seo-aeo-geo-guide-1-overview)

@@ -1,0 +1,78 @@
+name: Weekly Newsletter + Community Seeds
+
+on:
+  schedule:
+    # 매주 일요일 09:00 KST (토요일 24:00 UTC)
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: '실행 항목'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - newsletter-only
+          - seeds-only
+      send_newsletter:
+        description: '뉴스레터 실제 발송'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install anthropic python-dotenv
+
+      # ── 뉴스레터 다이제스트 ──
+      - name: Generate newsletter digest
+        if: ${{ github.event.inputs.action != 'seeds-only' }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BLOG_REPO_PATH: ${{ github.workspace }}
+          BLOG_SITE_URL: https://seroai.xyz
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          cd scripts
+          SEND_FLAG=""
+          if [ "${{ github.event.inputs.send_newsletter }}" = "true" ]; then
+            SEND_FLAG="--send"
+          fi
+          python newsletter_digest.py --days 7 $SEND_FLAG
+
+      # ── 커뮤니티 시딩 콘텐츠 ──
+      - name: Generate community seed content
+        if: ${{ github.event.inputs.action != 'newsletter-only' }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BLOG_REPO_PATH: ${{ github.workspace }}
+          BLOG_SITE_URL: https://seroai.xyz
+        run: |
+          cd scripts
+          python community_seed.py --count 3 --platform all
+
+      # ── 결과물 커밋 ──
+      - name: Commit generated content
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add scripts/newsletters/ scripts/community_seeds/
+          git diff --staged --quiet || git commit -m "chore: 주간 뉴스레터/커뮤니티 시딩 $(date +%Y-%m-%d)"
+          git push

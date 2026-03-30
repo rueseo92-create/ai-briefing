@@ -1,0 +1,154 @@
+---
+title: "Complete Guide to SEO·AEO·GEO ③ robots.txt, sitemap, llms.txt Technical Setup"
+description: "Learn how to set up technical SEO files for search engines and AI crawlers. Includes how to create robots.txt, sitemap.xml, feed.xml, llms.txt and Next.js implementation code."
+date: "2026-03-30T18:20:00"
+category: "tutorials"
+tags: ["기술적SEO", "robots.txt", "sitemap", "llms.txt", "NextJS"]
+thumbnail: ""
+difficulty: "intermediate"
+tldr: "Use robots.txt to allow crawling, sitemap.xml to provide page listings, and llms.txt to give site information to AI crawlers. These three files are the core of technical SEO."
+published: true
+sources:
+  - name: "Google robots.txt 사양"
+    url: "https://developers.google.com/search/docs/crawling-indexing/robots/intro"
+    type: "official"
+  - name: "llms.txt 표준 제안"
+    url: "https://llmstxt.org"
+    type: "official"
+  - name: "Next.js 공식 문서 - Metadata"
+    url: "https://nextjs.org/docs/app/api-reference/file-conventions/metadata"
+    type: "official"
+---
+
+Now that you've registered with Search Console, you need to create an environment where search engines and AI crawlers can properly read your site. This article covers the 4 essential technical SEO files.
+
+> Key Answer: The essential technical SEO files are robots.txt (crawling rules), sitemap.xml (page listings), feed.xml (RSS feed), and llms.txt (AI crawler summary). In Next.js, all of these can be generated automatically or semi-automatically.
+
+---
+
+## robots.txt — Crawling Permission Settings
+
+robots.txt is a file that tells search engine crawlers "where they can and cannot read" on your site. In 2026, you also need to consider AI crawlers (GPTBot, Claude-Web, etc.).
+
+### Recommended robots.txt Settings
+
+```
+User-agent: *
+Allow: /
+
+# Allow AI crawlers too
+User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: Claude-Web
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+
+Sitemap: https://seroai.xyz/sitemap.xml
+```
+
+> Pro Tip: If you block AI crawlers, your blog content won't be cited in ChatGPT, Perplexity, etc. Make sure to allow them for GEO purposes.
+
+### Major AI Crawler List
+
+| Crawler | Service | Recommended Setting |
+|--------|--------|-----------|
+| GPTBot | ChatGPT/OpenAI | Allow |
+| ChatGPT-User | ChatGPT Browsing | Allow |
+| Claude-Web | Claude/Anthropic | Allow |
+| PerplexityBot | Perplexity AI | Allow |
+| Googlebot | Google Search | Allow |
+| Yeti | Naver Search | Allow |
+
+---
+
+## sitemap.xml — Provide Complete Page Listings
+
+A sitemap is a file that tells search engines about all your blog's page URLs and update dates. According to Google's official documentation, sites that submit sitemaps have indexing speeds that are 4x faster on average (Source: Google Search Central, 2026).
+
+### Auto-Generate in Next.js
+
+```typescript
+// app/sitemap.ts
+export default async function sitemap() {
+  const posts = getAllPosts(); // Get all posts
+  return [
+    { url: 'https://seroai.xyz', lastModified: new Date() },
+    { url: 'https://seroai.xyz/posts', lastModified: new Date() },
+    ...posts.map(post => ({
+      url: `https://seroai.xyz/posts/${post.slug}`,
+      lastModified: new Date(post.date),
+    })),
+  ];
+}
+```
+
+> Key Point: In Next.js App Router, creating `app/sitemap.ts` automatically generates sitemap.xml during build. When you publish new articles and deploy, it updates automatically with no separate management needed.
+
+---
+
+## feed.xml (RSS) — For Subscriptions and Naver Submission
+
+RSS feed is a standard format that allows people to subscribe to blog posts. It's also a required submission item for Naver Search Advisor. Submitting RSS helps Naver recognize new articles faster.
+
+### RSS Generation Method
+
+```bash
+npm install feed
+```
+
+> Key Answer: feed.xml is a mandatory file to submit to Naver Search Advisor. Generate it automatically with the `feed` package and serve it through Next.js Route Handler (`app/feed.xml/route.ts`).
+
+---
+
+## llms.txt — Site Summary for AI Crawlers (GEO Core)
+
+llms.txt is a new standard proposed in 2025 that provides AI crawlers with a summary of key site information. If robots.txt says "where to read," llms.txt explains "what kind of site this is."
+
+### Recommended llms.txt Structure
+
+```markdown
+# Site Name
+> One-line description
+
+## Main Content
+- Category 1: Description
+- Category 2: Description
+
+## Site Information
+- URL: https://seroai.xyz
+- Language: Korean
+- Update Frequency: Daily
+- RSS: /feed.xml
+- Sitemap: /sitemap.xml
+```
+
+> Key Point: Deploy llms.txt to `public/llms.txt`. AI crawlers read this file to better understand your site, increasing the likelihood of being cited in AI responses.
+
+---
+
+## Technical SEO File Checklist
+
+| File | Location | Purpose | Required |
+|------|------|------|-----------|
+| robots.txt | /public/ | Set crawling rules | Required |
+| sitemap.xml | /app/sitemap.ts | Provide page listings | Required |
+| feed.xml | /app/feed.xml/ | RSS subscription/Naver submission | Required |
+| llms.txt | /public/ | AI crawler guidance | Strongly Recommended |
+
+---
+
+## Frequently Asked Questions
+
+### Q1. What happens if I block AI crawlers in robots.txt?
+A1. Your blog content won't be cited in AI services like ChatGPT, Perplexity, etc. You'll lose traffic opportunities, so if you want GEO, you must allow them.
+
+### Q2. Do I absolutely need to create llms.txt?
+A2. It's not required but strongly recommended. AI crawlers will better understand your site structure, increasing the likelihood of being cited in responses to relevant questions. It takes just 5 minutes to create.
+
+### Q3. Should I include all pages in sitemap.xml?
+A3. Only include pages you want exposed in search results. Exclude 404 pages, admin pages, etc. Using Next.js auto-generation automatically includes only public pages from the `app` directory.
+
+The next article covers [Structured Data and AEO Content Strategy](/posts/2026-03-30-seo-aeo-geo-guide-4-schema-aeo). [Previous article: Search Console Registration](/posts/2026-03-30-seo-aeo-geo-guide-2-search-console)

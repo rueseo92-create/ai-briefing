@@ -1,0 +1,159 @@
+---
+title: "SEO·AEO·GEO 完全指南 ④ 结构化数据与 AEO 内容策略"
+description: "通过 Schema.org 结构化数据获得 Google 富搜索结果，用 AEO 内容结构在 AI 答案框中曝光的方法，附实战代码指导。"
+date: "2026-03-30T18:30:00"
+category: "tutorials"
+tags: ["构架化数据", "Schema.org", "AEO", "富片段", "FAQ模式"]
+thumbnail: ""
+difficulty: "intermediate"
+tldr: "应用 Article、FAQPage、WebSite 三种结构化数据可以大大提高 Google 富搜索结果的曝光几率。AEO 的核心是问题式标题 + 首段即答结构。"
+published: true
+sources:
+  - name: "Schema.org 公式 文档"
+    url: "https://schema.org"
+    type: "official"
+  - name: "Google 结构化数据指南"
+    url: "https://developers.google.com/search/docs/appearance/structured-data"
+    type: "official"
+  - name: "Google AI Overview 指南"
+    url: "https://blog.google/products/search/"
+    type: "official"
+---
+
+在 Google 搜索时，您是否见过显示星级评分、FAQ、日期的搜索结果？这就是结构化数据的力量。结合结构化数据与 AEO 策略，不仅能在普通搜索中曝光，还能在 AI 答案框中被展示。
+
+> 核心答案：结构化数据是让搜索引擎准确理解内容的 JSON-LD 标记。应用 Article、FAQPage、WebSite 三种结构化数据可以使 Google 富搜索结果曝光几率提高 2.7 倍（出处：Schema.org 官方报告，2026）。
+
+---
+
+## 什么是结构化数据？为什么重要？
+
+结构化数据是告诉搜索引擎和 AI 内容含义的代码。就像人类理解"这是博客文章，作者是谁，什么时候写的"一样，让机器也能读取相同的信息。
+
+### 结构化数据的效果
+
+| 效果 | 数值 |
+|------|------|
+| 富搜索结果曝光 | CTR 增加 +30-50% |
+| Google AI Overview 引用 | 优先选择有结构化数据的页面 |
+| 百度 AI 摘要 | 偏好结构清晰的内容 |
+| 语音搜索答案 | FAQ 架构被用于语音搜索答案 |
+
+> 核心：截至 2026 年，Google 在约 35% 的搜索结果中显示富片段。没有结构化数据就无法在这个区域曝光（出处：Google Search Central，2026）。
+
+---
+
+## 必备结构化数据 3 种
+
+### 1. WebSite 架构（整个网站）
+
+只需在 `app/layout.tsx` 中添加一次即可。包含代表整个网站的信息。
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AI 简报",
+  "url": "https://seroai.xyz",
+  "description": "AI 新闻、政府项目、AI 工具指南",
+  "inLanguage": "zh-CN"
+}
+```
+
+### 2. Article 架构（每个博客文章）
+
+添加到每个文章页面的 `<head>` 中。让搜索引擎准确识别文章标题、作者、发布日期。
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "文章标题",
+  "description": "文章摘要",
+  "author": {
+    "@type": "Organization",
+    "name": "AI 简报"
+  },
+  "datePublished": "2026-03-30",
+  "dateModified": "2026-03-30",
+  "publisher": {
+    "@type": "Organization",
+    "name": "AI 简报",
+    "url": "https://seroai.xyz"
+  }
+}
+```
+
+### 3. FAQPage 架构（AEO 核心！）
+
+添加到有 FAQ 部分的页面。在 Google 搜索中以 FAQ 富搜索结果形式曝光，成为 AI 答案框的核心来源。
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Claude AI 可以免费使用吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "是的，Claude AI 在免费计划下每天可使用 30 次。"
+      }
+    }
+  ]
+}
+```
+
+> 核心答案：博客必须应用的结构化数据有 WebSite（整个网站）、Article（每个文章）、FAQPage（有 FAQ 的页面）三种。以 JSON-LD 格式放入 `<script type="application/ld+json">` 即可。
+
+---
+
+## AEO 内容策略 — AI 答案框曝光方法
+
+如果结构化数据是"技术信号"，那么 AEO 内容策略就是改变"内容写作方式"。Google AI Overview 和百度 AI 摘要偏好问题 → 即答结构的内容。
+
+### BAD vs GOOD 对比
+
+| 规则 | BAD | GOOD |
+|------|-----|------|
+| 标题 | Claude AI 2026年完美使用法 | 如何使用 Claude AI？2026年使用法 7 种 |
+| 首段 | 今天我们来了解 Claude AI... | Claude AI 是 Anthropic 开发的 AI，免费计划每天可使用 30 次。 |
+| 小标题 | ## 功能介绍 | ## Claude AI 的主要功能是什么？ |
+| FAQ | （无） | ## 常见问题 + Q&A 2-3 个 |
+
+> 小贴士：在标题中加入"如何"、"什么"、"为什么"、"何时"、"多少"等疑问词可以使 AI 答案框曝光几率提高约 2 倍。但标题必须自然。
+
+### AEO 核心 4 原则
+
+1. 问题式标题 — 包含用户实际会搜索的问题
+2. 首段即答 — 用 50-100 字给出核心答案（AI 可直接提取）
+3. 问题式小标题 — 在 H2/H3 中也放置问题关键词变形
+4. FAQ 部分 — 文章底部放常见问题 2-3 个 + Schema.org FAQPage 标记
+
+---
+
+## 结构化数据测试方法
+
+验证编写的结构化数据是否正确的工具：
+
+1. Google Rich Results Test — 可预览富搜索结果
+2. Schema.org Validator — JSON-LD 语法验证
+3. Google Search Console — 在"改进"标签中确认错误
+
+> 核心：添加结构化数据后务必用 Google Rich Results Test 验证。只要有一个语法错误，整个架构就会被忽略。
+
+---
+
+## 常见问题
+
+### Q1. 添加结构化数据后会立即出现富搜索结果吗？
+A1. 不会。结构化数据是富搜索结果的必要条件，但不是充分条件。Google 评估内容质量后决定是否显示，应用后 2-4 周后开始曝光。
+
+### Q2. FAQPage 架构需要在所有文章中添加吗？
+A2. 只在有 FAQ 部分的文章中添加。如果没有实际问答却只添加架构，Google 可能判定为垃圾内容。只有在真正有用的 Q&A 时才使用。
+
+### Q3. 在 Next.js 中添加结构化数据的最佳方法是？
+A3. 在 JSX 中用 `dangerouslySetInnerHTML` 插入 `<script type="application/ld+json">` 的方法最为标准。Next.js 的 `metadata` API 还不直接支持 JSON-LD。
+
+下篇文章将介绍 [GEO 策略和整体清单](/posts/2026-03-30-seo-aeo-geo-guide-5-geo-checklist)。[上一篇：技术性 SEO 设置](/posts/2026-03-30-seo-aeo-geo-guide-3-technical-seo)

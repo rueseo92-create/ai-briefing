@@ -1,0 +1,159 @@
+---
+title: "SEO・AEO・GEO 完全ガイド ④ 構造化データとAEOコンテンツ戦略"
+description: "Schema.org構造化データでGoogleリッチ結果を獲得し、AEOコンテンツ構造でAI回答ボックスに表示される方法を実践コードと共にご案内します。"
+date: "2026-03-30T18:30:00"
+category: "tutorials"
+tags: ["構造化データ", "Schema.org", "AEO", "リッチスニペット", "FAQスキーマ"]
+thumbnail: ""
+difficulty: "intermediate"
+tldr: "Article、FAQPage、WebSiteの3つの構造化データを適用すると、Googleリッチ結果への表示確率が高まります。AEOは質問形タイトル + 冒頭段落での即答構造が鍵です。"
+published: true
+sources:
+  - name: "Schema.org 公式文書"
+    url: "https://schema.org"
+    type: "official"
+  - name: "Google 構造化データガイド"
+    url: "https://developers.google.com/search/docs/appearance/structured-data"
+    type: "official"
+  - name: "Google AI Overview ガイド"
+    url: "https://blog.google/products/search/"
+    type: "official"
+---
+
+Googleで検索した際に星評価、FAQ、日付が表示される結果を見たことはありますか？それこそが構造化データの力です。構造化データとAEO戦略を一緒に適用すれば、通常の検索結果はもちろんAI回答ボックスにも表示される可能性があります。
+
+> 核心回答: 構造化データは検索エンジンがコンテンツを正確に理解できるようにするJSON-LDマークアップです。Article、FAQPage、WebSiteの3つを適用するとGoogleリッチ結果への表示確率が2.7倍高まります（出典: Schema.org公式報告、2026）。
+
+---
+
+## 構造化データとは？なぜ重要なのでしょうか？
+
+構造化データは検索エンジンとAIにコンテンツの意味を伝えるコードです。人間が「これはブログ記事で、作成者は誰で、いつ書かれたもの」と理解するように、機械も同じ情報を読み取れるようにします。
+
+### 構造化データの効果
+
+| 効果 | 数値 |
+|------|------|
+| リッチ結果表示 | CTR +30-50%増加 |
+| Google AI Overview引用 | 構造化データありのページ優先選択 |
+| Naver AI要約 | 明確な構造のコンテンツ優遇 |
+| 音声検索回答 | FAQスキーマが音声検索回答に活用 |
+
+> 重要: Googleは2026年基準で約35%の検索結果にリッチスニペットを表示しています。構造化データなしではこの領域に表示されることはできません（出典: Google Search Central、2026）。
+
+---
+
+## 必須構造化データ3種類
+
+### 1. WebSiteスキーマ（サイト全体）
+
+`app/layout.tsx`に一度だけ追加すれば済みます。サイト全体を代表する情報を含みます。
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AIブリーフィング",
+  "url": "https://seroai.xyz",
+  "description": "AIニュース、政府事業、AIツールガイド",
+  "inLanguage": "ko-KR"
+}
+```
+
+### 2. Articleスキーマ（各ブログ投稿）
+
+各投稿ページの`<head>`に追加します。検索エンジンが記事のタイトル、作成者、公開日を正確に認識できるようにします。
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "投稿タイトル",
+  "description": "投稿要約",
+  "author": {
+    "@type": "Organization",
+    "name": "AIブリーフィング"
+  },
+  "datePublished": "2026-03-30",
+  "dateModified": "2026-03-30",
+  "publisher": {
+    "@type": "Organization",
+    "name": "AIブリーフィング",
+    "url": "https://seroai.xyz"
+  }
+}
+```
+
+### 3. FAQPageスキーマ（AEOの核心！）
+
+FAQセクションがあるページに追加します。Google検索でFAQリッチ結果として表示され、AI回答ボックスの重要なソースとなります。
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Claude AIは無料で使用できますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "はい、Claude AIは無料プランで1日30回使用可能です。"
+      }
+    }
+  ]
+}
+```
+
+> 核心回答: ブログに必須で適用すべき構造化データはWebSite（サイト全体）、Article（各投稿）、FAQPage（FAQがあるページ）の3つです。JSON-LD形式で`<script type="application/ld+json">`に入れれば完了です。
+
+---
+
+## AEOコンテンツ戦略 — AI回答ボックス表示法
+
+構造化データが「技術的シグナル」なら、AEOコンテンツ戦略は「コンテンツ作成方式」を変えることです。Google AI OverviewとNaver AI要約は質問 → 即答構造のコンテンツを好みます。
+
+### BAD vs GOOD 比較
+
+| 規則 | BAD | GOOD |
+|------|-----|------|
+| タイトル | Claude AI 2026年完璧活用法 | Claude AIはどう使いますか？2026年活用法7つ |
+| 冒頭段落 | 今日はClaude AIについて調べてみましょう... | Claude AIはAnthropicが開発したAIで、無料プランで1日30回使用可能です。 |
+| 小見出し | ## 機能紹介 | ## Claude AIの主要機能は何ですか？ |
+| FAQ | （なし） | ## よくある質問 + Q&A 2-3個 |
+
+> ワンポイント: タイトルに「どう」「何」「なぜ」「いつ」「いくら」のような疑問詞を入れるとAI回答ボックス表示確率が約2倍高まります。ただし、タイトルは自然でなければなりません。
+
+### AEO核心4原則
+
+1. 質問形タイトル — ユーザーが実際に検索しそうな質問を含む
+2. 冒頭段落即答 — 50-100字で核心回答（AIが直接抽出可能）
+3. 質問形小見出し — H2/H3にも質問キーワード変形を配置
+4. FAQセクション — 記事下部によくある質問2-3個 + Schema.org FAQPageマークアップ
+
+---
+
+## 構造化データテスト方法
+
+作成した構造化データが正しいかを確認するツール：
+
+1. Google Rich Results Test — リッチ結果プレビュー可能
+2. Schema.org Validator — JSON-LD構文検証
+3. Google Search Console — 「拡張」タブでエラー確認
+
+> 重要: 構造化データを追加した後は必ずGoogle Rich Results Testで検証してください。構文エラーが一つでもあると全体スキーマが無視されます。
+
+---
+
+## よくある質問
+
+### Q1. 構造化データを入れるとすぐにリッチ結果が出ますか？
+A1. いいえ。構造化データはリッチ結果の必要条件であり充分条件ではありません。Googleがコンテンツ品質を評価した後に表示可否を決定し、適用後2-4週間後に表示が始まります。
+
+### Q2. FAQPageスキーマはすべての記事に入れるべきですか？
+A2. FAQセクションがある記事にのみ入れてください。実際の質問と回答がないのにスキーマだけ入れるとGoogleがスパムと判断する可能性があります。本当に有用なQ&Aがある時のみ使用してください。
+
+### Q3. Next.jsで構造化データを追加する最適な方法は？
+A3. `<script type="application/ld+json">`をJSXで`dangerouslySetInnerHTML`により挿入する方法が最も標準的です。Next.jsの`metadata` APIではまだJSON-LDを直接サポートしていません。
+
+次の記事では[GEO戦略と全体チェックリスト](/posts/2026-03-30-seo-aeo-geo-guide-5-geo-checklist)を扱います。[前回の記事：技術的SEO設定](/posts/2026-03-30-seo-aeo-geo-guide-3-technical-seo)
