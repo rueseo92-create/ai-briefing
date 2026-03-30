@@ -8,9 +8,8 @@ const AF_CODE = siteConfig.coupang.trackingCode;
 /** 쿠팡 파트너스 어필리에이트 링크 생성 */
 function buildAffiliateLink(keyword: string): string {
   const encodedKw = encodeURIComponent(keyword);
-  const landing = `https://www.coupang.com/np/search?q=${encodedKw}&channel=user`;
-  const encodedLanding = encodeURIComponent(landing);
-  return `https://link.coupang.com/re/AFFDP?lptag=${AF_CODE}&pageType=SEARCH&landingUrl=${encodedLanding}`;
+  // landingUrl의 구조 부분은 수동 인코딩, 키워드만 encodeURIComponent
+  return `https://link.coupang.com/re/AFFDP?lptag=${AF_CODE}&subid=&pageType=SEARCH&landingUrl=https%3A%2F%2Fwww.coupang.com%2Fnp%2Fsearch%3Fq%3D${encodedKw}%26channel%3Duser`;
 }
 
 // ─── 동적 배너 광고 (g.js) ───────────────────
