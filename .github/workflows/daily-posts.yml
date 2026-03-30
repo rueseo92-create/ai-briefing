@@ -2,14 +2,29 @@ name: Daily Blog Posts
 
 on:
   schedule:
-    # 매일 한국시간 오전 7시 (UTC 전날 22:00)
-    - cron: '0 22 * * *'
+    # 하루 4회 시간대별 발행 (한국시간 기준)
+    - cron: '0 22 * * *'    # 07:00 KST - 오전 슬롯 (ai-news, marketing)
+    - cron: '30 3 * * *'    # 12:30 KST - 점심 슬롯 (ai-tools, tutorials)
+    - cron: '0 9 * * *'     # 18:00 KST - 저녁 슬롯 (marketing, tutorials, ai-tools)
+    - cron: '30 12 * * *'   # 21:30 KST - 야간 슬롯 (gov-projects)
   workflow_dispatch:
     inputs:
-      count:
-        description: '생성할 글 수'
+      slot:
+        description: '발행 슬롯'
         required: false
-        default: '3'
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - morning
+          - lunch
+          - evening
+          - night
+          - all
+      count:
+        description: '글 수 (슬롯 설정 덮어씀, 비워두면 슬롯 기본값)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -38,17 +53,27 @@ jobs:
           BLOG_SITE_URL: https://coupang-blog-rho.vercel.app
         run: |
           cd scripts
-          python daily_publish.py --count ${{ github.event.inputs.count || '3' }}
+          SLOT="${{ github.event.inputs.slot || 'auto' }}"
+          COUNT="${{ github.event.inputs.count || '' }}"
+          CMD="python daily_publish.py --slot $SLOT"
+          if [ -n "$COUNT" ]; then CMD="$CMD --count $COUNT"; fi
+          $CMD
 
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add content/posts/*.mdx scripts/publish_history.json
-          git diff --staged --quiet || git commit -m "feat: 일일 자동 발행 $(date +%Y-%m-%d)"
+          SLOT_LABEL=$(TZ=Asia/Seoul date +%H:%M)
+          git diff --staged --quiet || git commit -m "feat: 자동 발행 $(date +%Y-%m-%d) ${SLOT_LABEL}"
           git push
 
       - name: Submit URLs to search engines (IndexNow)
         run: |
           cd scripts
           python submit_urls.py --new-only
+
+      - name: QC - 최근 포스트 품질 검사
+        run: |
+          cd scripts
+          python daily_publish.py --qc --qc-days 3

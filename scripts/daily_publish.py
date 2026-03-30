@@ -1,22 +1,26 @@
 """
-daily_publish.py - 매일 10개 블로그 글 자동 발행
+daily_publish.py - 시간대별 자동 발행 + QC
 
 실행:
-  python daily_publish.py              # 10개 발행 (기본)
-  python daily_publish.py --count 5    # 5개만
-  python daily_publish.py --dry-run    # 테스트 (배포 안함)
+  python daily_publish.py                    # 현재 시간 슬롯에 맞게 발행
+  python daily_publish.py --slot morning     # 오전 슬롯 강제 실행
+  python daily_publish.py --slot all         # 전체 슬롯 (10개) 한번에 발행
+  python daily_publish.py --count 5          # 수동: 5개 발행 (슬롯 무시)
+  python daily_publish.py --qc              # 최근 포스트 QC만 실행
+  python daily_publish.py --dry-run         # 테스트 (배포 안함)
 
 스케줄링:
-  - GitHub Actions: .github/workflows/daily-posts.yml
-  - Windows: daily_publish.bat → 작업 스케줄러
+  - GitHub Actions: .github/workflows/daily-posts.yml (1일 4회)
+  - Windows: daily_publish.bat -> 작업 스케줄러
 """
 
 import os
 import sys
 import json
+import re
 import random
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 # 같은 디렉토리의 모듈 임포트
@@ -26,6 +30,42 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import sero_blog
+
+# ──────────────────────────────────────────────
+# 시간대별 발행 슬롯 (한국시간 기준)
+# ──────────────────────────────────────────────
+# 하루 총 10편: 4개 슬롯에 분산 발행
+# 검색 트래픽 패턴에 맞춰 카테고리+검색 의도 배분
+SLOT_CONFIG = {
+    "morning": {
+        "hours": (6, 10),       # 06:00~09:59 KST
+        "count": 3,
+        "distribution": {"ai-news": 2, "marketing": 1},
+        "seo_angle": "최신 뉴스, 트렌드, 속보",
+        "label": "오전 (07:00)",
+    },
+    "lunch": {
+        "hours": (11, 14),      # 11:00~13:59 KST
+        "count": 2,
+        "distribution": {"ai-tools": 1, "tutorials": 1},
+        "seo_angle": "사용법, 활용 가이드, 추천",
+        "label": "점심 (12:30)",
+    },
+    "evening": {
+        "hours": (17, 20),      # 17:00~19:59 KST
+        "count": 3,
+        "distribution": {"marketing": 1, "tutorials": 1, "ai-tools": 1},
+        "seo_angle": "비교 분석, 리뷰, 실전 팁",
+        "label": "저녁 (18:00)",
+    },
+    "night": {
+        "hours": (20, 24),      # 20:00~23:59 KST
+        "count": 2,
+        "distribution": {"gov-projects": 2},
+        "seo_angle": "심층 분석, 지원사업 안내, 신청 방법",
+        "label": "야간 (21:30)",
+    },
+}
 
 # ──────────────────────────────────────────────
 # 토픽 풀: 카테고리별 주제 템플릿
@@ -93,6 +133,17 @@ TOPIC_POOL = {
     ],
 }
 
+# ──────────────────────────────────────────────
+# SEO 트래픽 부스트: 검색량 높은 키워드 수식어
+# ──────────────────────────────────────────────
+SEO_MODIFIERS = {
+    "ai-news": ["속보", "이번 주", "최신", "긴급", "단독"],
+    "gov-projects": ["신청방법", "마감임박", "최대 3억", "자격요건", "2026년"],
+    "ai-tools": ["무료", "추천 TOP", "직접 써보니", "비교", "초보자용"],
+    "tutorials": ["완벽 가이드", "5분 만에", "따라하기", "실전", "무료 강의"],
+    "marketing": ["ROI 200%", "자동화 비법", "매출 2배", "실전 사례", "무료 도구"],
+}
+
 # 발행 이력 추적 (중복 방지)
 HISTORY_FILE = Path(__file__).parent / "publish_history.json"
 
@@ -121,34 +172,52 @@ def save_history(history: dict):
     )
 
 
-def select_daily_topics(count: int = 10) -> list[dict]:
-    """오늘 발행할 토픽 선택 (카테고리 분산 + 중복 방지)"""
+def get_kst_now() -> datetime:
+    """현재 한국시간 반환"""
+    KST = timezone(timedelta(hours=9))
+    return datetime.now(KST)
+
+
+def detect_slot() -> str:
+    """현재 한국시간 기준으로 발행 슬롯 자동 감지"""
+    kst_hour = get_kst_now().hour
+    for slot_name, config in SLOT_CONFIG.items():
+        start, end = config["hours"]
+        if start <= kst_hour < end:
+            return slot_name
+    # 매칭되는 슬롯 없으면 morning 폴백
+    return "morning"
+
+
+def select_daily_topics(count: int = 10, slot: str = None) -> list[dict]:
+    """오늘 발행할 토픽 선택 (슬롯별 배분 + 중복 방지)"""
     history = load_history()
     recent_titles = {p["title"] for p in history["published"]}
 
-    # 카테고리별 배분: ai-news 2, gov-projects 2, ai-tools 2, tutorials 2, marketing 2
-    distribution = {
-        "ai-news": 2,
-        "gov-projects": 2,
-        "ai-tools": 2,
-        "tutorials": 2,
-        "marketing": 2,
-    }
-
-    # count에 맞게 비례 배분 조정
-    if count != 10:
-        total_ratio = sum(distribution.values())
+    # 슬롯 지정 시 해당 슬롯 배분, 아니면 균등 배분
+    if slot and slot in SLOT_CONFIG:
+        distribution = dict(SLOT_CONFIG[slot]["distribution"])
+    else:
         distribution = {
-            k: max(1, round(v / total_ratio * count))
-            for k, v in distribution.items()
+            "ai-news": 2,
+            "gov-projects": 2,
+            "ai-tools": 2,
+            "tutorials": 2,
+            "marketing": 2,
         }
-        # 합계 조정
-        while sum(distribution.values()) > count:
-            max_cat = max(distribution, key=distribution.get)
-            distribution[max_cat] -= 1
-        while sum(distribution.values()) < count:
-            min_cat = min(distribution, key=distribution.get)
-            distribution[min_cat] += 1
+        # count에 맞게 비례 배분 조정
+        if count != 10:
+            total_ratio = sum(distribution.values())
+            distribution = {
+                k: max(1, round(v / total_ratio * count))
+                for k, v in distribution.items()
+            }
+            while sum(distribution.values()) > count:
+                max_cat = max(distribution, key=distribution.get)
+                distribution[max_cat] -= 1
+            while sum(distribution.values()) < count:
+                min_cat = min(distribution, key=distribution.get)
+                distribution[min_cat] += 1
 
     topics = []
     for category, num in distribution.items():
@@ -159,46 +228,212 @@ def select_daily_topics(count: int = 10) -> list[dict]:
             available = pool  # 전부 발행했으면 리셋
 
         selected = random.sample(available, min(num, len(available)))
+
+        # SEO 수식어 부스트
+        modifiers = SEO_MODIFIERS.get(category, [])
         for topic_title in selected:
+            modifier = random.choice(modifiers) if modifiers else ""
             topics.append({
                 "topic": topic_title,
                 "category": category,
+                "seo_modifier": modifier,
             })
 
     random.shuffle(topics)
     return topics[:count]
 
 
-def run_daily(count: int = 10, dry_run: bool = False):
-    """매일 실행: count개 블로그 글 생성 및 발행"""
+# ──────────────────────────────────────────────
+# QC (품질 검사)
+# ──────────────────────────────────────────────
+def run_qc(days: int = 7) -> list[dict]:
+    """최근 포스트 품질 검사"""
+    posts_dir = Path(__file__).parent.parent / "content" / "posts"
+    cutoff = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+
+    issues = []
+    checked = 0
+    scores = []
+
+    print("=" * 60)
+    print(f"포스트 품질 검사 (QC)")
+    print(f"  대상: 최근 {days}일간 발행 포스트")
+    print("=" * 60)
+
+    if not posts_dir.exists():
+        print("  포스트 디렉토리 없음")
+        return issues
+
+    for f in sorted(posts_dir.glob("*.mdx"), reverse=True):
+        date_str = f.stem[:10]
+        if date_str < cutoff:
+            break
+
+        checked += 1
+        content = f.read_text(encoding="utf-8")
+        parts = content.split("---", 2)
+        if len(parts) < 3:
+            issues.append({"file": f.name, "issue": "프론트매터 파싱 실패", "severity": "error"})
+            continue
+
+        fm = parts[1]
+        body = parts[2]
+        body_clean = re.sub(r"\s", "", body)
+
+        checks_passed = 0
+        checks_total = 9
+
+        # 1. 본문 길이
+        if len(body_clean) >= 1000:
+            checks_passed += 1
+        else:
+            sev = "error" if len(body_clean) < 500 else "warning"
+            issues.append({"file": f.name, "issue": f"본문 짧음 ({len(body_clean)}자)", "severity": sev})
+
+        # 2. H2 구조
+        h2_count = len(re.findall(r"^## ", body, re.MULTILINE))
+        if h2_count >= 3:
+            checks_passed += 1
+        else:
+            issues.append({"file": f.name, "issue": f"H2 부족 ({h2_count}개)", "severity": "warning"})
+
+        # 3. H3 존재
+        h3_count = len(re.findall(r"^### ", body, re.MULTILINE))
+        if h3_count >= 1:
+            checks_passed += 1
+        else:
+            issues.append({"file": f.name, "issue": "H3 없음", "severity": "info"})
+
+        # 4. FAQ 섹션
+        has_faq = any(kw in body for kw in ["FAQ", "자주 묻는", "Q.", "Q:"])
+        if has_faq:
+            checks_passed += 1
+        else:
+            issues.append({"file": f.name, "issue": "FAQ 섹션 없음", "severity": "warning"})
+
+        # 5. 내부 링크
+        has_internal = "](/posts/" in body or "](/categories/" in body
+        if has_internal:
+            checks_passed += 1
+        else:
+            issues.append({"file": f.name, "issue": "내부 링크 없음 (SEO 손실)", "severity": "warning"})
+
+        # 6. 제목 길이
+        title_m = re.search(r'title:\s*"(.+?)"', fm)
+        title_ok = title_m and len(title_m.group(1)) <= 60
+        if title_ok:
+            checks_passed += 1
+        elif title_m:
+            issues.append({"file": f.name, "issue": f"제목 초과 ({len(title_m.group(1))}자)", "severity": "warning"})
+
+        # 7. description 길이
+        desc_m = re.search(r'description:\s*"(.+?)"', fm)
+        desc_ok = desc_m and 50 <= len(desc_m.group(1)) <= 155
+        if desc_ok:
+            checks_passed += 1
+        elif desc_m:
+            issues.append({"file": f.name, "issue": f"설명 길이 이상 ({len(desc_m.group(1))}자)", "severity": "info"})
+
+        # 8. 태그 수
+        tags_m = re.search(r'tags:\s*\[(.+?)\]', fm)
+        tags_ok = tags_m and len(tags_m.group(1).split(",")) >= 3
+        if tags_ok:
+            checks_passed += 1
+
+        # 9. 표 존재
+        has_table = bool(re.search(r"\|.+\|.+\|", body))
+        if has_table:
+            checks_passed += 1
+        else:
+            issues.append({"file": f.name, "issue": "표(Table) 없음", "severity": "info"})
+
+        score = round(checks_passed / checks_total * 100)
+        scores.append({"file": f.name, "score": score})
+
+    # 결과 출력
+    print(f"\n검사 완료: {checked}개 포스트")
+
+    if scores:
+        avg = sum(s["score"] for s in scores) / len(scores)
+        print(f"평균 품질 점수: {avg:.0f}/100")
+
+        low = [s for s in scores if s["score"] < 70]
+        if low:
+            print(f"\n저품질 포스트 ({len(low)}개):")
+            for s in low:
+                print(f"  [{s['score']}점] {s['file']}")
+
+    if issues:
+        errors = sum(1 for i in issues if i["severity"] == "error")
+        warns = sum(1 for i in issues if i["severity"] == "warning")
+        infos = sum(1 for i in issues if i["severity"] == "info")
+        print(f"\n이슈: {errors} errors, {warns} warnings, {infos} info")
+        for iss in issues:
+            icon = {"error": "X", "warning": "!", "info": "i"}.get(iss["severity"], "?")
+            print(f"  [{icon}] {iss['file'][:40]} - {iss['issue']}")
+    else:
+        print("\n모든 포스트 QC 통과!")
+
+    print("=" * 60)
+    return issues
+
+
+# ──────────────────────────────────────────────
+# 메인 발행 로직
+# ──────────────────────────────────────────────
+def run_daily(slot: str = "auto", count: int = None, dry_run: bool = False):
+    """슬롯 기반 자동 발행"""
     start = time.time()
     today = datetime.now().strftime("%Y-%m-%d")
 
+    # 슬롯 결정
+    if slot == "auto":
+        slot = detect_slot()
+
+    # 전체 슬롯 순차 실행
+    if slot == "all":
+        all_results = []
+        for s in SLOT_CONFIG:
+            results = run_daily(slot=s, dry_run=dry_run)
+            if results:
+                all_results.extend(results)
+        return all_results
+
+    slot_config = SLOT_CONFIG.get(slot)
+    effective_count = count or (slot_config["count"] if slot_config else 3)
+
     print("=" * 60)
-    print(f"일일 자동 발행 시작")
+    print(f"자동 발행 시작")
     print(f"  날짜: {today}")
-    print(f"  목표: {count}편")
+    print(f"  슬롯: {slot_config['label'] if slot_config else slot}")
+    print(f"  목표: {effective_count}편")
+    if slot_config:
+        print(f"  SEO 각도: {slot_config['seo_angle']}")
     print(f"  모드: {'Dry-run' if dry_run else 'Full (배포 포함)'}")
     print("=" * 60)
 
     history = load_history()
 
-    # 오늘 이미 발행한 수 확인
-    today_published = [p for p in history["published"] if p.get("date") == today]
-    if len(today_published) >= count:
-        print(f"\n오늘 이미 {len(today_published)}편 발행 완료. 스킵합니다.")
-        return
+    # 오늘 이 슬롯에서 이미 발행한 수 확인
+    today_slot_published = [
+        p for p in history["published"]
+        if p.get("date") == today and p.get("slot", "") == slot
+    ]
+    if len(today_slot_published) >= effective_count:
+        print(f"\n[{slot}] 슬롯에서 이미 {len(today_slot_published)}편 발행 완료. 스킵합니다.")
+        return []
 
-    remaining = count - len(today_published)
-    print(f"  오늘 발행 완료: {len(today_published)}편 → 추가 {remaining}편 생성")
+    remaining = effective_count - len(today_slot_published)
+    print(f"  이 슬롯 발행: {len(today_slot_published)}편 완료 -> 추가 {remaining}편 생성")
 
-    # 토픽 선택
-    daily_topics = select_daily_topics(remaining)
+    # 토픽 선택 (슬롯 기반)
+    daily_topics = select_daily_topics(remaining, slot=slot if slot_config else None)
     print(f"\n선택된 토픽 ({len(daily_topics)}개):")
     for i, t in enumerate(daily_topics):
-        print(f"  {i+1}. [{t['category']}] {t['topic']}")
+        mod = f" [{t.get('seo_modifier', '')}]" if t.get("seo_modifier") else ""
+        print(f"  {i+1}. [{t['category']}] {t['topic']}{mod}")
 
-    # K-Startup 최신 공고 먼저 크롤링 (gov-projects 카테고리에 사용)
+    # K-Startup 최신 공고 크롤링 (gov-projects 카테고리에 사용)
     kstartup_topics = []
     if sero_blog.KSTARTUP_ENABLED:
         try:
@@ -226,17 +461,18 @@ def run_daily(count: int = 10, dry_run: bool = False):
         print(f"{'─' * 50}")
 
         try:
-            # gov-projects 카테고리이고 K-Startup 데이터가 있으면 실제 데이터 사용
+            # gov-projects + K-Startup 실제 데이터 우선
             if topic_info["category"] == "gov-projects" and kstartup_idx < len(kstartup_topics):
                 topic_data = kstartup_topics[kstartup_idx]
                 kstartup_idx += 1
-                print(f"  → K-Startup 실제 데이터 사용: {topic_data.title}")
+                print(f"  -> K-Startup 실제 데이터 사용: {topic_data.title}")
             else:
-                # Claude로 토픽 상세 생성
+                # SEO 수식어를 summary에 힌트로 전달
+                seo_hint = topic_info.get("seo_modifier", "")
                 topic_data = sero_blog.TopicData(
                     title=topic_info["topic"],
                     category=topic_info["category"],
-                    summary="",
+                    summary=f"SEO 키워드 힌트: {seo_hint}" if seo_hint else "",
                     difficulty="beginner",
                 )
 
@@ -266,18 +502,19 @@ def run_daily(count: int = 10, dry_run: bool = False):
                 "file": filepath.name if filepath else "",
             })
 
-            # 이력 기록
+            # 이력 기록 (슬롯 정보 포함)
             history["published"].append({
                 "title": topic_info["topic"],
                 "category": topic_info["category"],
                 "date": today,
+                "slot": slot,
                 "slug": filepath.stem if filepath else "",
             })
             save_history(history)
 
         except Exception as e:
             print(f"  [오류] 생성 실패: {e}")
-            print("  → 다음 글로 넘어갑니다.")
+            print("  -> 다음 글로 넘어갑니다.")
 
         # API 과부하 방지 (3초 대기)
         if i < len(daily_topics) - 1:
@@ -286,11 +523,11 @@ def run_daily(count: int = 10, dry_run: bool = False):
 
     # 최종 결과
     duration = int(time.time() - start)
-    history["last_run"] = f"{today} ({len(results)}/{len(daily_topics)} 성공, {duration}초)"
+    history["last_run"] = f"{today} [{slot}] ({len(results)}/{len(daily_topics)} 성공, {duration}초)"
     save_history(history)
 
     print("\n" + "=" * 60)
-    print(f"일일 발행 완료! ({duration}초)")
+    print(f"발행 완료! [{slot}] ({duration}초)")
     print(f"  성공: {len(results)}/{len(daily_topics)}편")
     for r in results:
         status = "LIVE" if r["deployed"] else "FILE"
@@ -303,9 +540,21 @@ def run_daily(count: int = 10, dry_run: bool = False):
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="매일 10개 블로그 글 자동 발행")
-    parser.add_argument("--count", type=int, default=10, help="발행할 글 수 (기본: 10)")
-    parser.add_argument("--dry-run", action="store_true", help="테스트 모드 (배포 안함)")
+    parser = argparse.ArgumentParser(description="시간대별 자동 발행 + QC")
+    parser.add_argument("--slot", type=str, default="auto",
+                        choices=["auto", "morning", "lunch", "evening", "night", "all"],
+                        help="발행 슬롯 (기본: auto = 현재 시간 감지)")
+    parser.add_argument("--count", type=int, default=None,
+                        help="발행 수 (슬롯 설정 덮어씀)")
+    parser.add_argument("--qc", action="store_true",
+                        help="QC만 실행 (발행 안함)")
+    parser.add_argument("--qc-days", type=int, default=7,
+                        help="QC 검사 범위 일수 (기본: 7)")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="테스트 모드 (배포 안함)")
     args = parser.parse_args()
 
-    run_daily(count=args.count, dry_run=args.dry_run)
+    if args.qc:
+        run_qc(days=args.qc_days)
+    else:
+        run_daily(slot=args.slot, count=args.count, dry_run=args.dry_run)
