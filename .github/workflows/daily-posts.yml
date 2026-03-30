@@ -1,4 +1,4 @@
-name: Daily Blog Posts
+name: Daily Blog Posts + Social
 
 on:
   schedule:
@@ -25,6 +25,11 @@ on:
         description: '글 수 (슬롯 설정 덮어씀, 비워두면 슬롯 기본값)'
         required: false
         default: ''
+      social_only:
+        description: '소셜 미디어만 발행 (블로그 스킵)'
+        required: false
+        default: 'false'
+        type: boolean
 
 permissions:
   contents: write
@@ -46,11 +51,13 @@ jobs:
       - name: Install dependencies
         run: pip install anthropic python-dotenv
 
-      - name: Generate and publish posts
+      # ── 블로그 글 발행 ──
+      - name: Generate and publish blog posts
+        if: ${{ github.event.inputs.social_only != 'true' }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           BLOG_REPO_PATH: ${{ github.workspace }}
-          BLOG_SITE_URL: https://coupang-blog-rho.vercel.app
+          BLOG_SITE_URL: https://seroai.xyz
         run: |
           cd scripts
           SLOT="${{ github.event.inputs.slot || 'auto' }}"
@@ -59,7 +66,8 @@ jobs:
           if [ -n "$COUNT" ]; then CMD="$CMD --count $COUNT"; fi
           $CMD
 
-      - name: Commit and push
+      - name: Commit and push blog posts
+        if: ${{ github.event.inputs.social_only != 'true' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -69,11 +77,39 @@ jobs:
           git push
 
       - name: Submit URLs to search engines (IndexNow)
+        if: ${{ github.event.inputs.social_only != 'true' }}
+        continue-on-error: true
         run: |
           cd scripts
           python submit_urls.py --new-only
 
+      # ── 소셜 미디어 발행 (쓰레드 + 인스타그램) ──
+      - name: Publish to Threads & Instagram
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BLOG_REPO_PATH: ${{ github.workspace }}
+          BLOG_SITE_URL: https://seroai.xyz
+          THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          THREADS_USER_ID: ${{ secrets.THREADS_USER_ID }}
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+        run: |
+          cd scripts
+          COUNT="${{ github.event.inputs.count || '3' }}"
+          python social_publish.py --count $COUNT
+
+      - name: Commit social history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add scripts/social_history.json
+          git diff --staged --quiet || git commit -m "chore: 소셜 발행 이력 업데이트 $(date +%Y-%m-%d)"
+          git push
+
+      # ── QC ──
       - name: QC - 최근 포스트 품질 검사
+        if: ${{ github.event.inputs.social_only != 'true' }}
+        continue-on-error: true
         run: |
           cd scripts
           python daily_publish.py --qc --qc-days 3
