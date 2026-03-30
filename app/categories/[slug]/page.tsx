@@ -25,7 +25,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
   const posts = getPostsByCategory(params.slug);
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-6 lg:px-12">
+    <div className="pt-28 pb-20 max-w-7xl mx-auto px-6 lg:px-12" data-category={params.slug}>
       {/* Header */}
       <header className="mb-12">
         <div className="flex items-center gap-3 mb-2">

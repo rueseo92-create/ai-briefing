@@ -127,7 +127,7 @@ export default function PostPage({ params }: { params: { slug: string } }) {
         />
       )}
 
-      <article className="pt-28 pb-20">
+      <article className="pt-28 pb-20" data-category={meta.category}>
         {/* Breadcrumbs */}
         <nav className="max-w-4xl mx-auto px-6 mb-8">
           <ol className="flex items-center gap-2 text-sm text-on-surface-variant">
