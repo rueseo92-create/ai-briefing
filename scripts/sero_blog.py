@@ -708,6 +708,60 @@ def run_seo_audit(post: BlogPost) -> BlogPost:
 
 
 # ──────────────────────────────────────────────
+# 카테고리별 Unsplash 썸네일 풀
+# ──────────────────────────────────────────────
+_CATEGORY_IMAGES = {
+    "ai-news": [
+        "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+        "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80",
+        "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80",
+        "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80",
+        "https://images.unsplash.com/photo-1535378620166-273708d44e4c?w=800&q=80",
+        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80",
+    ],
+    "gov-projects": [
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
+        "https://images.unsplash.com/photo-1523292562811-8fa7962a78c8?w=800&q=80",
+        "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&q=80",
+        "https://images.unsplash.com/photo-1577415124269-fc1140a69e91?w=800&q=80",
+        "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80",
+        "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80",
+    ],
+    "ai-tools": [
+        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+        "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&q=80",
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80",
+        "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80",
+        "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&q=80",
+        "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80",
+    ],
+    "tutorials": [
+        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80",
+        "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&q=80",
+        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80",
+        "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80",
+        "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&q=80",
+        "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&q=80",
+    ],
+    "marketing": [
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+        "https://images.unsplash.com/photo-1533750516457-a7f992034fec?w=800&q=80",
+        "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80",
+        "https://images.unsplash.com/photo-1560472355-536de3962603?w=800&q=80",
+        "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&q=80",
+        "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80",
+    ],
+}
+
+
+def _pick_thumbnail(slug: str, category: str) -> str:
+    """slug 해시 기반으로 카테고리별 이미지 결정 (동일 slug = 동일 이미지)"""
+    images = _CATEGORY_IMAGES.get(category, _CATEGORY_IMAGES["ai-news"])
+    h = hash(slug) % len(images)
+    return images[h]
+
+
+# ──────────────────────────────────────────────
 # Step 5: MDX 파일 생성
 # ──────────────────────────────────────────────
 def create_mdx_file(post: BlogPost) -> Path:
@@ -721,13 +775,16 @@ def create_mdx_file(post: BlogPost) -> Path:
     for s in post.sources:
         sources_yaml += f'\n  - name: "{s.name}"\n    url: "{s.url}"\n    type: "{s.type}"'
 
+    # 카테고리별 Unsplash 썸네일 자동 할당
+    thumbnail = _pick_thumbnail(post.slug, post.category)
+
     mdx = f"""---
 title: "{post.title}"
 description: "{post.description}"
 date: "{datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}"
 category: "{post.category}"
 tags: {json.dumps(post.tags, ensure_ascii=False)}
-thumbnail: ""
+thumbnail: "{thumbnail}"
 difficulty: "{post.difficulty}"
 tldr: "{post.tldr}"
 published: {str(post.published).lower()}

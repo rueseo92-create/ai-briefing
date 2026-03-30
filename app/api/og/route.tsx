@@ -1,8 +1,7 @@
 /**
  * /api/og - 동적 Open Graph 이미지 생성
  *
- * 사용: <meta property="og:image" content="/api/og?title=제목&category=리뷰" />
- * SNS 공유 시 자동으로 예쁜 카드 이미지 생성
+ * 사용: <meta property="og:image" content="/api/og?title=제목&category=AI뉴스" />
  */
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
@@ -10,10 +9,19 @@ import { siteConfig } from "@/lib/config";
 
 export const runtime = "edge";
 
+const categoryColors: Record<string, string> = {
+  "ai-news": "#6366F1",
+  "gov-projects": "#059669",
+  "ai-tools": "#0891B2",
+  tutorials: "#7C3AED",
+  marketing: "#D97706",
+};
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const title = searchParams.get("title") || siteConfig.defaultTitle;
   const category = searchParams.get("category") || "";
+  const accent = categoryColors[category] || "#6366F1";
 
   return new ImageResponse(
     (
@@ -23,85 +31,91 @@ export async function GET(req: NextRequest) {
           width: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          padding: "60px 80px",
-          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+          justifyContent: "space-between",
+          padding: "60px 72px",
+          background: "linear-gradient(145deg, #0F0B2E 0%, #1a1145 40%, #0c1a3a 100%)",
           fontFamily: "sans-serif",
         }}
       >
-        {/* Category badge */}
-        {category && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: 20,
-            }}
-          >
+        {/* 상단: 카테고리 + 장식 */}
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          {category && (
             <span
               style={{
-                fontSize: 18,
-                color: "#ff8c00",
-                background: "rgba(255,140,0,0.15)",
-                padding: "6px 16px",
-                borderRadius: 20,
-                border: "1px solid rgba(255,140,0,0.3)",
+                fontSize: 16,
+                fontWeight: 700,
+                color: accent,
+                background: `${accent}18`,
+                padding: "8px 20px",
+                borderRadius: 40,
+                border: `1px solid ${accent}40`,
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
               }}
             >
               {category}
             </span>
-          </div>
-        )}
+          )}
+        </div>
 
-        {/* Title */}
+        {/* 중앙: 제목 */}
         <div
           style={{
-            fontSize: 48,
+            fontSize: 56,
             fontWeight: 800,
             color: "#ffffff",
-            lineHeight: 1.3,
-            marginBottom: 30,
+            lineHeight: 1.2,
+            letterSpacing: "-0.02em",
             display: "-webkit-box",
             WebkitLineClamp: 3,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
+            maxWidth: "90%",
           }}
         >
           {title}
         </div>
 
-        {/* Site name */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-          }}
-        >
+        {/* 하단: 브랜드 */}
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <div
             style={{
-              width: 36,
-              height: 36,
-              borderRadius: 8,
-              background: "linear-gradient(135deg, #ff8c00, #e65100)",
+              width: 40,
+              height: 40,
+              borderRadius: 10,
+              background: "linear-gradient(135deg, #4F46E5, #7C3AED)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 18,
+              fontSize: 16,
+              fontWeight: 800,
               color: "white",
             }}
           >
-            📝
+            AI
           </div>
-          <span style={{ fontSize: 22, color: "#8899aa" }}>
+          <span style={{ fontSize: 20, fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>
             {siteConfig.name}
           </span>
+          <div style={{ flex: 1 }} />
+          <span style={{ fontSize: 14, color: "rgba(255,255,255,0.2)" }}>
+            seroai.xyz
+          </span>
         </div>
+
+        {/* 장식 글로우 */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            width: "50%",
+            height: "100%",
+            background: `radial-gradient(ellipse at 80% 30%, ${accent}15, transparent 60%)`,
+          }}
+        />
       </div>
     ),
-    {
-      width: 1200,
-      height: 630,
-    }
+    { width: 1200, height: 630 }
   );
 }
