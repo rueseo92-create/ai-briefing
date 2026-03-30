@@ -2,6 +2,7 @@ import { getAllPosts } from "@/lib/posts";
 import { siteConfig } from "@/lib/config";
 import { PostCard } from "@/components/PostCard";
 import { CoupangLinkAd, CoupangSidebarAd } from "@/components/CoupangAd";
+import NewsletterForm from "@/components/NewsletterForm";
 import { getDictionary, localizedHref, defaultLocale, type Locale } from "@/lib/i18n";
 
 /* 카테고리 액센트 컬러 */
@@ -161,16 +162,10 @@ export default async function Home({ params }: { params: { locale: string } }) {
                 <h3 className="text-lg font-bold text-white font-headline mb-1">{dict.home.newsletter}</h3>
                 <p className="text-sm text-white/60">{dict.home.newsletterDesc}</p>
               </div>
-              <form className="flex flex-col sm:flex-row gap-2.5 w-full lg:w-auto flex-shrink-0" action="#">
-                <input
-                  className="px-5 py-3 rounded-full bg-white/[0.12] backdrop-blur-sm border border-white/[0.1] text-sm text-white placeholder-white/40 focus:ring-2 focus:ring-white/20 focus:border-white/20 focus:bg-white/[0.15] transition-all w-full sm:w-64"
-                  placeholder={dict.home.emailPlaceholder}
-                  type="email"
-                />
-                <button className="px-6 py-3 bg-white text-indigo-700 font-bold text-sm rounded-full hover:bg-indigo-50 transition-colors flex-shrink-0 shadow-lg">
-                  {dict.home.subscribe}
-                </button>
-              </form>
+              <NewsletterForm
+                placeholder={dict.home.emailPlaceholder}
+                buttonText={dict.home.subscribe}
+              />
             </div>
           </div>
         </div>
