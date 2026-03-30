@@ -167,12 +167,13 @@ export default function Home() {
                 .filter((v, i, a) => a.indexOf(v) === i)
                 .slice(0, 10)
                 .map((tag) => (
-                  <span
+                  <a
                     key={tag}
-                    className="px-3 py-1.5 bg-white border border-slate-200 rounded-md text-xs text-on-surface-variant hover:border-primary hover:text-primary transition-all cursor-pointer"
+                    href={`/search?tag=${encodeURIComponent(tag)}`}
+                    className="px-3 py-1.5 bg-white border border-slate-200 rounded-md text-xs text-on-surface-variant hover:border-primary hover:text-primary transition-all"
                   >
                     #{tag}
-                  </span>
+                  </a>
                 ))}
             </div>
           </section>

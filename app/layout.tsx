@@ -142,9 +142,9 @@ function Header() {
           ))}
         </nav>
         <div className="flex items-center space-x-4">
-          <button className="p-2 text-slate-600 hover:text-primary transition-colors">
+          <a href="/search" className="p-2 text-slate-600 hover:text-primary transition-colors">
             <span className="material-symbols-outlined">search</span>
-          </button>
+          </a>
           <button className="p-2 text-slate-600 hover:text-primary transition-colors md:hidden">
             <span className="material-symbols-outlined">menu</span>
           </button>
