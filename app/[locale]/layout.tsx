@@ -106,6 +106,7 @@ const navKeyMap: Record<string, string> = {
   "/categories/gov-projects": "govProjects",
   "/categories/ai-tools": "aiTools",
   "/categories/tutorials": "tutorials",
+  "/business": "business",
   "/about": "about",
 };
 

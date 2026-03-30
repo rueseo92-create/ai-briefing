@@ -38,6 +38,7 @@ export const siteConfig = {
     { href: "/categories/gov-projects", label: "정부사업" },
     { href: "/categories/ai-tools", label: "AI 도구" },
     { href: "/categories/marketing", label: "마케팅 자동화" },
+    { href: "/business", label: "사업 소개" },
     { href: "/about", label: "소개" },
   ],
 
