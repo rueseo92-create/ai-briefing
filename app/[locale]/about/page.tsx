@@ -4,7 +4,7 @@ import { getAllPosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
   title: "회사 소개 | SERO AI",
-  description: "세로에이아이(SERO AI) — 헬스케어와 AI를 잇는 콘텐츠 자동화 · 디지털 마케팅 전문 기업",
+  description: "세로에이아이(SERO AI) — AI 콘텐츠 자동화 · 디지털 마케팅 · SEO 전문 기업",
 };
 
 export default function AboutPage() {
@@ -25,7 +25,7 @@ export default function AboutPage() {
             세로에이아이
           </h1>
           <p className="text-lg text-white/50 leading-relaxed max-w-xl">
-            Healthcare meets AI — 헬스케어 전문성과 AI 기술을 결합해<br className="hidden lg:block" />
+            AI 기술과 마케팅 전문성을 결합해<br className="hidden lg:block" />
             콘텐츠 자동화와 디지털 성장 솔루션을 만듭니다.
           </p>
         </div>
@@ -47,14 +47,13 @@ export default function AboutPage() {
                   세로에이아이(SERO AI)는 AI 기술 기반 콘텐츠 자동화와 디지털 마케팅 솔루션을 제공하는 기업입니다.
                 </p>
                 <p>
-                  대표는 한국과 미국 간호사(RN) 면허를 보유한 의료 전문가이자,
-                  디지털헬스 석·박사 과정을 거친 연구자입니다.
-                  스타트업에서 마케팅부터 프로덕트 개발까지 전 과정을 직접 경험하며,
-                  도메인 지식과 기술 역량을 동시에 갖추었습니다.
+                  대표는 스타트업에서 마케팅부터 프로덕트 개발까지 전 과정을 직접 경험한
+                  풀스택 개발자이자 디지털 마케터입니다.
+                  데이터 기반 의사결정과 빠른 실행력을 동시에 갖추었습니다.
                 </p>
                 <p>
-                  이 독특한 교차점 — 헬스케어의 엄격한 근거 기반 사고와,
-                  스타트업의 빠른 실행력, AI 기술의 확장성 — 이 세로에이아이의 핵심입니다.
+                  AI 기술의 확장성과 스타트업의 빠른 실행력 —
+                  이 조합이 세로에이아이의 핵심입니다.
                 </p>
               </div>
             </div>
@@ -73,7 +72,7 @@ export default function AboutPage() {
 
               <div className="space-y-5 text-sm">
                 {[
-                  { label: "사업 분야", value: "AI 콘텐츠 자동화 · 디지털 마케팅 · 헬스테크" },
+                  { label: "사업 분야", value: "AI 콘텐츠 자동화 · 디지털 마케팅 · SEO 최적화" },
                   { label: "주요 서비스", value: "블로그/웹사이트 구축, SEO 최적화, AI 파이프라인 개발, 콘텐츠 대행" },
                   { label: "기술 스택", value: "Next.js · TypeScript · Python · Claude API · Vercel" },
                   { label: "웹사이트", value: "seroai.xyz" },
@@ -121,10 +120,10 @@ export default function AboutPage() {
 
                 <div className="space-y-2.5 text-left">
                   {[
-                    { icon: "local_hospital", text: "한국 · 미국 RN (간호사 면허)" },
-                    { icon: "school", text: "디지털헬스학과 석·박사" },
+                    { icon: "code", text: "풀스택 개발 (Next.js · Python)" },
+                    { icon: "trending_up", text: "디지털 마케팅 · SEO 전문가" },
                     { icon: "rocket_launch", text: "스타트업 창업 · 운영 경험" },
-                    { icon: "code", text: "풀스택 개발 (마케팅 → 개발)" },
+                    { icon: "smart_toy", text: "AI 파이프라인 설계 · 구축" },
                   ].map((item) => (
                     <div key={item.icon} className="flex items-start gap-2.5 text-sm text-on-surface-variant">
                       <span className="material-symbols-outlined text-primary text-base mt-0.5">{item.icon}</span>
@@ -139,11 +138,11 @@ export default function AboutPage() {
             <div className="lg:col-span-2 space-y-6">
               {[
                 {
-                  icon: "medical_services",
+                  icon: "analytics",
                   color: "bg-rose-500",
-                  title: "헬스케어 전문성",
-                  subtitle: "한국 · 미국 RN 면허 / 디지털헬스 석·박사",
-                  desc: "임상 현장에서 시작해 디지털헬스 연구까지. 데이터 기반 의사결정과 근거 중심 사고가 체질입니다. 복잡한 정보를 정확하게 정리하고 쉽게 전달하는 능력은 여기서 비롯됐습니다.",
+                  title: "데이터 기반 마케팅",
+                  subtitle: "SEO · AEO · GEO / 콘텐츠 마케팅 전략",
+                  desc: "검색엔진 최적화부터 AI 검색엔진 대응까지. 데이터 기반 의사결정과 성과 중심 사고가 체질입니다. 복잡한 정보를 정확하게 정리하고 쉽게 전달하는 능력이 핵심 역량입니다.",
                 },
                 {
                   icon: "trending_up",
@@ -222,11 +221,11 @@ export default function AboutPage() {
               <div className="space-y-4 text-on-surface-variant leading-relaxed">
                 <p>
                   AI 브리핑은 세로에이아이의 콘텐츠 자동화 기술을 100% 적용한 라이브 프로젝트입니다.
-                  AI 뉴스, 정부사업, 도구 리뷰, 튜토리얼을 매일 자동으로 발행하며,
+                  AI 뉴스, AI 부업 가이드, 도구 리뷰, 튜토리얼을 매일 자동으로 발행하며,
                   저희가 제공하는 서비스가 실제로 어떻게 작동하는지 직접 보여드립니다.
                 </p>
                 <p>
-                  클롤링부터 AI 글 생성, SEO 최적화, 자동 발행, 수익화까지 —
+                  크롤링부터 AI 글 생성, SEO 최적화, 자동 발행, 수익화까지 —
                   모든 파이프라인이 이 블로그에서 실시간으로 돌아가고 있습니다.
                 </p>
               </div>
