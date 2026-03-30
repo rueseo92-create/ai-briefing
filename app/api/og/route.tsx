@@ -11,7 +11,7 @@ export const runtime = "edge";
 
 const categoryColors: Record<string, string> = {
   "ai-news": "#6366F1",
-  "gov-projects": "#059669",
+  "side-hustle": "#059669",
   "ai-tools": "#0891B2",
   tutorials: "#7C3AED",
   marketing: "#D97706",

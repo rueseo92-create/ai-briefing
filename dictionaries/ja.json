@@ -1,13 +1,13 @@
 {
   "meta": {
-    "siteDescription": "AIニュース、政府事業、AIツールガイドをわかりやすくまとめます",
-    "defaultTitle": "AIブリーフィング | AIニュース・政府事業・活用ガイド"
+    "siteDescription": "AIニュース、AI副業・自動化収益、AIツールガイドをわかりやすくまとめます",
+    "defaultTitle": "AIブリーフィング | AIニュース・AI副業・活用ガイド"
   },
   "nav": {
     "home": "ホーム",
     "allPosts": "全記事",
     "aiNews": "AIニュース",
-    "govProjects": "政府事業",
+    "sideHustle": "AI副業",
     "aiTools": "AIツール",
     "tutorials": "チュートリアル",
     "marketing": "マーケティング",

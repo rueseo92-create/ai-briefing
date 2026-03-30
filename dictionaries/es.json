@@ -1,13 +1,13 @@
 {
   "meta": {
-    "siteDescription": "Noticias de IA, proyectos gubernamentales y guías prácticas de herramientas IA",
-    "defaultTitle": "AI Briefing | Noticias IA, Proyectos Gov y Guías"
+    "siteDescription": "Noticias de IA, trabajos secundarios con IA y guías prácticas de herramientas IA",
+    "defaultTitle": "AI Briefing | Noticias IA, Side Hustles y Guías"
   },
   "nav": {
     "home": "Inicio",
     "allPosts": "Todos",
     "aiNews": "Noticias IA",
-    "govProjects": "Proyectos Gov",
+    "sideHustle": "Side Hustle",
     "aiTools": "Herramientas IA",
     "tutorials": "Tutoriales",
     "marketing": "Marketing",

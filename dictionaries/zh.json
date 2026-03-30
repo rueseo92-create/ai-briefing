@@ -1,13 +1,13 @@
 {
   "meta": {
-    "siteDescription": "AI新闻、政府项目、AI工具指南，简明易懂",
-    "defaultTitle": "AI简报 | AI新闻、政府项目与实用指南"
+    "siteDescription": "AI新闻、AI副业与自动化收益、AI工具指南，简明易懂",
+    "defaultTitle": "AI简报 | AI新闻、AI副业与实用指南"
   },
   "nav": {
     "home": "首页",
     "allPosts": "全部文章",
     "aiNews": "AI新闻",
-    "govProjects": "政府项目",
+    "sideHustle": "AI副业",
     "aiTools": "AI工具",
     "tutorials": "教程",
     "marketing": "营销自动化",

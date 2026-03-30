@@ -1,13 +1,13 @@
 {
   "meta": {
-    "siteDescription": "AI news, government projects, and practical AI tool guides — simplified",
-    "defaultTitle": "AI Briefing | AI News, Gov Projects & Guides"
+    "siteDescription": "AI news, AI side hustles, and practical AI tool guides — simplified",
+    "defaultTitle": "AI Briefing | AI News, Side Hustles & Guides"
   },
   "nav": {
     "home": "Home",
     "allPosts": "All Posts",
     "aiNews": "AI News",
-    "govProjects": "Gov Projects",
+    "sideHustle": "Side Hustle",
     "aiTools": "AI Tools",
     "tutorials": "Tutorials",
     "marketing": "Marketing",
@@ -23,14 +23,14 @@
     "firstPostSoon": "First post coming soon.",
     "popularKeywords": "Popular Keywords",
     "newsletter": "AI Briefing Newsletter",
-    "newsletterDesc": "Weekly AI trends and government project updates, delivered to your inbox.",
+    "newsletterDesc": "Weekly AI trends and side hustle tips, delivered to your inbox.",
     "emailPlaceholder": "Enter your email address",
     "subscribe": "Subscribe",
     "noSpam": "No spam. Unsubscribe anytime.",
     "aboutThisBlog": "About this blog",
     "aboutItems": [
       "AI news explained simply",
-      "Government AI funding & project info",
+      "AI side hustles & digital nomad guides",
       "Practical AI tool usage guides",
       "Google SEO-optimized content"
     ],
@@ -53,7 +53,7 @@
   "search": {
     "title": "Search",
     "description": "Search articles by keyword or tag",
-    "placeholder": "Search (e.g., ChatGPT, AI automation, gov projects)",
+    "placeholder": "Search (e.g., ChatGPT, AI side hustle, automation)",
     "button": "Search",
     "popularKeywords": "Popular Keywords",
     "results": "{n} results",

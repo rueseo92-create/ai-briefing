@@ -53,7 +53,7 @@ SITE_URL = os.getenv("BLOG_SITE_URL", "")
 # AI 브리핑 카테고리 (lib/config.ts 와 동기화)
 CATEGORIES = {
     "ai-news": {"name": "AI 뉴스", "emoji": "🤖"},
-    "gov-projects": {"name": "정부사업", "emoji": "🏛️"},
+    "side-hustle": {"name": "AI 부업", "emoji": "💰"},
     "ai-tools": {"name": "AI 도구", "emoji": "🛠️"},
     "tutorials": {"name": "튜토리얼", "emoji": "📚"},
     "marketing": {"name": "마케팅 자동화", "emoji": "📈"},
@@ -318,8 +318,8 @@ def collect_topics(topic: str = "AI", count: int = 5, source: str = "all") -> li
     # 점수 부여
     for t in topics:
         score = 5.0
-        if t.category == "gov-projects":
-            score += 3  # 정부사업 콘텐츠 우선
+        if t.category == "side-hustle":
+            score += 3  # AI 부업/노마드 콘텐츠 우선
         if t.source_url:
             score += 2  # 출처가 있는 콘텐츠 우선
         if any(kw in t.title for kw in ["지원", "공모", "무료", "신청"]):
@@ -353,13 +353,12 @@ def _generate_topics_claude(topic: str, count: int) -> list[TopicData]:
 - 존재하지 않는 정부사업, 지원금, 공모전을 만들어내지 말 것
 - 실제 확인되지 않은 URL을 만들지 말 것
 - 구체적 금액/마감일/선정 규모 등을 지어내지 말 것
-- "gov-projects" 카테고리는 사용 금지 (크롤링 데이터 기반으로만 생성됨)
-
 토픽 유형 (골고루 섞어서):
 - ai-news: AI 업계 최신 뉴스, 모델 출시, 기업 동향 (이번 주 뉴스)
 - ai-tools: ChatGPT, Claude, Midjourney 등 AI 도구 최신 업데이트/비교/활용법
 - tutorials: AI 활용법 단계별 가이드 (2026년 최신 버전 기준)
 - marketing: AI 기반 마케팅 자동화 전략, 도구, 퍼널, CRM, 이메일/SNS 자동화
+- side-hustle: AI 부업, 디지털노마드, 자동화 수익, 프리랜서 가이드, 패시브 인컴
 
 제목 작성 (후킹 필수!):
 - 클릭을 유도하는 강력한 후킹 제목 (50자 이내)
@@ -487,14 +486,14 @@ BLOG_PROMPT = """당신은 SEO·GEO(Generative Engine Optimization)에 특화된
 6. 분량: 2500~3500자
 
 7. 정보 정확성 (매우 중요! — 할루시네이션 절대 금지)
-   - 존재하지 않는 정부사업, 보조금, 공모전을 절대 만들어내지 말 것
+   - 존재하지 않는 사업, 보조금, 공모전을 절대 만들어내지 말 것
    - 구체적 지원금액, 마감일, 선정 규모를 지어내지 말 것
    - 실제 확인되지 않은 URL을 절대 만들지 말 것
    - 출처 URL은 반드시 실제 존재하는 공식 도메인의 메인 페이지만 사용
      예: "https://openai.com", "https://www.msit.go.kr" (OK)
      예: "https://msit.go.kr/ai-startup-2026" (금지 — 실제 존재 확인 불가)
    - 확실하지 않은 정보는 "~로 알려져 있다", "~한 것으로 보인다"와 같은 추정 표현 사용
-   - 정부 정책/사업은 크롤링으로 확인된 경우에만 구체적으로 언급
+   - 정부 정책/사업 정보는 크롤링으로 확인된 경우에만 구체적으로 언급
    - 반드시 2026년 최신 정보만 작성 (과거 연도 정보 사용 금지)
    - "2024년", "2025년" 등 과거 데이터를 현재 정보처럼 쓰지 말 것
 
@@ -556,10 +555,10 @@ def _validate_source_url(url: str) -> bool:
 
 def generate_blog_post(topic: TopicData) -> BlogPost:
     """Claude API로 SEO 최적화 블로그 글 생성"""
-    # gov-projects 카테고리는 크롤링 데이터 없이 생성 불가
-    if topic.category == "gov-projects" and not topic.source_url:
-        print(f"  [차단] gov-projects는 크롤링 소스 없이 생성 불가: {topic.title}")
-        raise RuntimeError(f"gov-projects 카테고리는 크롤링된 source_url이 필요합니다: {topic.title}")
+    # 카테고리 유효성 검증
+    if topic.category not in CATEGORIES:
+        print(f"  [경고] 알 수 없는 카테고리 '{topic.category}' → ai-news로 변경")
+        topic.category = "ai-news"
 
     print(f"[2/7] 블로그 글 생성 중... (토픽: {topic.title})")
 
