@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "siteDescription": "AIニュース、政府事業、AIツールガイドをわかりやすくまとめます",
+    "defaultTitle": "AIブリーフィング | AIニュース・政府事業・活用ガイド"
+  },
+  "nav": {
+    "home": "ホーム",
+    "allPosts": "全記事",
+    "aiNews": "AIニュース",
+    "govProjects": "政府事業",
+    "aiTools": "AIツール",
+    "tutorials": "チュートリアル",
+    "about": "紹介"
+  },
+  "home": {
+    "latest": "Latest",
+    "all": "すべて",
+    "viewAllPosts": "全記事を見る",
+    "noPosts": "まだ記事がありません",
+    "noPostsDesc": "パイプラインを実行してAI関連コンテンツを生成してください",
+    "firstPostSoon": "最初の記事がまもなく公開されます。",
+    "popularKeywords": "人気キーワード",
+    "newsletter": "AIブリーフィングニュースレター",
+    "newsletterDesc": "毎週AIトレンドと政府事業情報をお届けします。",
+    "emailPlaceholder": "メールアドレスを入力",
+    "subscribe": "購読する",
+    "noSpam": "スパムなし。いつでも解除可能です。",
+    "aboutThisBlog": "このブログについて",
+    "aboutItems": [
+      "AIニュースをわかりやすく整理",
+      "政府AI事業・助成金情報のクローリング",
+      "実践的なAIツール活用ガイド",
+      "Google検索最適化(SEO)コンテンツ"
+    ],
+    "coupangTitle": "AIブロガーに人気の機材",
+    "coupangDevTitle": "開発者・ブロガー必須アイテム"
+  },
+  "post": {
+    "readingTime": "分で読了",
+    "references": "参考資料",
+    "relatedPosts": "関連記事",
+    "viewAll": "すべて見る",
+    "beginner": "入門",
+    "intermediate": "中級",
+    "advanced": "上級",
+    "home": "ホーム",
+    "coupangReaderTitle": "この記事の読者がよく検索する商品",
+    "coupangDevTitle": "開発者・ブロガー必須アイテム",
+    "koreanContentNotice": "この記事は韓国語で書かれています。"
+  },
+  "search": {
+    "title": "検索",
+    "description": "キーワードまたはタグで記事を検索",
+    "placeholder": "検索ワードを入力（例：ChatGPT、AI自動化、政府事業）",
+    "button": "検索",
+    "popularKeywords": "人気キーワード",
+    "results": "検索結果{n}件",
+    "noResults": "検索結果がありません",
+    "noResultsDesc": "他のキーワードで検索するか、人気タグをご覧ください",
+    "initialTitle": "キーワードを入力またはタグを選択",
+    "initialDesc": "{n}件の記事から検索",
+    "reset": "リセット",
+    "tag": "タグ"
+  },
+  "category": {
+    "postsCount": "{n}件の記事",
+    "all": "すべて",
+    "noPosts": "まだ{name}の記事がありません",
+    "noPostsDesc": "新しい記事が近日公開予定です。",
+    "allPosts": "全記事"
+  },
+  "footer": {
+    "sitemap": "サイトマップ",
+    "rss": "RSS",
+    "privacyPolicy": "プライバシーポリシー"
+  },
+  "coupang": {
+    "viewOnCoupang": "Coupangで見る",
+    "recommendation": "Coupangおすすめ",
+    "disclaimer": "この投稿にはCoupang Partnersアフィリエイトリンクが含まれ、手数料が発生する場合があります。",
+    "sponsored": "SPONSORED"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "siteDescription": "AI 뉴스, 정부사업, AI 도구 가이드를 쉽게 정리합니다",
+    "defaultTitle": "AI 브리핑 | AI 뉴스, 정부사업, 활용 가이드"
+  },
+  "nav": {
+    "home": "홈",
+    "allPosts": "전체 글",
+    "aiNews": "AI 뉴스",
+    "govProjects": "정부사업",
+    "aiTools": "AI 도구",
+    "tutorials": "튜토리얼",
+    "about": "소개"
+  },
+  "home": {
+    "latest": "Latest",
+    "all": "전체",
+    "viewAllPosts": "전체 글 보기",
+    "noPosts": "아직 글이 없습니다",
+    "noPostsDesc": "파이프라인을 실행해서 AI 관련 콘텐츠를 생성해보세요",
+    "firstPostSoon": "곧 첫 번째 글이 올라옵니다.",
+    "popularKeywords": "인기 키워드",
+    "newsletter": "AI 브리핑 뉴스레터",
+    "newsletterDesc": "매주 AI 트렌드와 정부사업 정보를 정리해서 보내드립니다.",
+    "emailPlaceholder": "이메일 주소를 입력하세요",
+    "subscribe": "구독하기",
+    "noSpam": "스팸 걱정 없이 언제든 해지 가능합니다.",
+    "aboutThisBlog": "이 블로그는",
+    "aboutItems": [
+      "AI 뉴스를 쉬운 한국어로 정리",
+      "정부 AI 사업/지원금 정보 크롤링",
+      "실전 AI 도구 사용법 가이드",
+      "Google 검색 최적화(SEO) 콘텐츠"
+    ],
+    "coupangTitle": "AI 블로거들이 많이 쓰는 장비",
+    "coupangDevTitle": "개발자·블로거 필수 장비 모음"
+  },
+  "post": {
+    "readingTime": "분 읽기",
+    "references": "참고 자료",
+    "relatedPosts": "관련 글 더보기",
+    "viewAll": "전체 보기",
+    "beginner": "입문",
+    "intermediate": "중급",
+    "advanced": "심화",
+    "home": "홈",
+    "coupangReaderTitle": "이 글을 읽는 분들이 많이 찾는 상품",
+    "coupangDevTitle": "개발자·블로거 필수 장비 모음",
+    "koreanContentNotice": ""
+  },
+  "search": {
+    "title": "검색",
+    "description": "키워드 또는 태그로 글을 찾아보세요",
+    "placeholder": "검색어를 입력하세요 (예: ChatGPT, AI 자동화, 정부사업)",
+    "button": "검색",
+    "popularKeywords": "인기 키워드",
+    "results": "검색 결과 {n}건",
+    "noResults": "검색 결과가 없습니다",
+    "noResultsDesc": "다른 키워드로 검색하거나 인기 키워드를 눌러보세요",
+    "initialTitle": "검색어를 입력하거나 키워드를 선택하세요",
+    "initialDesc": "총 {n}개의 글에서 검색할 수 있습니다",
+    "reset": "초기화",
+    "tag": "태그"
+  },
+  "category": {
+    "postsCount": "{n}개의 글",
+    "all": "전체",
+    "noPosts": "아직 {name} 글이 없습니다",
+    "noPostsDesc": "곧 새로운 글이 올라올 예정입니다.",
+    "allPosts": "전체 글"
+  },
+  "footer": {
+    "sitemap": "사이트맵",
+    "rss": "RSS",
+    "privacyPolicy": "개인정보처리방침"
+  },
+  "coupang": {
+    "viewOnCoupang": "쿠팡에서 보기",
+    "recommendation": "쿠팡 추천",
+    "disclaimer": "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+    "sponsored": "SPONSORED"
+  }
+}

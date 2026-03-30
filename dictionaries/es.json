@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "siteDescription": "Noticias de IA, proyectos gubernamentales y guías prácticas de herramientas IA",
+    "defaultTitle": "AI Briefing | Noticias IA, Proyectos Gov y Guías"
+  },
+  "nav": {
+    "home": "Inicio",
+    "allPosts": "Todos",
+    "aiNews": "Noticias IA",
+    "govProjects": "Proyectos Gov",
+    "aiTools": "Herramientas IA",
+    "tutorials": "Tutoriales",
+    "about": "Acerca de"
+  },
+  "home": {
+    "latest": "Latest",
+    "all": "Todos",
+    "viewAllPosts": "Ver todos los artículos",
+    "noPosts": "Aún no hay artículos",
+    "noPostsDesc": "Ejecuta el pipeline para generar contenido de IA",
+    "firstPostSoon": "El primer artículo llegará pronto.",
+    "popularKeywords": "Palabras clave populares",
+    "newsletter": "Newsletter AI Briefing",
+    "newsletterDesc": "Tendencias de IA y proyectos gubernamentales semanalmente en tu correo.",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "subscribe": "Suscribirse",
+    "noSpam": "Sin spam. Cancela en cualquier momento.",
+    "aboutThisBlog": "Sobre este blog",
+    "aboutItems": [
+      "Noticias de IA explicadas de forma sencilla",
+      "Info de proyectos/subsidios gubernamentales de IA",
+      "Guías prácticas de herramientas IA",
+      "Contenido optimizado para Google SEO"
+    ],
+    "coupangTitle": "Equipo popular entre bloggers de IA",
+    "coupangDevTitle": "Equipo esencial para devs y bloggers"
+  },
+  "post": {
+    "readingTime": "min de lectura",
+    "references": "Referencias",
+    "relatedPosts": "Artículos relacionados",
+    "viewAll": "Ver todos",
+    "beginner": "Principiante",
+    "intermediate": "Intermedio",
+    "advanced": "Avanzado",
+    "home": "Inicio",
+    "coupangReaderTitle": "Productos que buscan los lectores de este artículo",
+    "coupangDevTitle": "Equipo esencial para devs y bloggers",
+    "koreanContentNotice": "Este artículo está escrito en coreano."
+  },
+  "search": {
+    "title": "Buscar",
+    "description": "Busca artículos por palabra clave o etiqueta",
+    "placeholder": "Buscar (ej: ChatGPT, automatización IA, proyectos gov)",
+    "button": "Buscar",
+    "popularKeywords": "Palabras clave populares",
+    "results": "{n} resultados",
+    "noResults": "No se encontraron resultados",
+    "noResultsDesc": "Prueba otras palabras clave o explora etiquetas populares",
+    "initialTitle": "Ingresa una palabra clave o selecciona una etiqueta",
+    "initialDesc": "Busca entre {n} artículos",
+    "reset": "Restablecer",
+    "tag": "Etiqueta"
+  },
+  "category": {
+    "postsCount": "{n} artículos",
+    "all": "Todos",
+    "noPosts": "Aún no hay artículos de {name}",
+    "noPostsDesc": "Nuevos artículos próximamente.",
+    "allPosts": "Todos los artículos"
+  },
+  "footer": {
+    "sitemap": "Mapa del sitio",
+    "rss": "RSS",
+    "privacyPolicy": "Política de privacidad"
+  },
+  "coupang": {
+    "viewOnCoupang": "Ver en Coupang",
+    "recommendation": "Recomendados Coupang",
+    "disclaimer": "Este post contiene enlaces de afiliado de Coupang Partners, por los cuales se puede recibir una comisión.",
+    "sponsored": "SPONSORED"
+  }
+}

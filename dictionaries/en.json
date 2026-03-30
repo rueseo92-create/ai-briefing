@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "siteDescription": "AI news, government projects, and practical AI tool guides — simplified",
+    "defaultTitle": "AI Briefing | AI News, Gov Projects & Guides"
+  },
+  "nav": {
+    "home": "Home",
+    "allPosts": "All Posts",
+    "aiNews": "AI News",
+    "govProjects": "Gov Projects",
+    "aiTools": "AI Tools",
+    "tutorials": "Tutorials",
+    "about": "About"
+  },
+  "home": {
+    "latest": "Latest",
+    "all": "All",
+    "viewAllPosts": "View All Posts",
+    "noPosts": "No posts yet",
+    "noPostsDesc": "Run the pipeline to generate AI-related content",
+    "firstPostSoon": "First post coming soon.",
+    "popularKeywords": "Popular Keywords",
+    "newsletter": "AI Briefing Newsletter",
+    "newsletterDesc": "Weekly AI trends and government project updates, delivered to your inbox.",
+    "emailPlaceholder": "Enter your email address",
+    "subscribe": "Subscribe",
+    "noSpam": "No spam. Unsubscribe anytime.",
+    "aboutThisBlog": "About this blog",
+    "aboutItems": [
+      "AI news explained simply",
+      "Government AI funding & project info",
+      "Practical AI tool usage guides",
+      "Google SEO-optimized content"
+    ],
+    "coupangTitle": "Popular gear among AI bloggers",
+    "coupangDevTitle": "Must-have gear for devs & bloggers"
+  },
+  "post": {
+    "readingTime": "min read",
+    "references": "References",
+    "relatedPosts": "Related Posts",
+    "viewAll": "View All",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "home": "Home",
+    "coupangReaderTitle": "Products readers of this article often search",
+    "coupangDevTitle": "Must-have gear for devs & bloggers",
+    "koreanContentNotice": "This article is written in Korean."
+  },
+  "search": {
+    "title": "Search",
+    "description": "Search articles by keyword or tag",
+    "placeholder": "Search (e.g., ChatGPT, AI automation, gov projects)",
+    "button": "Search",
+    "popularKeywords": "Popular Keywords",
+    "results": "{n} results",
+    "noResults": "No results found",
+    "noResultsDesc": "Try different keywords or browse popular tags",
+    "initialTitle": "Enter a keyword or select a tag",
+    "initialDesc": "Search across {n} articles",
+    "reset": "Reset",
+    "tag": "Tag"
+  },
+  "category": {
+    "postsCount": "{n} posts",
+    "all": "All",
+    "noPosts": "No {name} posts yet",
+    "noPostsDesc": "New posts coming soon.",
+    "allPosts": "All Posts"
+  },
+  "footer": {
+    "sitemap": "Sitemap",
+    "rss": "RSS",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "coupang": {
+    "viewOnCoupang": "View on Coupang",
+    "recommendation": "Coupang Picks",
+    "disclaimer": "This post contains Coupang Partners affiliate links, for which a commission may be earned.",
+    "sponsored": "SPONSORED"
+  }
+}
