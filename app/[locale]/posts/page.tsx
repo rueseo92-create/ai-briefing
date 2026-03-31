@@ -7,7 +7,7 @@ export default async function PostsPage({ params }: { params: { locale: string }
   const locale = (params.locale || defaultLocale) as Locale;
   const dict = await getDictionary(locale);
   const lh = (path: string) => localizedHref(path, locale);
-  const posts = getAllPosts();
+  const posts = getAllPosts(locale as "ko" | "en");
 
   return (
     <div className="pt-28 pb-20 max-w-7xl mx-auto px-6 lg:px-12">

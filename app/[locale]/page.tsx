@@ -18,7 +18,7 @@ export default async function Home({ params }: { params: { locale: string } }) {
   const dict = await getDictionary(locale);
   const lh = (path: string) => localizedHref(path, locale);
 
-  const posts = getAllPosts();
+  const posts = getAllPosts(locale as "ko" | "en");
   const featured = posts[0];
   const leadStory = posts[1];
   const gridPosts = posts.slice(2, 8);

@@ -105,6 +105,7 @@ export interface PostMeta {
   difficulty?: "beginner" | "intermediate" | "advanced";
   tldr?: string;
   published: boolean;
+  language?: "ko" | "en";
 }
 
 export interface SourceLink {
@@ -118,8 +119,8 @@ export interface Post {
   content: string;
 }
 
-// 전체 포스트 목록 (정렬: 최신순)
-export function getAllPosts(): PostMeta[] {
+// 전체 포스트 목록 (정렬: 최신순, locale 필터 지원)
+export function getAllPosts(locale?: "ko" | "en"): PostMeta[] {
   if (!fs.existsSync(POSTS_DIR)) return [];
 
   const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".mdx"));
@@ -143,13 +144,14 @@ export function getAllPosts(): PostMeta[] {
         difficulty: data.difficulty || null,
         tldr: data.tldr || null,
         published: data.published !== false,
+        language: data.language || "ko",
       } as PostMeta;
     })
     .filter((p) => p.published)
+    .filter((p) => !locale || (p.language || "ko") === locale)
     .sort((a, b) => {
       const dateDiff = new Date(b.date).getTime() - new Date(a.date).getTime();
       if (dateDiff !== 0) return dateDiff;
-      // 같은 날짜면 slug 역순 (최신 파일이 위로)
       return b.slug.localeCompare(a.slug);
     });
 
@@ -183,9 +185,9 @@ export function getPost(slug: string): Post | null {
   };
 }
 
-// 카테고리별 포스트
-export function getPostsByCategory(category: string): PostMeta[] {
-  return getAllPosts().filter((p) => p.category === category);
+// 카테고리별 포스트 (locale 필터 지원)
+export function getPostsByCategory(category: string, locale?: "ko" | "en"): PostMeta[] {
+  return getAllPosts(locale).filter((p) => p.category === category);
 }
 
 // 관련 포스트 (같은 카테고리 + 태그 겹치는 것)

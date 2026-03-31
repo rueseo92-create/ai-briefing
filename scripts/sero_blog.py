@@ -108,6 +108,7 @@ class TopicData:
     difficulty: str = "beginner"
     tags: list = field(default_factory=list)
     score: float = 0.0
+    language: str = "ko"
 
 
 @dataclass
@@ -134,6 +135,7 @@ class BlogPost:
     seo_score: float = 0.0
     reading_time: int = 0
     char_count: int = 0
+    language: str = "ko"
 
 
 # ──────────────────────────────────────────────
@@ -333,15 +335,33 @@ def _programmatic_polish(content: str, category: str) -> str:
 # ──────────────────────────────────────────────
 # Step 1: 토픽 수집 (크롤링 + Claude)
 # ──────────────────────────────────────────────
-def collect_topics(topic: str = "AI", count: int = 5, source: str = "all") -> list[TopicData]:
+def collect_topics(topic: str = "AI", count: int = 5, source: str = "all", language: str = "ko") -> list[TopicData]:
     """AI 뉴스/정부사업 토픽 수집
 
     Args:
         topic: 주제
         count: 토픽 수
         source: 소스 ("all", "kstartup", "gov", "claude")
+        language: 언어 ("ko", "en")
     """
-    print(f"[1/5] 토픽 수집 중... (주제: {topic}, 소스: {source})")
+    print(f"[1/5] 토픽 수집 중... (주제: {topic}, 소스: {source}, lang={language})")
+
+    # 영문 모드: 크롤링 건너뛰고 Claude로만 생성
+    if language == "en":
+        topics = _generate_topics_claude_en(topic, min(count + 2, 12))
+        for t in topics:
+            score = 5.0
+            if t.category == "side-hustle":
+                score += 3
+            if any(kw in t.title.lower() for kw in ["free", "best", "how to", "guide"]):
+                score += 2
+            t.score = score
+        topics.sort(key=lambda x: x.score, reverse=True)
+        print(f"  → {len(topics)}개 EN 토픽 수집 (상위 {count}개 선택)")
+        for i, t in enumerate(topics[:count]):
+            print(f"  {i+1}. [{t.category}] {t.title} (score: {t.score:.1f})")
+        return topics[:count]
+
     topics = []
 
     # K-Startup 크롤링
@@ -515,6 +535,137 @@ SEO 기준:
 # ──────────────────────────────────────────────
 # Step 2: SEO 최적화 글 생성
 # ──────────────────────────────────────────────
+
+# ── 영문 토픽 생성 ──
+def _generate_topics_claude_en(topic: str, count: int) -> list[TopicData]:
+    """Generate English blog topics via Claude"""
+    today = datetime.now().strftime("%Y-%m-%d")
+    prompt = f"""You are an English AI blog editor targeting global audiences.
+Today: {today}
+
+Generate {count} blog post topics about "{topic}" for an AI/tech blog.
+
+Requirements:
+- Only cover 2026 latest information
+- Target high-search-volume English keywords
+- Focus on topics people actually search on Google
+- NEVER fabricate government programs, grants, statistics, or URLs
+
+Categories (distribute evenly):
+- ai-news: Latest AI industry news, model releases, company updates
+- ai-tools: AI tool reviews, comparisons, tutorials (ChatGPT, Claude, Gemini, etc.)
+- marketing: AI-powered marketing automation, strategies, tools
+- side-hustle: AI side hustles, passive income, freelancing with AI
+
+Title style:
+- Click-worthy, 60 chars max
+- Use numbers: "Top 7", "5 Best"
+- Curiosity: "I Tried...", "Honest Review", "vs"
+- SEO keywords: "free", "best", "how to", "guide", "2026"
+
+Output JSON only:
+{{"topics": [
+  {{"title": "...", "category": "...", "summary": "...", "difficulty": "beginner/intermediate/advanced", "tags": ["tag1","tag2","tag3"]}}
+]}}"""
+
+    data = None
+    for attempt in range(3):
+        try:
+            resp = claude.messages.create(
+                model=CLAUDE_MODEL,
+                max_tokens=2048,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            text = re.sub(r"```json\s*|```", "", resp.content[0].text.strip())
+            data = _safe_json_parse(text)
+            if data and "topics" in data:
+                break
+        except Exception as e:
+            print(f"  [EN topics] attempt {attempt+1}/3 failed: {e}")
+            if attempt == 2:
+                return []
+
+    if not data or "topics" not in data:
+        return []
+
+    results = []
+    for t in data.get("topics", []):
+        results.append(TopicData(
+            title=t["title"],
+            category=t.get("category", "ai-news"),
+            summary=t.get("summary", ""),
+            difficulty=t.get("difficulty", "beginner"),
+            tags=t.get("tags", []),
+            language="en",
+        ))
+    return results
+
+
+# ── 영문 블로그 프롬프트 ──
+BLOG_PROMPT_EN = """You are an expert English AI blog writer specializing in SEO and GEO (Generative Engine Optimization).
+Write a visually rich, easy-to-read blog post about the topic below.
+
+Topic: {title}
+Category: {category}
+Summary: {summary}
+Difficulty: {difficulty}
+Today: {today}
+
+Writing rules:
+1. SEO-optimized clickworthy title (under 60 chars)
+   - Use numbers, curiosity, and action words
+   - Include primary keyword in first 100 characters
+   - Use keyword variations in H2/H3 subheadings
+
+2. Structure (MUST follow):
+   - Opening hook (2-3 sentences, engage reader immediately)
+   - H2 sections (at least 4) with H3 subsections
+   - Horizontal rules (---) between H2 sections
+   - Concrete numbers, dates, and examples
+   - Comparison tables (at least 1 markdown table)
+   - Conclusion with key takeaways + next steps
+   - FAQ section: 2-3 questions (### Q1. / A1. format)
+
+3. GEO optimization (critical for AI search citation):
+   - Stats/numbers every 150-200 chars
+   - Answer capsules: > Key takeaway: [clear 1-line answer]
+   - Source citations: (Source: Name, 2026)
+   - Entity relationships: explicitly describe connections
+   - E-E-A-T signals: "Based on testing", "According to official docs"
+
+4. Content design:
+   - Highlight key info with blockquotes (> ) — at least 3
+   - NO markdown bold (**) — never use ** in the body
+   - NO strikethrough (~~)
+   - Use hyphens (-) for ranges, not tildes (~)
+   - Emoji restraint: max 2 per section
+   - Internal links: [Related articles](/categories/category-slug) — at least 2
+   - Action steps as numbered lists (1. 2. 3.)
+
+5. Tone: Professional yet approachable, expert but accessible
+
+6. Length: 2500-3500 characters
+
+7. Accuracy (CRITICAL — NO hallucination):
+   - NEVER fabricate programs, grants, statistics, or URLs
+   - Source URLs must be real official domains only
+   - Use hedging language for uncertain info
+
+8. Table rules:
+   - Blank line before and after tables
+   - Proper header separator: |------|------|
+   - At least 1 table required
+
+Output JSON only:
+{{"title": "SEO title (60 chars max)",
+  "description": "meta description (under 155 chars)",
+  "tldr": "1-2 sentence summary",
+  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
+  "content": "full markdown body (H2, H3, lists, tables, blockquotes, FAQ)",
+  "sources": [{{"name": "Source name", "url": "URL", "type": "official/news/paper"}}]
+}}"""
+
+
 BLOG_PROMPT = """당신은 SEO·GEO(Generative Engine Optimization)에 특화된 한국어 AI 블로그 작가이자 콘텐츠 디자이너입니다.
 아래 토픽에 대해 시각적으로 풍부하고 읽기 쉬운 블로그 글을 작성해주세요.
 
@@ -653,12 +804,14 @@ def generate_blog_post(topic: TopicData) -> BlogPost:
         print(f"  [경고] 알 수 없는 카테고리 '{topic.category}' → ai-news로 변경")
         topic.category = "ai-news"
 
-    print(f"[2/5] 블로그 글 생성 중... (토픽: {topic.title})")
+    lang = getattr(topic, "language", "ko")
+    print(f"[2/5] 블로그 글 생성 중... (토픽: {topic.title}, lang={lang})")
 
-    prompt_content = BLOG_PROMPT.format(
+    blog_prompt = BLOG_PROMPT_EN if lang == "en" else BLOG_PROMPT
+    prompt_content = blog_prompt.format(
         title=topic.title,
         category=CATEGORIES.get(topic.category, {}).get("name", topic.category),
-        summary=topic.summary or "최신 AI 트렌드 관련 정보",
+        summary=topic.summary or ("Latest AI trends" if lang == "en" else "최신 AI 트렌드 관련 정보"),
         difficulty=topic.difficulty,
         today=datetime.now().strftime("%Y-%m-%d"),
     )
@@ -683,7 +836,8 @@ def generate_blog_post(topic: TopicData) -> BlogPost:
         if data and "content" in data:
             # 본문 잘림 추가 검증: 마지막 문자가 문장 종결인지 확인
             content = data["content"].rstrip()
-            if content and not content[-1] in ".다요죠세습까!?\n":
+            end_chars = ".다요죠세습까!?\n" if lang == "ko" else ".!?\n"
+            if content and not content[-1] in end_chars:
                 print(f"  [경고] 본문이 중간에 끊김 감지, 재시도...")
                 continue
             break
@@ -730,6 +884,7 @@ def generate_blog_post(topic: TopicData) -> BlogPost:
         sources=sources,
         difficulty=topic.difficulty,
         tldr=data.get("tldr", ""),
+        language=lang,
     )
 
     print(f"  → 제목: {post.title}")
@@ -896,6 +1051,7 @@ def create_mdx_file(post: BlogPost) -> Path:
     # 카테고리별 Unsplash 썸네일 자동 할당
     thumbnail = _pick_thumbnail(post.slug, post.category)
 
+    lang_field = f'\nlanguage: "{post.language}"' if post.language == "en" else ""
     mdx = f"""---
 title: "{post.title}"
 description: "{post.description}"
@@ -905,7 +1061,7 @@ tags: {json.dumps(post.tags, ensure_ascii=False)}
 thumbnail: "{thumbnail}"
 difficulty: "{post.difficulty}"
 tldr: "{post.tldr}"
-published: {str(post.published).lower()}
+published: {str(post.published).lower()}{lang_field}
 sources:{sources_yaml if sources_yaml else " []"}
 ---
 
@@ -973,6 +1129,7 @@ def run_pipeline(
     publish: bool = True,
     dry_run: bool = False,
     source: str = "all",
+    language: str = "ko",
 ):
     """전체 파이프라인 실행
 
@@ -982,18 +1139,19 @@ def run_pipeline(
         publish: True면 published: true
         dry_run: True면 파일 생성만 (배포 안함)
         source: 데이터 소스 ("all", "kstartup", "gov", "claude")
+        language: 언어 ("ko", "en")
     """
     pipeline_start = time.time()
     print("=" * 60)
     print(f"AI 브리핑 파이프라인 v4 (토큰 최적화)")
     print(f"   주제: {topic} | 생성: {count}편 | 발행: {publish}")
-    print(f"   소스: {source}")
+    print(f"   소스: {source} | 언어: {language}")
     print(f"   모드: {'Dry-run' if dry_run else 'Full'}")
     print(f"   시각: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("=" * 60)
 
     # 1. 토픽 수집
-    topics = collect_topics(topic, count + 2, source=source)
+    topics = collect_topics(topic, count + 2, source=source, language=language)
 
     results = []
     for i, topic_data in enumerate(topics[:count]):
@@ -1080,6 +1238,8 @@ if __name__ == "__main__":
                         help="데이터 소스 (기본: all)")
     parser.add_argument("--draft", action="store_true", help="임시저장")
     parser.add_argument("--dry-run", action="store_true", help="배포 없이 파일만 생성")
+    parser.add_argument("--lang", type=str, default="ko", choices=["ko", "en"],
+                        help="언어 (기본: ko, 영문: en)")
     args = parser.parse_args()
 
     run_pipeline(
@@ -1088,4 +1248,5 @@ if __name__ == "__main__":
         publish=not args.draft,
         dry_run=args.dry_run,
         source=args.source,
+        language=args.lang,
     )

@@ -15,7 +15,7 @@ export default async function SearchPage({
 
   const query = searchParams.q?.trim() || "";
   const tag = searchParams.tag?.trim() || "";
-  const allPosts = getAllPosts();
+  const allPosts = getAllPosts(locale as "ko" | "en");
 
   const tagCounts: Record<string, number> = {};
   allPosts.forEach((p) => p.tags.forEach((t) => { tagCounts[t] = (tagCounts[t] || 0) + 1; }));

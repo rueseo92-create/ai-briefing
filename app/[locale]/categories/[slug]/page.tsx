@@ -28,7 +28,7 @@ export default async function CategoryPage({ params }: { params: { locale: strin
   const category = getCategory(params.slug);
   if (!category) notFound();
 
-  const posts = getPostsByCategory(params.slug);
+  const posts = getPostsByCategory(params.slug, locale as "ko" | "en");
 
   return (
     <div className="pt-28 pb-20 max-w-7xl mx-auto px-6 lg:px-12" data-category={params.slug}>

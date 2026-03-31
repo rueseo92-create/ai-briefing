@@ -76,7 +76,7 @@ export default async function PostPage({ params }: { params: { locale: string; s
   const readingTime = estimateReadingTime(content);
 
   // Prev/Next navigation
-  const allPosts = getAllPosts();
+  const allPosts = getAllPosts(locale as "ko" | "en");
   const currentIdx = allPosts.findIndex((p) => p.slug === params.slug);
   const prevPost = currentIdx < allPosts.length - 1 ? allPosts[currentIdx + 1] : null;
   const nextPost = currentIdx > 0 ? allPosts[currentIdx - 1] : null;
