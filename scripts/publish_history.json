@@ -211,7 +211,21 @@
       "date": "2026-04-01",
       "slot": "evening",
       "slug": "2026-04-01-2-2026"
+    },
+    {
+      "title": "AI 이미지 판매 부업",
+      "category": "side-hustle",
+      "date": "2026-04-01",
+      "slot": "night",
+      "slug": "2026-04-01-guide-side-hustle-getting-started-image"
+    },
+    {
+      "title": "AI 부업으로 월 100만원 만들기",
+      "category": "side-hustle",
+      "date": "2026-04-01",
+      "slot": "night",
+      "slug": "2026-04-01-ai-100-5"
     }
   ],
-  "last_run": "2026-04-01 [evening] (3/3 성공, 256초)"
+  "last_run": "2026-04-01 [night] (2/2 성공, 227초)"
 }
