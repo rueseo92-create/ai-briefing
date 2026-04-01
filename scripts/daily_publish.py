@@ -370,7 +370,7 @@ def run_qc(days: int = 7) -> list[dict]:
 def run_daily(slot: str = "auto", count: int = None, dry_run: bool = False):
     """슬롯 기반 자동 발행"""
     start = time.time()
-    today = datetime.now().strftime("%Y-%m-%d")
+    today = get_kst_now().strftime("%Y-%m-%d")
 
     # 슬롯 결정
     if slot == "auto":
