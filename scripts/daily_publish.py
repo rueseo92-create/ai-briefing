@@ -38,14 +38,14 @@ import sero_blog
 # 검색 트래픽 패턴에 맞춰 카테고리+검색 의도 배분
 SLOT_CONFIG = {
     "morning": {
-        "hours": (6, 10),       # 06:00~09:59 KST
+        "hours": (0, 11),       # 00:00~10:59 KST (GitHub Actions 지연 대비 여유)
         "count": 3,
         "distribution": {"ai-news": 2, "marketing": 1},
         "seo_angle": "최신 뉴스, 트렌드, 속보",
         "label": "오전 (07:00)",
     },
     "lunch": {
-        "hours": (11, 14),      # 11:00~13:59 KST
+        "hours": (11, 17),      # 11:00~16:59 KST
         "count": 2,
         "distribution": {"ai-tools": 1, "side-hustle": 1},
         "seo_angle": "사용법, 활용 가이드, 추천",

@@ -38,6 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/search", freq: "weekly" as const, priority: 0.6 },
     { path: "/about", freq: "monthly" as const, priority: 0.5 },
     { path: "/business", freq: "monthly" as const, priority: 0.6 },
+    { path: "/privacy", freq: "yearly" as const, priority: 0.3 },
   ];
 
   for (const page of staticPaths) {
