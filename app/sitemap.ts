@@ -28,7 +28,6 @@ function alternates(path: string) {
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const posts = getAllPosts();
   const entries: MetadataRoute.Sitemap = [];
 
   // 정적 페이지 (모든 로케일)
@@ -67,16 +66,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  // 포스트 페이지 (모든 로케일)
-  for (const post of posts) {
-    const postPath = `/posts/${post.slug}`;
-    for (const locale of LOCALES) {
+  // 포스트 페이지 (해당 언어 포스트가 있는 로케일만)
+  const postsByLocale = Object.fromEntries(
+    LOCALES.map((l) => [l, new Set(getAllPosts(l as "ko" | "en").map((p) => p.slug))])
+  );
+
+  for (const locale of LOCALES) {
+    const localePosts = getAllPosts(locale as "ko" | "en");
+    for (const post of localePosts) {
+      const postPath = `/posts/${post.slug}`;
+      const hasOtherLocale = LOCALES.some(
+        (l) => l !== locale && postsByLocale[l].has(post.slug)
+      );
       entries.push({
         url: localUrl(postPath, locale),
         lastModified: new Date(post.date),
         changeFrequency: "monthly",
         priority: locale === "ko" ? 0.8 : 0.6,
-        alternates: alternates(postPath),
+        alternates: hasOtherLocale ? alternates(postPath) : undefined,
       });
     }
   }
