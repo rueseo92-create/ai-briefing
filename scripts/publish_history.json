@@ -330,7 +330,28 @@
       "date": "2026-04-03",
       "slot": "lunch",
       "slug": "2026-04-03-midjourney"
+    },
+    {
+      "title": "SEO 자동화 도구 활용법",
+      "category": "marketing",
+      "date": "2026-04-03",
+      "slot": "evening",
+      "slug": "2026-04-03-seo-3-30"
+    },
+    {
+      "title": "AI 번역 부업 시작하기",
+      "category": "side-hustle",
+      "date": "2026-04-03",
+      "slot": "evening",
+      "slug": "2026-04-03-ai-50"
+    },
+    {
+      "title": "AI 문서 요약 도구",
+      "category": "ai-tools",
+      "date": "2026-04-03",
+      "slot": "evening",
+      "slug": "2026-04-03-ai-top-5"
     }
   ],
-  "last_run": "2026-04-03 [lunch] (2/2 성공, 176초)"
+  "last_run": "2026-04-03 [evening] (3/3 성공, 200초)"
 }
