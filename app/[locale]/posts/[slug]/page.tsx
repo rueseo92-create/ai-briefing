@@ -6,6 +6,7 @@ import { breadcrumbSchema, articleSchema, faqSchema, ogImageUrl } from "@/lib/se
 import { PostCard } from "@/components/PostCard";
 import { SourceCard } from "@/components/SourceCard";
 import { CoupangLinkAd } from "@/components/CoupangAd";
+import { AdSense } from "@/components/AdSense";
 import { ReadingProgress } from "@/components/ReadingProgress";
 import { TableOfContents } from "@/components/TableOfContents";
 import { ShareButtons } from "@/components/ShareButtons";
@@ -185,6 +186,10 @@ export default async function PostPage({ params }: { params: { locale: string; s
           <div className="prose max-w-none">
             <MDXRemote source={content} options={{ mdxOptions: { remarkPlugins: [[remarkGfm, { singleTilde: false }]] } }} />
           </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-6 mt-12">
+          <AdSense slot="auto" format="auto" />
         </div>
 
         {siteConfig.coupang.enabled && (

@@ -158,6 +158,7 @@ export default async function LocaleLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
         />
+        <meta name="google-adsense-account" content="ca-pub-1902054355965964" />
         <JsonLd locale={locale} />
         {siteConfig.analytics.gaId && (
           <>
@@ -174,13 +175,11 @@ export default async function LocaleLayout({
         )}
       </head>
       <body className="bg-background text-on-surface antialiased font-body">
-        {process.env.NEXT_PUBLIC_ADSENSE_ID && (
-          <Script
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
-            strategy="afterInteractive"
-            crossOrigin="anonymous"
-          />
-        )}
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1902054355965964"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
         {/* Header */}
         <header className="fixed top-0 w-full z-50 glass-header border-b border-slate-200/50 shadow-sm">
           <div className="flex justify-between items-center h-16 px-6 lg:px-12 max-w-7xl mx-auto">
