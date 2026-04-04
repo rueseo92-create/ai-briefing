@@ -1,8 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
-const INQUIRIES_FILE = path.join(process.cwd(), "data/inquiries.json");
 
 interface Inquiry {
   services: string[];
@@ -10,21 +6,6 @@ interface Inquiry {
   email: string;
   company?: string;
   createdAt: string;
-}
-
-function readInquiries(): Inquiry[] {
-  try {
-    if (!fs.existsSync(INQUIRIES_FILE)) return [];
-    return JSON.parse(fs.readFileSync(INQUIRIES_FILE, "utf-8"));
-  } catch {
-    return [];
-  }
-}
-
-function writeInquiries(data: Inquiry[]) {
-  const dir = path.dirname(INQUIRIES_FILE);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(INQUIRIES_FILE, JSON.stringify(data, null, 2), "utf-8");
 }
 
 const VALID_SERVICES = ["blog", "seo", "website", "pipeline", "monetize"];
@@ -52,7 +33,7 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString(),
     };
 
-    // 외부 웹훅 설정 시 전달
+    // 외부 웹훅 설정 시 전달 (Slack, Discord 등)
     const webhookUrl = process.env.INQUIRY_WEBHOOK_URL;
     if (webhookUrl) {
       await fetch(webhookUrl, {
@@ -60,13 +41,10 @@ export async function POST(req: NextRequest) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(inquiry),
       });
-      return NextResponse.json({ ok: true });
     }
 
-    // 로컬 JSON 저장
-    const inquiries = readInquiries();
-    inquiries.push(inquiry);
-    writeInquiries(inquiries);
+    // Vercel Logs에 기록 (Vercel 대시보드 > Logs에서 확인 가능)
+    console.log("[견적문의]", JSON.stringify(inquiry));
 
     return NextResponse.json({ ok: true });
   } catch {
