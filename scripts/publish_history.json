@@ -400,7 +400,77 @@
       "date": "2026-04-04",
       "slot": "lunch",
       "slug": "2026-04-04-claude-ai-10"
+    },
+    {
+      "title": "리타겟팅 광고 자동화 설정법",
+      "category": "marketing",
+      "date": "2026-04-05",
+      "slot": "morning",
+      "slug": "2026-04-05-automation"
+    },
+    {
+      "title": "AI 윤리와 안전성 논의",
+      "category": "ai-news",
+      "date": "2026-04-05",
+      "slot": "morning",
+      "slug": "2026-04-05-2026-ai-5"
+    },
+    {
+      "title": "AI 규제 정책 동향",
+      "category": "ai-news",
+      "date": "2026-04-05",
+      "slot": "morning",
+      "slug": "2026-04-05-post-7965"
+    },
+    {
+      "title": "AI 번역 부업 시작하기",
+      "category": "side-hustle",
+      "date": "2026-04-05",
+      "slot": "lunch",
+      "slug": "2026-04-05-ai-50"
+    },
+    {
+      "title": "AI 마케팅 자동화 도구",
+      "category": "ai-tools",
+      "date": "2026-04-05",
+      "slot": "lunch",
+      "slug": "2026-04-05-free-tools-automation-marketing"
+    },
+    {
+      "title": "Claude AI 사용 가이드",
+      "category": "ai-tools",
+      "date": "2026-04-05",
+      "slot": "evening",
+      "slug": "2026-04-05-claude-ai"
+    },
+    {
+      "title": "패시브 인컴 AI 활용법",
+      "category": "side-hustle",
+      "date": "2026-04-05",
+      "slot": "evening",
+      "slug": "2026-04-05-300-ai"
+    },
+    {
+      "title": "마케팅 퍼널 자동화 구축",
+      "category": "marketing",
+      "date": "2026-04-05",
+      "slot": "evening",
+      "slug": "2026-04-05-automation-marketing"
+    },
+    {
+      "title": "AI 자동화 부업 아이디어",
+      "category": "side-hustle",
+      "date": "2026-04-06",
+      "slot": "night",
+      "slug": "2026-04-05-ai-7-50"
+    },
+    {
+      "title": "AI 콘텐츠 판매 부업",
+      "category": "side-hustle",
+      "date": "2026-04-06",
+      "slot": "night",
+      "slug": "2026-04-05-ai-100-3"
     }
   ],
-  "last_run": "2026-04-05 [night] (0/2 성공, 8초)"
+  "last_run": "2026-04-06 [night] (2/2 성공, 252초)"
 }
