@@ -582,7 +582,21 @@
       "date": "2026-04-07",
       "slot": "evening",
       "slug": "2026-04-07-ai-top-7-vs-vs-chatgpt"
+    },
+    {
+      "title": "자동화 수익 파이프라인 구축",
+      "category": "side-hustle",
+      "date": "2026-04-07",
+      "slot": "night",
+      "slug": "2026-04-07-ai-100-3"
+    },
+    {
+      "title": "AI 이미지 판매 부업",
+      "category": "side-hustle",
+      "date": "2026-04-07",
+      "slot": "night",
+      "slug": "2026-04-07-side-hustle-income-image"
     }
   ],
-  "last_run": "2026-04-07 [evening] (3/3 성공, 308초)"
+  "last_run": "2026-04-07 [night] (2/2 성공, 247초)"
 }
