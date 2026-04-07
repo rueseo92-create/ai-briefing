@@ -32,7 +32,7 @@ import random
 import time
 import urllib.parse
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Optional
@@ -46,6 +46,9 @@ import anthropic
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# GitHub Actions(UTC) 환경에서도 한국 시간 기준으로 날짜 산출
+KST = timezone(timedelta(hours=9))
 
 # ──────────────────────────────────────────────
 # Config
@@ -450,7 +453,7 @@ def collect_topics(topic: str = "AI", count: int = 5, source: str = "all", langu
 
 def _generate_topics_claude(topic: str, count: int) -> list[TopicData]:
     """Claude로 블로그 토픽 생성"""
-    today = datetime.now().strftime("%Y-%m-%d")
+    today = datetime.now(KST).strftime("%Y-%m-%d")
     one_week_ago = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
 
     prompt = f"""당신은 한국 AI 블로그 에디터입니다.
@@ -539,7 +542,7 @@ SEO 기준:
 # ── 영문 토픽 생성 ──
 def _generate_topics_claude_en(topic: str, count: int) -> list[TopicData]:
     """Generate English blog topics via Claude"""
-    today = datetime.now().strftime("%Y-%m-%d")
+    today = datetime.now(KST).strftime("%Y-%m-%d")
     prompt = f"""You are an English AI blog editor targeting global audiences.
 Today: {today}
 
@@ -869,7 +872,7 @@ def generate_blog_post(topic: TopicData) -> BlogPost:
             type=topic.source_type or "news",
         ))
 
-    today = datetime.now().strftime("%Y-%m-%d")
+    today = datetime.now(KST).strftime("%Y-%m-%d")
     title = data["title"]
     slug = f"{today}-{_generate_english_slug(title, topic.title)}"
 

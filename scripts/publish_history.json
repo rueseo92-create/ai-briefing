@@ -547,7 +547,21 @@
       "date": "2026-04-07",
       "slot": "morning",
       "slug": "2026-04-06-automation-marketing-practical"
+    },
+    {
+      "title": "AI 부업으로 월 100만원 만들기",
+      "category": "side-hustle",
+      "date": "2026-04-07",
+      "slot": "lunch",
+      "slug": "2026-04-07-ai-100-3"
+    },
+    {
+      "title": "AI 마케팅 자동화 도구",
+      "category": "ai-tools",
+      "date": "2026-04-07",
+      "slot": "lunch",
+      "slug": "2026-04-07-free-tools-automation-marketing"
     }
   ],
-  "last_run": "2026-04-07 [morning] (3/3 성공, 194초)"
+  "last_run": "2026-04-07 [lunch] (2/2 성공, 129초)"
 }
