@@ -652,7 +652,21 @@
       "date": "2026-04-08",
       "slot": "evening",
       "slug": "2026-04-08-ai-300"
+    },
+    {
+      "title": "디지털 노마드 수입원 만들기",
+      "category": "side-hustle",
+      "date": "2026-04-08",
+      "slot": "night",
+      "slug": "2026-04-08-ai-300-5"
+    },
+    {
+      "title": "프리랜서 AI 활용 수익화",
+      "category": "side-hustle",
+      "date": "2026-04-08",
+      "slot": "night",
+      "slug": "2026-04-08-ai-200-7"
     }
   ],
-  "last_run": "2026-04-08 [evening] (3/3 성공, 335초)"
+  "last_run": "2026-04-08 [night] (2/2 성공, 237초)"
 }
