@@ -701,7 +701,28 @@
       "date": "2026-04-09",
       "slot": "lunch",
       "slug": "2026-04-09-ai-10"
+    },
+    {
+      "title": "AI 번역 부업 시작하기",
+      "category": "side-hustle",
+      "date": "2026-04-09",
+      "slot": "evening",
+      "slug": "2026-04-09-ai-100-3"
+    },
+    {
+      "title": "ChatGPT 활용법",
+      "category": "ai-tools",
+      "date": "2026-04-09",
+      "slot": "evening",
+      "slug": "2026-04-09-chatgpt-7"
+    },
+    {
+      "title": "SEO 자동화 도구 활용법",
+      "category": "marketing",
+      "date": "2026-04-09",
+      "slot": "evening",
+      "slug": "2026-04-09-seo-5"
     }
   ],
-  "last_run": "2026-04-09 [lunch] (2/2 성공, 161초)"
+  "last_run": "2026-04-09 [evening] (3/3 성공, 302초)"
 }
