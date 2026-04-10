@@ -799,7 +799,28 @@
       "date": "2026-04-10",
       "slot": "night",
       "slug": "2026-04-10-ai-100"
+    },
+    {
+      "title": "오픈소스 AI 모델 동향",
+      "category": "ai-news",
+      "date": "2026-04-11",
+      "slot": "morning",
+      "slug": "2026-04-11-ai-top5"
+    },
+    {
+      "title": "최신 AI 모델 출시 소식",
+      "category": "ai-news",
+      "date": "2026-04-11",
+      "slot": "morning",
+      "slug": "2026-04-11-2026-ai"
+    },
+    {
+      "title": "SNS 마케팅 자동화 도구 비교",
+      "category": "marketing",
+      "date": "2026-04-11",
+      "slot": "morning",
+      "slug": "2026-04-11-sns-6-1"
     }
   ],
-  "last_run": "2026-04-10 [night] (2/2 성공, 152초)"
+  "last_run": "2026-04-11 [morning] (3/3 성공, 256초)"
 }
