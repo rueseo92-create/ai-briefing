@@ -834,7 +834,28 @@
       "date": "2026-04-11",
       "slot": "lunch",
       "slug": "2026-04-11-2026-ai-top-5"
+    },
+    {
+      "title": "Midjourney 이미지 생성",
+      "category": "ai-tools",
+      "date": "2026-04-11",
+      "slot": "evening",
+      "slug": "2026-04-11-midjourney-top-7"
+    },
+    {
+      "title": "AI 번역 부업 시작하기",
+      "category": "side-hustle",
+      "date": "2026-04-11",
+      "slot": "evening",
+      "slug": "2026-04-11-ai-50-5"
+    },
+    {
+      "title": "CRM 마케팅 자동화 도입법",
+      "category": "marketing",
+      "date": "2026-04-11",
+      "slot": "evening",
+      "slug": "2026-04-11-crm-87-6"
     }
   ],
-  "last_run": "2026-04-11 [lunch] (2/2 성공, 239초)"
+  "last_run": "2026-04-11 [evening] (3/3 성공, 284초)"
 }
