@@ -855,7 +855,21 @@
       "date": "2026-04-11",
       "slot": "evening",
       "slug": "2026-04-11-crm-87-6"
+    },
+    {
+      "title": "프리랜서 AI 활용 수익화",
+      "category": "side-hustle",
+      "date": "2026-04-11",
+      "slot": "night",
+      "slug": "2026-04-11-ai-200"
+    },
+    {
+      "title": "AI 번역 부업 시작하기",
+      "category": "side-hustle",
+      "date": "2026-04-11",
+      "slot": "night",
+      "slug": "2026-04-11-ai-300-3"
     }
   ],
-  "last_run": "2026-04-11 [evening] (3/3 성공, 284초)"
+  "last_run": "2026-04-11 [night] (2/2 성공, 158초)"
 }
