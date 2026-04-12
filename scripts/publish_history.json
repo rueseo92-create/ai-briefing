@@ -904,7 +904,28 @@
       "date": "2026-04-12",
       "slot": "lunch",
       "slug": "2026-04-12-ai-top-7-2026"
+    },
+    {
+      "title": "SNS 마케팅 자동화 도구 비교",
+      "category": "marketing",
+      "date": "2026-04-12",
+      "slot": "evening",
+      "slug": "2026-04-12-sns-roi-200-5"
+    },
+    {
+      "title": "AI 문서 요약 도구",
+      "category": "ai-tools",
+      "date": "2026-04-12",
+      "slot": "evening",
+      "slug": "2026-04-12-guide-tools"
+    },
+    {
+      "title": "AI 자동화 부업 아이디어",
+      "category": "side-hustle",
+      "date": "2026-04-12",
+      "slot": "evening",
+      "slug": "2026-04-12-ai-300-7"
     }
   ],
-  "last_run": "2026-04-12 [lunch] (2/2 성공, 151초)"
+  "last_run": "2026-04-12 [evening] (3/3 성공, 301초)"
 }
