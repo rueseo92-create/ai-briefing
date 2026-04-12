@@ -925,7 +925,21 @@
       "date": "2026-04-12",
       "slot": "evening",
       "slug": "2026-04-12-ai-300-7"
+    },
+    {
+      "title": "AI 콘텐츠 판매 부업",
+      "category": "side-hustle",
+      "date": "2026-04-12",
+      "slot": "night",
+      "slug": "2026-04-12-50-ai"
+    },
+    {
+      "title": "AI 자동화 부업 아이디어",
+      "category": "side-hustle",
+      "date": "2026-04-12",
+      "slot": "night",
+      "slug": "2026-04-12-ai-6-300"
     }
   ],
-  "last_run": "2026-04-12 [evening] (3/3 성공, 301초)"
+  "last_run": "2026-04-12 [night] (2/2 성공, 240초)"
 }
