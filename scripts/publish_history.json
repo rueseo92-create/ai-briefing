@@ -974,7 +974,28 @@
       "date": "2026-04-13",
       "slot": "lunch",
       "slug": "2026-04-13-ai-100"
+    },
+    {
+      "title": "AI 데이터 분석 도구",
+      "category": "ai-tools",
+      "date": "2026-04-13",
+      "slot": "evening",
+      "slug": "2026-04-13-ai-1-2026"
+    },
+    {
+      "title": "퍼포먼스 마케팅 자동화 가이드",
+      "category": "marketing",
+      "date": "2026-04-13",
+      "slot": "evening",
+      "slug": "2026-04-13-7-2026"
+    },
+    {
+      "title": "프리랜서 AI 활용 수익화",
+      "category": "side-hustle",
+      "date": "2026-04-13",
+      "slot": "evening",
+      "slug": "2026-04-13-ai-3-200"
     }
   ],
-  "last_run": "2026-04-13 [lunch] (2/2 성공, 138초)"
+  "last_run": "2026-04-13 [evening] (3/3 성공, 224초)"
 }
