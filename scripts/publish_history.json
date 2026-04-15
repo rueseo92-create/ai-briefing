@@ -1100,7 +1100,21 @@
       "date": "2026-04-15",
       "slot": "morning",
       "slug": "2026-04-15-2026-ai-1"
+    },
+    {
+      "title": "ChatGPT 활용법",
+      "category": "ai-tools",
+      "date": "2026-04-15",
+      "slot": "lunch",
+      "slug": "2026-04-15-chatgpt-top-15"
+    },
+    {
+      "title": "AI 부업으로 월 100만원 만들기",
+      "category": "side-hustle",
+      "date": "2026-04-15",
+      "slot": "lunch",
+      "slug": "2026-04-15-ai-100-3"
     }
   ],
-  "last_run": "2026-04-15 [morning] (3/3 성공, 280초)"
+  "last_run": "2026-04-15 [lunch] (2/2 성공, 214초)"
 }
