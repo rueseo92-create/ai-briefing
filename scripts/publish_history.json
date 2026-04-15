@@ -1135,7 +1135,21 @@
       "date": "2026-04-15",
       "slot": "evening",
       "slug": "2026-04-15-ai-100"
+    },
+    {
+      "title": "패시브 인컴 AI 활용법",
+      "category": "side-hustle",
+      "date": "2026-04-15",
+      "slot": "night",
+      "slug": "2026-04-15-ai-500-2026"
+    },
+    {
+      "title": "디지털 노마드 수입원 만들기",
+      "category": "side-hustle",
+      "date": "2026-04-15",
+      "slot": "night",
+      "slug": "2026-04-15-5-2026-ai"
     }
   ],
-  "last_run": "2026-04-15 [evening] (3/3 성공, 252초)"
+  "last_run": "2026-04-15 [night] (2/2 성공, 121초)"
 }
