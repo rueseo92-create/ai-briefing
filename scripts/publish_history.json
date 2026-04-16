@@ -1184,7 +1184,28 @@
       "date": "2026-04-16",
       "slot": "lunch",
       "slug": "2026-04-16-ai-100-2026"
+    },
+    {
+      "title": "프리랜서 AI 활용 수익화",
+      "category": "side-hustle",
+      "date": "2026-04-16",
+      "slot": "evening",
+      "slug": "2026-04-16-ai-7-2026"
+    },
+    {
+      "title": "AI 마케팅 자동화 플랫폼 추천",
+      "category": "marketing",
+      "date": "2026-04-16",
+      "slot": "evening",
+      "slug": "2026-04-16-ai-7-1"
+    },
+    {
+      "title": "AI 번역 도구 추천",
+      "category": "ai-tools",
+      "date": "2026-04-16",
+      "slot": "evening",
+      "slug": "2026-04-16-2026-ai-5-1"
     }
   ],
-  "last_run": "2026-04-16 [lunch] (2/2 성공, 305초)"
+  "last_run": "2026-04-16 [evening] (3/3 성공, 272초)"
 }
