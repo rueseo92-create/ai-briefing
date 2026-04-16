@@ -1219,7 +1219,28 @@
       "date": "2026-04-16",
       "slot": "night",
       "slug": "2026-04-16-ai-100"
+    },
+    {
+      "title": "오픈소스 AI 모델 동향",
+      "category": "ai-news",
+      "date": "2026-04-17",
+      "slot": "morning",
+      "slug": "2026-04-17-2026-ai-chatgpt"
+    },
+    {
+      "title": "AI 스타트업 투자 트렌드",
+      "category": "ai-news",
+      "date": "2026-04-17",
+      "slot": "morning",
+      "slug": "2026-04-17-ai-1-2026"
+    },
+    {
+      "title": "CRM 마케팅 자동화 도입법",
+      "category": "marketing",
+      "date": "2026-04-17",
+      "slot": "morning",
+      "slug": "2026-04-17-crm-roi-200"
     }
   ],
-  "last_run": "2026-04-16 [night] (2/2 성공, 193초)"
+  "last_run": "2026-04-17 [morning] (3/3 성공, 206초)"
 }
