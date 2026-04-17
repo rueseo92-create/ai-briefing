@@ -1254,7 +1254,28 @@
       "date": "2026-04-17",
       "slot": "lunch",
       "slug": "2026-04-17-ai-100-3"
+    },
+    {
+      "title": "자동화 수익 파이프라인 구축",
+      "category": "side-hustle",
+      "date": "2026-04-17",
+      "slot": "evening",
+      "slug": "2026-04-17-2026-ai-50"
+    },
+    {
+      "title": "AI 번역 도구 추천",
+      "category": "ai-tools",
+      "date": "2026-04-17",
+      "slot": "evening",
+      "slug": "2026-04-17-ai-1-2026"
+    },
+    {
+      "title": "SEO 자동화 도구 활용법",
+      "category": "marketing",
+      "date": "2026-04-17",
+      "slot": "evening",
+      "slug": "2026-04-17-seo-roi-200"
     }
   ],
-  "last_run": "2026-04-17 [lunch] (2/2 성공, 236초)"
+  "last_run": "2026-04-17 [evening] (3/3 성공, 278초)"
 }
