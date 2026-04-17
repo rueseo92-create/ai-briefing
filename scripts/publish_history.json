@@ -1289,7 +1289,28 @@
       "date": "2026-04-17",
       "slot": "night",
       "slug": "2026-04-17-ai-100"
+    },
+    {
+      "title": "최신 AI 모델 출시 소식",
+      "category": "ai-news",
+      "date": "2026-04-18",
+      "slot": "morning",
+      "slug": "2026-04-18-2026-4-ai"
+    },
+    {
+      "title": "리타겟팅 광고 자동화 설정법",
+      "category": "marketing",
+      "date": "2026-04-18",
+      "slot": "morning",
+      "slug": "2026-04-18-roi-200-30"
+    },
+    {
+      "title": "생성형 AI 시장 전망",
+      "category": "ai-news",
+      "date": "2026-04-18",
+      "slot": "morning",
+      "slug": "2026-04-18-ai-2026-45"
     }
   ],
-  "last_run": "2026-04-17 [night] (2/2 성공, 197초)"
+  "last_run": "2026-04-18 [morning] (3/3 성공, 212초)"
 }
