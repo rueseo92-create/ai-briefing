@@ -1499,7 +1499,28 @@
       "date": "2026-04-20",
       "slot": "night",
       "slug": "2026-04-20-300-ai"
+    },
+    {
+      "title": "빅테크 AI 전략 변화",
+      "category": "ai-news",
+      "date": "2026-04-21",
+      "slot": "morning",
+      "slug": "2026-04-21-strategy"
+    },
+    {
+      "title": "SNS 마케팅 자동화 도구 비교",
+      "category": "marketing",
+      "date": "2026-04-21",
+      "slot": "morning",
+      "slug": "2026-04-21-sns-roi-200-1"
+    },
+    {
+      "title": "AI 스타트업 투자 트렌드",
+      "category": "ai-news",
+      "date": "2026-04-21",
+      "slot": "morning",
+      "slug": "2026-04-21-2026-ai-1"
     }
   ],
-  "last_run": "2026-04-20 [night] (2/2 성공, 144초)"
+  "last_run": "2026-04-21 [morning] (3/3 성공, 314초)"
 }
