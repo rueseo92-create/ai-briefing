@@ -1464,7 +1464,28 @@
       "date": "2026-04-20",
       "slot": "lunch",
       "slug": "2026-04-20-ai-100-6"
+    },
+    {
+      "title": "마케팅 퍼널 자동화 구축",
+      "category": "marketing",
+      "date": "2026-04-20",
+      "slot": "evening",
+      "slug": "2026-04-20-automation-marketing"
+    },
+    {
+      "title": "Claude AI 사용 가이드",
+      "category": "ai-tools",
+      "date": "2026-04-20",
+      "slot": "evening",
+      "slug": "2026-04-20-claude-ai-top-7-10"
+    },
+    {
+      "title": "AI 부업으로 월 100만원 만들기",
+      "category": "side-hustle",
+      "date": "2026-04-20",
+      "slot": "evening",
+      "slug": "2026-04-20-ai-100"
     }
   ],
-  "last_run": "2026-04-20 [lunch] (2/2 성공, 208초)"
+  "last_run": "2026-04-20 [evening] (3/3 성공, 185초)"
 }
