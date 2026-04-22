@@ -1639,7 +1639,28 @@
       "date": "2026-04-22",
       "slot": "night",
       "slug": "2026-04-22-ai-200"
+    },
+    {
+      "title": "AI 챗봇 마케팅 자동화",
+      "category": "marketing",
+      "date": "2026-04-23",
+      "slot": "morning",
+      "slug": "2026-04-23-automation-marketing-practical"
+    },
+    {
+      "title": "AI 윤리와 안전성 논의",
+      "category": "ai-news",
+      "date": "2026-04-23",
+      "slot": "morning",
+      "slug": "2026-04-23-ai-2026"
+    },
+    {
+      "title": "최신 AI 모델 출시 소식",
+      "category": "ai-news",
+      "date": "2026-04-23",
+      "slot": "morning",
+      "slug": "2026-04-23-2026-4-ai"
     }
   ],
-  "last_run": "2026-04-22 [night] (2/2 성공, 253초)"
+  "last_run": "2026-04-23 [morning] (3/3 성공, 249초)"
 }
