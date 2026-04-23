@@ -1709,7 +1709,28 @@
       "date": "2026-04-23",
       "slot": "night",
       "slug": "2026-04-23-ai-100"
+    },
+    {
+      "title": "AI 스타트업 투자 트렌드",
+      "category": "ai-news",
+      "date": "2026-04-24",
+      "slot": "morning",
+      "slug": "2026-04-24-2026-ai-1"
+    },
+    {
+      "title": "콘텐츠 마케팅 자동화 워크플로우",
+      "category": "marketing",
+      "date": "2026-04-24",
+      "slot": "morning",
+      "slug": "2026-04-24-10-300"
+    },
+    {
+      "title": "오픈소스 AI 모델 동향",
+      "category": "ai-news",
+      "date": "2026-04-24",
+      "slot": "morning",
+      "slug": "2026-04-24-2026-ai-4"
     }
   ],
-  "last_run": "2026-04-23 [night] (2/2 성공, 202초)"
+  "last_run": "2026-04-24 [morning] (3/3 성공, 210초)"
 }
