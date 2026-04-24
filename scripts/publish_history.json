@@ -1779,7 +1779,28 @@
       "date": "2026-04-24",
       "slot": "night",
       "slug": "2026-04-24-300-ai-5"
+    },
+    {
+      "title": "생성형 AI 시장 전망",
+      "category": "ai-news",
+      "date": "2026-04-25",
+      "slot": "morning",
+      "slug": "2026-04-25-ai-2026"
+    },
+    {
+      "title": "최신 AI 모델 출시 소식",
+      "category": "ai-news",
+      "date": "2026-04-25",
+      "slot": "morning",
+      "slug": "2026-04-25-2026-4-ai-3"
+    },
+    {
+      "title": "퍼포먼스 마케팅 자동화 가이드",
+      "category": "marketing",
+      "date": "2026-04-25",
+      "slot": "morning",
+      "slug": "2026-04-25-roi-300"
     }
   ],
-  "last_run": "2026-04-24 [night] (2/2 성공, 243초)"
+  "last_run": "2026-04-25 [morning] (3/3 성공, 287초)"
 }
