@@ -1744,7 +1744,28 @@
       "date": "2026-04-24",
       "slot": "lunch",
       "slug": "2026-04-24-ai-100"
+    },
+    {
+      "title": "AI 문서 요약 도구",
+      "category": "ai-tools",
+      "date": "2026-04-24",
+      "slot": "evening",
+      "slug": "2026-04-24-ai-7-1"
+    },
+    {
+      "title": "AI 부업으로 월 100만원 만들기",
+      "category": "side-hustle",
+      "date": "2026-04-24",
+      "slot": "evening",
+      "slug": "2026-04-24-ai-100-5"
+    },
+    {
+      "title": "CRM 마케팅 자동화 도입법",
+      "category": "marketing",
+      "date": "2026-04-24",
+      "slot": "evening",
+      "slug": "2026-04-24-crm-3"
     }
   ],
-  "last_run": "2026-04-24 [lunch] (2/2 성공, 152초)"
+  "last_run": "2026-04-24 [evening] (3/3 성공, 334초)"
 }
