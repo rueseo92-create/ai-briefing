@@ -1835,7 +1835,21 @@
       "date": "2026-04-25",
       "slot": "evening",
       "slug": "2026-04-25-claude-ai-7"
+    },
+    {
+      "title": "AI 부업으로 월 100만원 만들기",
+      "category": "side-hustle",
+      "date": "2026-04-25",
+      "slot": "night",
+      "slug": "2026-04-25-ai-100-3"
+    },
+    {
+      "title": "AI 자동화 부업 아이디어",
+      "category": "side-hustle",
+      "date": "2026-04-25",
+      "slot": "night",
+      "slug": "2026-04-25-side-hustle-income-getting-started"
     }
   ],
-  "last_run": "2026-04-25 [evening] (3/3 성공, 291초)"
+  "last_run": "2026-04-25 [night] (2/2 성공, 154초)"
 }
