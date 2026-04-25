@@ -1849,7 +1849,28 @@
       "date": "2026-04-25",
       "slot": "night",
       "slug": "2026-04-25-side-hustle-income-getting-started"
+    },
+    {
+      "title": "AI 규제 정책 동향",
+      "category": "ai-news",
+      "date": "2026-04-26",
+      "slot": "morning",
+      "slug": "2026-04-26-post-9700"
+    },
+    {
+      "title": "빅테크 AI 전략 변화",
+      "category": "ai-news",
+      "date": "2026-04-26",
+      "slot": "morning",
+      "slug": "2026-04-26-ai-2026"
+    },
+    {
+      "title": "SEO 자동화 도구 활용법",
+      "category": "marketing",
+      "date": "2026-04-26",
+      "slot": "morning",
+      "slug": "2026-04-26-seo-roi-200"
     }
   ],
-  "last_run": "2026-04-25 [night] (2/2 성공, 154초)"
+  "last_run": "2026-04-26 [morning] (3/3 성공, 262초)"
 }
