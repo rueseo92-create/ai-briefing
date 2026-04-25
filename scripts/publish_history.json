@@ -1800,7 +1800,21 @@
       "date": "2026-04-25",
       "slot": "morning",
       "slug": "2026-04-25-roi-300"
+    },
+    {
+      "title": "패시브 인컴 AI 활용법",
+      "category": "side-hustle",
+      "date": "2026-04-25",
+      "slot": "lunch",
+      "slug": "2026-04-25-guide"
+    },
+    {
+      "title": "Midjourney 이미지 생성",
+      "category": "ai-tools",
+      "date": "2026-04-25",
+      "slot": "lunch",
+      "slug": "2026-04-25-midjourney-5"
     }
   ],
-  "last_run": "2026-04-25 [morning] (3/3 성공, 287초)"
+  "last_run": "2026-04-25 [lunch] (2/2 성공, 216초)"
 }
