@@ -1959,7 +1959,28 @@
       "date": "2026-04-30",
       "slot": "night",
       "slug": "2026-04-30-100-30"
+    },
+    {
+      "title": "이번 주 AI 업계 뉴스",
+      "category": "ai-news",
+      "date": "2026-05-01",
+      "slot": "morning",
+      "slug": "2026-05-01-post-2519"
+    },
+    {
+      "title": "AI 마케팅 자동화 플랫폼 추천",
+      "category": "marketing",
+      "date": "2026-05-01",
+      "slot": "morning",
+      "slug": "2026-05-01-automation-marketing"
+    },
+    {
+      "title": "오픈소스 AI 모델 동향",
+      "category": "ai-news",
+      "date": "2026-05-01",
+      "slot": "morning",
+      "slug": "2026-05-01-2026-ai-5"
     }
   ],
-  "last_run": "2026-04-30 [night] (2/2 성공, 160초)"
+  "last_run": "2026-05-01 [morning] (3/3 성공, 205초)"
 }
