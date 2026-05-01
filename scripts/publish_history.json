@@ -2008,7 +2008,28 @@
       "date": "2026-05-01",
       "slot": "night",
       "slug": "2026-05-01-2026-ai-300"
+    },
+    {
+      "title": "이번 주 AI 업계 뉴스",
+      "category": "ai-news",
+      "date": "2026-05-02",
+      "slot": "morning",
+      "slug": "2026-05-02-post-8080"
+    },
+    {
+      "title": "오픈소스 AI 모델 동향",
+      "category": "ai-news",
+      "date": "2026-05-02",
+      "slot": "morning",
+      "slug": "2026-05-02-2026-ai"
+    },
+    {
+      "title": "AI 챗봇 마케팅 자동화",
+      "category": "marketing",
+      "date": "2026-05-02",
+      "slot": "morning",
+      "slug": "2026-05-02-automation-marketing-strategy"
     }
   ],
-  "last_run": "2026-05-01 [night] (2/2 성공, 224초)"
+  "last_run": "2026-05-02 [morning] (3/3 성공, 245초)"
 }
