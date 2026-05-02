@@ -2008,7 +2008,21 @@
       "date": "2026-05-02",
       "slot": "evening",
       "slug": "2026-05-02-guide-free-tools-automation"
+    },
+    {
+      "title": "ChatGPT로 수익 내는 방법",
+      "category": "side-hustle",
+      "date": "2026-05-02",
+      "slot": "night",
+      "slug": "2026-05-02-chatgpt-100-7"
+    },
+    {
+      "title": "패시브 인컴 AI 활용법",
+      "category": "side-hustle",
+      "date": "2026-05-02",
+      "slot": "night",
+      "slug": "2026-05-02-ai-100-5"
     }
   ],
-  "last_run": "2026-05-02 [evening] (3/3 성공, 336초)"
+  "last_run": "2026-05-02 [night] (2/2 성공, 212초)"
 }
