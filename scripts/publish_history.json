@@ -1987,7 +1987,28 @@
       "date": "2026-05-02",
       "slot": "lunch",
       "slug": "2026-05-02-chatgpt-5-3"
+    },
+    {
+      "title": "AI 이미지 판매 부업",
+      "category": "side-hustle",
+      "date": "2026-05-02",
+      "slot": "evening",
+      "slug": "2026-05-02-side-hustle-income-image"
+    },
+    {
+      "title": "Midjourney 이미지 생성",
+      "category": "ai-tools",
+      "date": "2026-05-02",
+      "slot": "evening",
+      "slug": "2026-05-02-vs-dall-e-vs"
+    },
+    {
+      "title": "콘텐츠 마케팅 자동화 워크플로우",
+      "category": "marketing",
+      "date": "2026-05-02",
+      "slot": "evening",
+      "slug": "2026-05-02-guide-free-tools-automation"
     }
   ],
-  "last_run": "2026-05-02 [lunch] (2/2 성공, 205초)"
+  "last_run": "2026-05-02 [evening] (3/3 성공, 336초)"
 }
