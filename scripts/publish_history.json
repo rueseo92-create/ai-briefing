@@ -2022,7 +2022,28 @@
       "date": "2026-05-02",
       "slot": "night",
       "slug": "2026-05-02-ai-100-5"
+    },
+    {
+      "title": "최신 AI 모델 출시 소식",
+      "category": "ai-news",
+      "date": "2026-05-03",
+      "slot": "morning",
+      "slug": "2026-05-03-2026-ai-5"
+    },
+    {
+      "title": "AI 마케팅 자동화 플랫폼 추천",
+      "category": "marketing",
+      "date": "2026-05-03",
+      "slot": "morning",
+      "slug": "2026-05-03-ai-roi-200"
+    },
+    {
+      "title": "AI 규제 정책 동향",
+      "category": "ai-news",
+      "date": "2026-05-03",
+      "slot": "morning",
+      "slug": "2026-05-03-post-4166"
     }
   ],
-  "last_run": "2026-05-02 [night] (2/2 성공, 212초)"
+  "last_run": "2026-05-03 [morning] (3/3 성공, 301초)"
 }
