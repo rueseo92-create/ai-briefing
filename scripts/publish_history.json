@@ -2008,7 +2008,21 @@
       "date": "2026-05-03",
       "slot": "evening",
       "slug": "2026-05-03-100-ai-5"
+    },
+    {
+      "title": "AI 부업으로 월 100만원 만들기",
+      "category": "side-hustle",
+      "date": "2026-05-03",
+      "slot": "night",
+      "slug": "2026-05-03-ai-100-3"
+    },
+    {
+      "title": "AI 번역 부업 시작하기",
+      "category": "side-hustle",
+      "date": "2026-05-03",
+      "slot": "night",
+      "slug": "2026-05-03-ai-100-3"
     }
   ],
-  "last_run": "2026-05-03 [evening] (3/3 성공, 199초)"
+  "last_run": "2026-05-03 [night] (2/2 성공, 217초)"
 }
