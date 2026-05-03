@@ -2022,7 +2022,28 @@
       "date": "2026-05-03",
       "slot": "night",
       "slug": "2026-05-03-ai-100-3"
+    },
+    {
+      "title": "이메일 마케팅 자동화 전략",
+      "category": "marketing",
+      "date": "2026-05-04",
+      "slot": "morning",
+      "slug": "2026-05-04-free-tools-automation"
+    },
+    {
+      "title": "AI 규제 정책 동향",
+      "category": "ai-news",
+      "date": "2026-05-04",
+      "slot": "morning",
+      "slug": "2026-05-04-ai-2026"
+    },
+    {
+      "title": "AI 반도체 경쟁 현황",
+      "category": "ai-news",
+      "date": "2026-05-04",
+      "slot": "morning",
+      "slug": "2026-05-04-ai-1-2026"
     }
   ],
-  "last_run": "2026-05-03 [night] (2/2 성공, 217초)"
+  "last_run": "2026-05-04 [morning] (3/3 성공, 275초)"
 }
