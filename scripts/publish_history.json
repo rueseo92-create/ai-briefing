@@ -2008,7 +2008,14 @@
       "date": "2026-05-08",
       "slot": "morning",
       "slug": "2026-05-08-3-300"
+    },
+    {
+      "title": "AI 스타트업 투자 트렌드",
+      "category": "ai-news",
+      "date": "2026-05-08",
+      "slot": "morning",
+      "slug": "2026-05-08-2026-ai-1"
     }
   ],
-  "last_run": "2026-05-08 [morning] (2/3 성공, 294초)"
+  "last_run": "2026-05-08 [morning] (1/1 성공, 71초)"
 }
