@@ -1959,7 +1959,28 @@
       "date": "2026-05-09",
       "slot": "lunch",
       "slug": "2026-05-09-midjourney-1"
+    },
+    {
+      "title": "AI 챗봇 마케팅 자동화",
+      "category": "marketing",
+      "date": "2026-05-09",
+      "slot": "evening",
+      "slug": "2026-05-09-ai-10"
+    },
+    {
+      "title": "AI 문서 요약 도구",
+      "category": "ai-tools",
+      "date": "2026-05-09",
+      "slot": "evening",
+      "slug": "2026-05-09-ai-5-1"
+    },
+    {
+      "title": "디지털 노마드 수입원 만들기",
+      "category": "side-hustle",
+      "date": "2026-05-09",
+      "slot": "evening",
+      "slug": "2026-05-09-200-30"
     }
   ],
-  "last_run": "2026-05-09 [lunch] (2/2 성공, 128초)"
+  "last_run": "2026-05-09 [evening] (3/3 성공, 235초)"
 }
