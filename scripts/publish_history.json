@@ -1959,7 +1959,28 @@
       "date": "2026-05-10",
       "slot": "lunch",
       "slug": "2026-05-10-ai-top-5-1"
+    },
+    {
+      "title": "리타겟팅 광고 자동화 설정법",
+      "category": "marketing",
+      "date": "2026-05-10",
+      "slot": "evening",
+      "slug": "2026-05-10-roi-200"
+    },
+    {
+      "title": "AI 번역 부업 시작하기",
+      "category": "side-hustle",
+      "date": "2026-05-10",
+      "slot": "evening",
+      "slug": "2026-05-10-100-ai-5"
+    },
+    {
+      "title": "Claude AI 사용 가이드",
+      "category": "ai-tools",
+      "date": "2026-05-10",
+      "slot": "evening",
+      "slug": "2026-05-10-claude-ai-vs-chatgpt-5"
     }
   ],
-  "last_run": "2026-05-10 [lunch] (2/2 성공, 151초)"
+  "last_run": "2026-05-10 [evening] (3/3 성공, 373초)"
 }
