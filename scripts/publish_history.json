@@ -1966,7 +1966,21 @@
       "date": "2026-05-11",
       "slot": "lunch",
       "slug": "2026-05-11-ai-300"
+    },
+    {
+      "title": "AI 자동화 부업 아이디어",
+      "category": "side-hustle",
+      "date": "2026-05-11",
+      "slot": "night",
+      "slug": "2026-05-11-2026-ai-best-7-300"
+    },
+    {
+      "title": "AI 번역 부업 시작하기",
+      "category": "side-hustle",
+      "date": "2026-05-11",
+      "slot": "night",
+      "slug": "2026-05-11-ai-50-5"
     }
   ],
-  "last_run": "2026-05-11 [lunch] (2/2 성공, 170초)"
+  "last_run": "2026-05-11 [night] (2/2 성공, 307초)"
 }
