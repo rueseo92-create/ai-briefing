@@ -1959,7 +1959,28 @@
       "date": "2026-05-12",
       "slot": "night",
       "slug": "2026-05-12-ai-100-3"
+    },
+    {
+      "title": "AI 챗봇 마케팅 자동화",
+      "category": "marketing",
+      "date": "2026-05-13",
+      "slot": "morning",
+      "slug": "2026-05-13-ai-200"
+    },
+    {
+      "title": "최신 AI 모델 출시 소식",
+      "category": "ai-news",
+      "date": "2026-05-13",
+      "slot": "morning",
+      "slug": "2026-05-13-2026-ai-5-1"
+    },
+    {
+      "title": "AI 규제 정책 동향",
+      "category": "ai-news",
+      "date": "2026-05-13",
+      "slot": "morning",
+      "slug": "2026-05-13-2026-ai"
     }
   ],
-  "last_run": "2026-05-12 [night] (2/2 성공, 140초)"
+  "last_run": "2026-05-13 [morning] (3/3 성공, 363초)"
 }
