@@ -1,76 +1,6 @@
 {
   "published": [
     {
-      "title": "리타겟팅 광고 자동화 설정법",
-      "category": "marketing",
-      "date": "2026-04-13",
-      "slot": "morning",
-      "slug": "2026-04-13-automation"
-    },
-    {
-      "title": "생성형 AI 시장 전망",
-      "category": "ai-news",
-      "date": "2026-04-13",
-      "slot": "morning",
-      "slug": "2026-04-13-ai-2026"
-    },
-    {
-      "title": "빅테크 AI 전략 변화",
-      "category": "ai-news",
-      "date": "2026-04-13",
-      "slot": "morning",
-      "slug": "2026-04-13-ai-ms-ai"
-    },
-    {
-      "title": "AI 데이터 분석 도구",
-      "category": "ai-tools",
-      "date": "2026-04-13",
-      "slot": "lunch",
-      "slug": "2026-04-13-ai-1-2026"
-    },
-    {
-      "title": "AI 번역 부업 시작하기",
-      "category": "side-hustle",
-      "date": "2026-04-13",
-      "slot": "lunch",
-      "slug": "2026-04-13-ai-100"
-    },
-    {
-      "title": "AI 데이터 분석 도구",
-      "category": "ai-tools",
-      "date": "2026-04-13",
-      "slot": "evening",
-      "slug": "2026-04-13-ai-1-2026"
-    },
-    {
-      "title": "퍼포먼스 마케팅 자동화 가이드",
-      "category": "marketing",
-      "date": "2026-04-13",
-      "slot": "evening",
-      "slug": "2026-04-13-7-2026"
-    },
-    {
-      "title": "프리랜서 AI 활용 수익화",
-      "category": "side-hustle",
-      "date": "2026-04-13",
-      "slot": "evening",
-      "slug": "2026-04-13-ai-3-200"
-    },
-    {
-      "title": "자동화 수익 파이프라인 구축",
-      "category": "side-hustle",
-      "date": "2026-04-13",
-      "slot": "night",
-      "slug": "2026-04-13-ai-100"
-    },
-    {
-      "title": "AI 부업으로 월 100만원 만들기",
-      "category": "side-hustle",
-      "date": "2026-04-13",
-      "slot": "night",
-      "slug": "2026-04-13-ai-100-3"
-    },
-    {
       "title": "이번 주 AI 업계 뉴스",
       "category": "ai-news",
       "date": "2026-04-14",
@@ -1959,7 +1889,21 @@
       "date": "2026-05-14",
       "slot": "morning",
       "slug": "2026-05-14-ai-1-2026"
+    },
+    {
+      "title": "AI 영상 편집 도구",
+      "category": "ai-tools",
+      "date": "2026-05-14",
+      "slot": "lunch",
+      "slug": "2026-05-14-2026-ai-7-5"
+    },
+    {
+      "title": "AI 번역 부업 시작하기",
+      "category": "side-hustle",
+      "date": "2026-05-14",
+      "slot": "lunch",
+      "slug": "2026-05-14-ai-100"
     }
   ],
-  "last_run": "2026-05-14 [morning] (3/3 성공, 204초)"
+  "last_run": "2026-05-14 [lunch] (2/2 성공, 135초)"
 }
