@@ -1861,7 +1861,28 @@
       "date": "2026-05-17",
       "slot": "lunch",
       "slug": "2026-05-17-ai-top-5-2026"
+    },
+    {
+      "title": "AI 마케팅 자동화 플랫폼 추천",
+      "category": "marketing",
+      "date": "2026-05-17",
+      "slot": "evening",
+      "slug": "2026-05-17-ai-1-2026"
+    },
+    {
+      "title": "AI 콘텐츠 판매 부업",
+      "category": "side-hustle",
+      "date": "2026-05-17",
+      "slot": "evening",
+      "slug": "2026-05-17-ai-3-100"
+    },
+    {
+      "title": "Midjourney 이미지 생성",
+      "category": "ai-tools",
+      "date": "2026-05-17",
+      "slot": "evening",
+      "slug": "2026-05-17-midjourney-1"
     }
   ],
-  "last_run": "2026-05-17 [lunch] (2/2 성공, 230초)"
+  "last_run": "2026-05-17 [evening] (3/3 성공, 393초)"
 }
