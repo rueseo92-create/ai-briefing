@@ -1833,7 +1833,28 @@
       "date": "2026-05-20",
       "slot": "night",
       "slug": "2026-05-20-automation-income"
+    },
+    {
+      "title": "최신 AI 모델 출시 소식",
+      "category": "ai-news",
+      "date": "2026-05-21",
+      "slot": "morning",
+      "slug": "2026-05-21-2026-5-ai"
+    },
+    {
+      "title": "생성형 AI 시장 전망",
+      "category": "ai-news",
+      "date": "2026-05-21",
+      "slot": "morning",
+      "slug": "2026-05-21-2026-ai"
+    },
+    {
+      "title": "SNS 마케팅 자동화 도구 비교",
+      "category": "marketing",
+      "date": "2026-05-21",
+      "slot": "morning",
+      "slug": "2026-05-21-sns-1-2026"
     }
   ],
-  "last_run": "2026-05-20 [night] (2/2 성공, 140초)"
+  "last_run": "2026-05-21 [morning] (3/3 성공, 324초)"
 }
