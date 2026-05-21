@@ -1,76 +1,6 @@
 {
   "published": [
     {
-      "title": "AI 윤리와 안전성 논의",
-      "category": "ai-news",
-      "date": "2026-04-20",
-      "slot": "morning",
-      "slug": "2026-04-20-2026-ai"
-    },
-    {
-      "title": "AI 규제 정책 동향",
-      "category": "ai-news",
-      "date": "2026-04-20",
-      "slot": "morning",
-      "slug": "2026-04-20-2026-ai"
-    },
-    {
-      "title": "AI 마케팅 자동화 플랫폼 추천",
-      "category": "marketing",
-      "date": "2026-04-20",
-      "slot": "morning",
-      "slug": "2026-04-20-2026-roi-200-ai-top-5"
-    },
-    {
-      "title": "AI 마케팅 자동화 도구",
-      "category": "ai-tools",
-      "date": "2026-04-20",
-      "slot": "lunch",
-      "slug": "2026-04-20-2026-ai-top-10-1"
-    },
-    {
-      "title": "AI 이미지 판매 부업",
-      "category": "side-hustle",
-      "date": "2026-04-20",
-      "slot": "lunch",
-      "slug": "2026-04-20-ai-100-6"
-    },
-    {
-      "title": "마케팅 퍼널 자동화 구축",
-      "category": "marketing",
-      "date": "2026-04-20",
-      "slot": "evening",
-      "slug": "2026-04-20-automation-marketing"
-    },
-    {
-      "title": "Claude AI 사용 가이드",
-      "category": "ai-tools",
-      "date": "2026-04-20",
-      "slot": "evening",
-      "slug": "2026-04-20-claude-ai-top-7-10"
-    },
-    {
-      "title": "AI 부업으로 월 100만원 만들기",
-      "category": "side-hustle",
-      "date": "2026-04-20",
-      "slot": "evening",
-      "slug": "2026-04-20-ai-100"
-    },
-    {
-      "title": "자동화 수익 파이프라인 구축",
-      "category": "side-hustle",
-      "date": "2026-04-20",
-      "slot": "night",
-      "slug": "2026-04-20-ai-300"
-    },
-    {
-      "title": "AI 콘텐츠 판매 부업",
-      "category": "side-hustle",
-      "date": "2026-04-20",
-      "slot": "night",
-      "slug": "2026-04-20-300-ai"
-    },
-    {
       "title": "빅테크 AI 전략 변화",
       "category": "ai-news",
       "date": "2026-04-21",
@@ -1854,7 +1784,21 @@
       "date": "2026-05-21",
       "slot": "morning",
       "slug": "2026-05-21-sns-1-2026"
+    },
+    {
+      "title": "AI 부업으로 월 100만원 만들기",
+      "category": "side-hustle",
+      "date": "2026-05-21",
+      "slot": "lunch",
+      "slug": "2026-05-21-ai-100-3"
+    },
+    {
+      "title": "AI 마케팅 자동화 도구",
+      "category": "ai-tools",
+      "date": "2026-05-21",
+      "slot": "lunch",
+      "slug": "2026-05-21-ai-10"
     }
   ],
-  "last_run": "2026-05-21 [morning] (3/3 성공, 324초)"
+  "last_run": "2026-05-21 [lunch] (2/2 성공, 139초)"
 }
