@@ -1777,7 +1777,21 @@
       "date": "2026-05-23",
       "slot": "evening",
       "slug": "2026-05-23-10-ai-best-5-vs"
+    },
+    {
+      "title": "AI 콘텐츠 판매 부업",
+      "category": "side-hustle",
+      "date": "2026-05-23",
+      "slot": "night",
+      "slug": "2026-05-23-ai-300"
+    },
+    {
+      "title": "AI 번역 부업 시작하기",
+      "category": "side-hustle",
+      "date": "2026-05-23",
+      "slot": "night",
+      "slug": "2026-05-23-ai-100"
     }
   ],
-  "last_run": "2026-05-23 [evening] (3/3 성공, 276초)"
+  "last_run": "2026-05-23 [night] (2/2 성공, 145초)"
 }
