@@ -1,76 +1,6 @@
 {
   "published": [
     {
-      "title": "생성형 AI 시장 전망",
-      "category": "ai-news",
-      "date": "2026-04-25",
-      "slot": "morning",
-      "slug": "2026-04-25-ai-2026"
-    },
-    {
-      "title": "최신 AI 모델 출시 소식",
-      "category": "ai-news",
-      "date": "2026-04-25",
-      "slot": "morning",
-      "slug": "2026-04-25-2026-4-ai-3"
-    },
-    {
-      "title": "퍼포먼스 마케팅 자동화 가이드",
-      "category": "marketing",
-      "date": "2026-04-25",
-      "slot": "morning",
-      "slug": "2026-04-25-roi-300"
-    },
-    {
-      "title": "패시브 인컴 AI 활용법",
-      "category": "side-hustle",
-      "date": "2026-04-25",
-      "slot": "lunch",
-      "slug": "2026-04-25-guide"
-    },
-    {
-      "title": "Midjourney 이미지 생성",
-      "category": "ai-tools",
-      "date": "2026-04-25",
-      "slot": "lunch",
-      "slug": "2026-04-25-midjourney-5"
-    },
-    {
-      "title": "SNS 마케팅 자동화 도구 비교",
-      "category": "marketing",
-      "date": "2026-04-25",
-      "slot": "evening",
-      "slug": "2026-04-25-sns-5-1"
-    },
-    {
-      "title": "AI 자동화 부업 아이디어",
-      "category": "side-hustle",
-      "date": "2026-04-25",
-      "slot": "evening",
-      "slug": "2026-04-25-2026-ai-10-300"
-    },
-    {
-      "title": "Claude AI 사용 가이드",
-      "category": "ai-tools",
-      "date": "2026-04-25",
-      "slot": "evening",
-      "slug": "2026-04-25-claude-ai-7"
-    },
-    {
-      "title": "AI 부업으로 월 100만원 만들기",
-      "category": "side-hustle",
-      "date": "2026-04-25",
-      "slot": "night",
-      "slug": "2026-04-25-ai-100-3"
-    },
-    {
-      "title": "AI 자동화 부업 아이디어",
-      "category": "side-hustle",
-      "date": "2026-04-25",
-      "slot": "night",
-      "slug": "2026-04-25-side-hustle-income-getting-started"
-    },
-    {
       "title": "AI 규제 정책 동향",
       "category": "ai-news",
       "date": "2026-04-26",
@@ -1765,5 +1695,5 @@
       "slug": "2026-05-25-ai-100-30-7"
     }
   ],
-  "last_run": "2026-05-26 [morning] (0/3 성공, 11초)"
+  "last_run": "2026-05-26 [lunch] (0/2 성공, 13초)"
 }
