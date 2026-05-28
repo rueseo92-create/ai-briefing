@@ -1686,7 +1686,21 @@
       "date": "2026-05-28",
       "slot": "lunch",
       "slug": "2026-05-28-ai-100"
+    },
+    {
+      "title": "프리랜서 AI 활용 수익화",
+      "category": "side-hustle",
+      "date": "2026-05-28",
+      "slot": "night",
+      "slug": "2026-05-28-ai-100"
+    },
+    {
+      "title": "자동화 수익 파이프라인 구축",
+      "category": "side-hustle",
+      "date": "2026-05-28",
+      "slot": "night",
+      "slug": "2026-05-28-ai-100-2026"
     }
   ],
-  "last_run": "2026-05-28 [lunch] (2/2 성공, 132초)"
+  "last_run": "2026-05-28 [night] (2/2 성공, 141초)"
 }
