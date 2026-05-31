@@ -1686,7 +1686,21 @@
       "date": "2026-05-31",
       "slot": "evening",
       "slug": "2026-05-31-ai-top-5-3"
+    },
+    {
+      "title": "AI 부업으로 월 100만원 만들기",
+      "category": "side-hustle",
+      "date": "2026-05-31",
+      "slot": "night",
+      "slug": "2026-05-31-ai-100-2026"
+    },
+    {
+      "title": "AI 콘텐츠 판매 부업",
+      "category": "side-hustle",
+      "date": "2026-05-31",
+      "slot": "night",
+      "slug": "2026-05-31-ai-300-3"
     }
   ],
-  "last_run": "2026-05-31 [evening] (3/3 성공, 277초)"
+  "last_run": "2026-05-31 [night] (2/2 성공, 143초)"
 }
