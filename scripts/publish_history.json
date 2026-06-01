@@ -3,76 +3,6 @@
     {
       "title": "이번 주 AI 업계 뉴스",
       "category": "ai-news",
-      "date": "2026-05-01",
-      "slot": "morning",
-      "slug": "2026-05-01-post-2519"
-    },
-    {
-      "title": "AI 마케팅 자동화 플랫폼 추천",
-      "category": "marketing",
-      "date": "2026-05-01",
-      "slot": "morning",
-      "slug": "2026-05-01-automation-marketing"
-    },
-    {
-      "title": "오픈소스 AI 모델 동향",
-      "category": "ai-news",
-      "date": "2026-05-01",
-      "slot": "morning",
-      "slug": "2026-05-01-2026-ai-5"
-    },
-    {
-      "title": "프리랜서 AI 활용 수익화",
-      "category": "side-hustle",
-      "date": "2026-05-01",
-      "slot": "lunch",
-      "slug": "2026-05-01-ai-300"
-    },
-    {
-      "title": "Midjourney 이미지 생성",
-      "category": "ai-tools",
-      "date": "2026-05-01",
-      "slot": "lunch",
-      "slug": "2026-05-01-how-to-free-complete"
-    },
-    {
-      "title": "퍼포먼스 마케팅 자동화 가이드",
-      "category": "marketing",
-      "date": "2026-05-01",
-      "slot": "evening",
-      "slug": "2026-05-01-roi-300"
-    },
-    {
-      "title": "AI 번역 도구 추천",
-      "category": "ai-tools",
-      "date": "2026-05-01",
-      "slot": "evening",
-      "slug": "2026-05-01-2026-ai-top-5-1"
-    },
-    {
-      "title": "AI 부업으로 월 100만원 만들기",
-      "category": "side-hustle",
-      "date": "2026-05-01",
-      "slot": "evening",
-      "slug": "2026-05-01-ai-100-5"
-    },
-    {
-      "title": "자동화 수익 파이프라인 구축",
-      "category": "side-hustle",
-      "date": "2026-05-01",
-      "slot": "night",
-      "slug": "2026-05-01-2026-100-ai"
-    },
-    {
-      "title": "디지털 노마드 수입원 만들기",
-      "category": "side-hustle",
-      "date": "2026-05-01",
-      "slot": "night",
-      "slug": "2026-05-01-2026-ai-300"
-    },
-    {
-      "title": "이번 주 AI 업계 뉴스",
-      "category": "ai-news",
       "date": "2026-05-02",
       "slot": "morning",
       "slug": "2026-05-02-post-8080"
@@ -1721,7 +1651,28 @@
       "date": "2026-06-01",
       "slot": "morning",
       "slug": "2026-06-01-sns-roi-200-feat-5"
+    },
+    {
+      "title": "AI 코딩 도구 비교",
+      "category": "ai-tools",
+      "date": "2026-06-01",
+      "slot": "evening",
+      "slug": "2026-06-01-ai-2026-1"
+    },
+    {
+      "title": "디지털 노마드 수입원 만들기",
+      "category": "side-hustle",
+      "date": "2026-06-01",
+      "slot": "evening",
+      "slug": "2026-06-01-ai-100"
+    },
+    {
+      "title": "SEO 자동화 도구 활용법",
+      "category": "marketing",
+      "date": "2026-06-01",
+      "slot": "evening",
+      "slug": "2026-06-01-tools-automation-seo"
     }
   ],
-  "last_run": "2026-06-01 [morning] (3/3 성공, 190초)"
+  "last_run": "2026-06-01 [evening] (3/3 성공, 226초)"
 }
