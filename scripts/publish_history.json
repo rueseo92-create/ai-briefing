@@ -1665,7 +1665,28 @@
       "date": "2026-06-04",
       "slot": "night",
       "slug": "2026-06-04-ai-300"
+    },
+    {
+      "title": "SEO 자동화 도구 활용법",
+      "category": "marketing",
+      "date": "2026-06-05",
+      "slot": "morning",
+      "slug": "2026-06-05-seo-3-7"
+    },
+    {
+      "title": "이번 주 AI 업계 뉴스",
+      "category": "ai-news",
+      "date": "2026-06-05",
+      "slot": "morning",
+      "slug": "2026-06-05-ai-2026-6-1-5"
+    },
+    {
+      "title": "AI 윤리와 안전성 논의",
+      "category": "ai-news",
+      "date": "2026-06-05",
+      "slot": "morning",
+      "slug": "2026-06-05-ai-2026"
     }
   ],
-  "last_run": "2026-06-04 [night] (2/2 성공, 158초)"
+  "last_run": "2026-06-05 [morning] (3/3 성공, 183초)"
 }
