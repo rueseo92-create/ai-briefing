@@ -1,55 +1,6 @@
 {
   "published": [
     {
-      "title": "이메일 마케팅 자동화 전략",
-      "category": "marketing",
-      "date": "2026-05-04",
-      "slot": "morning",
-      "slug": "2026-05-04-free-tools-automation"
-    },
-    {
-      "title": "AI 규제 정책 동향",
-      "category": "ai-news",
-      "date": "2026-05-04",
-      "slot": "morning",
-      "slug": "2026-05-04-ai-2026"
-    },
-    {
-      "title": "AI 반도체 경쟁 현황",
-      "category": "ai-news",
-      "date": "2026-05-04",
-      "slot": "morning",
-      "slug": "2026-05-04-ai-1-2026"
-    },
-    {
-      "title": "AI 콘텐츠 판매 부업",
-      "category": "side-hustle",
-      "date": "2026-05-04",
-      "slot": "lunch",
-      "slug": "2026-05-04-ai-300-3"
-    },
-    {
-      "title": "AI 마케팅 자동화 도구",
-      "category": "ai-tools",
-      "date": "2026-05-04",
-      "slot": "lunch",
-      "slug": "2026-05-04-2026-ai-top-5-5"
-    },
-    {
-      "title": "패시브 인컴 AI 활용법",
-      "category": "side-hustle",
-      "date": "2026-05-04",
-      "slot": "night",
-      "slug": "2026-05-04-ai-50"
-    },
-    {
-      "title": "자동화 수익 파이프라인 구축",
-      "category": "side-hustle",
-      "date": "2026-05-04",
-      "slot": "night",
-      "slug": "2026-05-04-side-hustle-automation-income"
-    },
-    {
       "title": "오픈소스 AI 모델 동향",
       "category": "ai-news",
       "date": "2026-05-05",
@@ -1679,7 +1630,28 @@
       "date": "2026-06-04",
       "slot": "morning",
       "slug": "2026-06-04-post-6278"
+    },
+    {
+      "title": "자동화 수익 파이프라인 구축",
+      "category": "side-hustle",
+      "date": "2026-06-04",
+      "slot": "evening",
+      "slug": "2026-06-04-automation-income-getting-started"
+    },
+    {
+      "title": "AI 코딩 도구 비교",
+      "category": "ai-tools",
+      "date": "2026-06-04",
+      "slot": "evening",
+      "slug": "2026-06-04-2026-ai-5-1"
+    },
+    {
+      "title": "CRM 마케팅 자동화 도입법",
+      "category": "marketing",
+      "date": "2026-06-04",
+      "slot": "evening",
+      "slug": "2026-06-04-crm-2-5"
     }
   ],
-  "last_run": "2026-06-04 [morning] (3/3 성공, 273초)"
+  "last_run": "2026-06-04 [evening] (3/3 성공, 410초)"
 }
