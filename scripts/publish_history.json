@@ -1609,7 +1609,21 @@
       "date": "2026-06-10",
       "slot": "lunch",
       "slug": "2026-06-10-claude-ai-chatgpt"
+    },
+    {
+      "title": "디지털 노마드 수입원 만들기",
+      "category": "side-hustle",
+      "date": "2026-06-10",
+      "slot": "night",
+      "slug": "2026-06-10-ai-5-200"
+    },
+    {
+      "title": "AI 콘텐츠 판매 부업",
+      "category": "side-hustle",
+      "date": "2026-06-10",
+      "slot": "night",
+      "slug": "2026-06-10-side-hustle-income-getting-started"
     }
   ],
-  "last_run": "2026-06-10 [lunch] (2/2 성공, 201초)"
+  "last_run": "2026-06-10 [night] (2/2 성공, 205초)"
 }
