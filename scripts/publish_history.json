@@ -1,55 +1,6 @@
 {
   "published": [
     {
-      "title": "최신 AI 모델 출시 소식",
-      "category": "ai-news",
-      "date": "2026-05-12",
-      "slot": "morning",
-      "slug": "2026-05-12-post-9415"
-    },
-    {
-      "title": "AI 마케팅 자동화 플랫폼 추천",
-      "category": "marketing",
-      "date": "2026-05-12",
-      "slot": "morning",
-      "slug": "2026-05-12-ai-5-1"
-    },
-    {
-      "title": "AI 반도체 경쟁 현황",
-      "category": "ai-news",
-      "date": "2026-05-12",
-      "slot": "morning",
-      "slug": "2026-05-12-2026-ai-1"
-    },
-    {
-      "title": "AI 번역 부업 시작하기",
-      "category": "side-hustle",
-      "date": "2026-05-12",
-      "slot": "lunch",
-      "slug": "2026-05-12-ai-100"
-    },
-    {
-      "title": "AI 번역 도구 추천",
-      "category": "ai-tools",
-      "date": "2026-05-12",
-      "slot": "lunch",
-      "slug": "2026-05-12-2026-ai-5-1"
-    },
-    {
-      "title": "자동화 수익 파이프라인 구축",
-      "category": "side-hustle",
-      "date": "2026-05-12",
-      "slot": "night",
-      "slug": "2026-05-12-ai-100"
-    },
-    {
-      "title": "AI 부업으로 월 100만원 만들기",
-      "category": "side-hustle",
-      "date": "2026-05-12",
-      "slot": "night",
-      "slug": "2026-05-12-ai-100-3"
-    },
-    {
       "title": "AI 챗봇 마케팅 자동화",
       "category": "marketing",
       "date": "2026-05-13",
@@ -1651,7 +1602,28 @@
       "date": "2026-06-12",
       "slot": "morning",
       "slug": "2026-06-12-2026-ai-1"
+    },
+    {
+      "title": "AI 이미지 판매 부업",
+      "category": "side-hustle",
+      "date": "2026-06-12",
+      "slot": "evening",
+      "slug": "2026-06-12-ai-200-3"
+    },
+    {
+      "title": "Claude AI 사용 가이드",
+      "category": "ai-tools",
+      "date": "2026-06-12",
+      "slot": "evening",
+      "slug": "2026-06-12-claude-ai-top-5"
+    },
+    {
+      "title": "AI 마케팅 자동화 플랫폼 추천",
+      "category": "marketing",
+      "date": "2026-06-12",
+      "slot": "evening",
+      "slug": "2026-06-12-ai-8-1"
     }
   ],
-  "last_run": "2026-06-12 [morning] (3/3 성공, 205초)"
+  "last_run": "2026-06-12 [evening] (3/3 성공, 299초)"
 }
