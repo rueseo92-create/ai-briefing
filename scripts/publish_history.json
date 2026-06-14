@@ -1644,7 +1644,28 @@
       "date": "2026-06-14",
       "slot": "night",
       "slug": "2026-06-14-ai-300"
+    },
+    {
+      "title": "국내 AI 기업 동향",
+      "category": "ai-news",
+      "date": "2026-06-15",
+      "slot": "morning",
+      "slug": "2026-06-15-2026-ai"
+    },
+    {
+      "title": "최신 AI 모델 출시 소식",
+      "category": "ai-news",
+      "date": "2026-06-15",
+      "slot": "morning",
+      "slug": "2026-06-15-2026-6-ai-gpt-5-claude"
+    },
+    {
+      "title": "CRM 마케팅 자동화 도입법",
+      "category": "marketing",
+      "date": "2026-06-15",
+      "slot": "morning",
+      "slug": "2026-06-15-crm-roi-200-5"
     }
   ],
-  "last_run": "2026-06-14 [night] (2/2 성공, 230초)"
+  "last_run": "2026-06-15 [morning] (3/3 성공, 273초)"
 }
