@@ -1,55 +1,6 @@
 {
   "published": [
     {
-      "title": "SEO 자동화 도구 활용법",
-      "category": "marketing",
-      "date": "2026-05-14",
-      "slot": "morning",
-      "slug": "2026-05-14-roi-200-seo-6"
-    },
-    {
-      "title": "AI 스타트업 투자 트렌드",
-      "category": "ai-news",
-      "date": "2026-05-14",
-      "slot": "morning",
-      "slug": "2026-05-14-ai-2026"
-    },
-    {
-      "title": "AI 반도체 경쟁 현황",
-      "category": "ai-news",
-      "date": "2026-05-14",
-      "slot": "morning",
-      "slug": "2026-05-14-ai-1-2026"
-    },
-    {
-      "title": "AI 영상 편집 도구",
-      "category": "ai-tools",
-      "date": "2026-05-14",
-      "slot": "lunch",
-      "slug": "2026-05-14-2026-ai-7-5"
-    },
-    {
-      "title": "AI 번역 부업 시작하기",
-      "category": "side-hustle",
-      "date": "2026-05-14",
-      "slot": "lunch",
-      "slug": "2026-05-14-ai-100"
-    },
-    {
-      "title": "ChatGPT로 수익 내는 방법",
-      "category": "side-hustle",
-      "date": "2026-05-14",
-      "slot": "night",
-      "slug": "2026-05-14-chatgpt-100-5"
-    },
-    {
-      "title": "자동화 수익 파이프라인 구축",
-      "category": "side-hustle",
-      "date": "2026-05-14",
-      "slot": "night",
-      "slug": "2026-05-14-automation-income"
-    },
-    {
       "title": "퍼포먼스 마케팅 자동화 가이드",
       "category": "marketing",
       "date": "2026-05-15",
@@ -1658,7 +1609,28 @@
       "date": "2026-06-14",
       "slot": "morning",
       "slug": "2026-06-14-ai-top-5"
+    },
+    {
+      "title": "SNS 마케팅 자동화 도구 비교",
+      "category": "marketing",
+      "date": "2026-06-14",
+      "slot": "evening",
+      "slug": "2026-06-14-sns-7-1"
+    },
+    {
+      "title": "AI 마케팅 자동화 도구",
+      "category": "ai-tools",
+      "date": "2026-06-14",
+      "slot": "evening",
+      "slug": "2026-06-14-ai-top-7"
+    },
+    {
+      "title": "자동화 수익 파이프라인 구축",
+      "category": "side-hustle",
+      "date": "2026-06-14",
+      "slot": "evening",
+      "slug": "2026-06-14-guide-automation-income"
     }
   ],
-  "last_run": "2026-06-14 [morning] (3/3 성공, 304초)"
+  "last_run": "2026-06-14 [evening] (3/3 성공, 214초)"
 }
