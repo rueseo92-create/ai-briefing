@@ -1,76 +1,6 @@
 {
   "published": [
     {
-      "title": "오픈소스 AI 모델 동향",
-      "category": "ai-news",
-      "date": "2026-05-24",
-      "slot": "morning",
-      "slug": "2026-05-24-2026-ai"
-    },
-    {
-      "title": "AI 챗봇 마케팅 자동화",
-      "category": "marketing",
-      "date": "2026-05-24",
-      "slot": "morning",
-      "slug": "2026-05-24-ai-7-3"
-    },
-    {
-      "title": "생성형 AI 시장 전망",
-      "category": "ai-news",
-      "date": "2026-05-24",
-      "slot": "morning",
-      "slug": "2026-05-24-ai-2026"
-    },
-    {
-      "title": "AI 영상 편집 도구",
-      "category": "ai-tools",
-      "date": "2026-05-24",
-      "slot": "lunch",
-      "slug": "2026-05-24-tools-video"
-    },
-    {
-      "title": "AI 콘텐츠 판매 부업",
-      "category": "side-hustle",
-      "date": "2026-05-24",
-      "slot": "lunch",
-      "slug": "2026-05-24-ai-300"
-    },
-    {
-      "title": "AI 자동화 부업 아이디어",
-      "category": "side-hustle",
-      "date": "2026-05-24",
-      "slot": "evening",
-      "slug": "2026-05-24-ai-5-50"
-    },
-    {
-      "title": "AI 챗봇 마케팅 자동화",
-      "category": "marketing",
-      "date": "2026-05-24",
-      "slot": "evening",
-      "slug": "2026-05-24-free-automation-marketing"
-    },
-    {
-      "title": "AI 데이터 분석 도구",
-      "category": "ai-tools",
-      "date": "2026-05-24",
-      "slot": "evening",
-      "slug": "2026-05-24-2026-ai-top-10-1"
-    },
-    {
-      "title": "AI 콘텐츠 판매 부업",
-      "category": "side-hustle",
-      "date": "2026-05-24",
-      "slot": "night",
-      "slug": "2026-05-24-ai-50"
-    },
-    {
-      "title": "프리랜서 AI 활용 수익화",
-      "category": "side-hustle",
-      "date": "2026-05-24",
-      "slot": "night",
-      "slug": "2026-05-24-ai-2026-300"
-    },
-    {
       "title": "이메일 마케팅 자동화 전략",
       "category": "marketing",
       "date": "2026-05-25",
@@ -1205,5 +1135,5 @@
       "slug": "2026-06-16-ai-2026-3"
     }
   ],
-  "last_run": "2026-06-24 [morning] (0/3 성공, 19초)"
+  "last_run": "2026-06-24 [lunch] (0/2 성공, 8초)"
 }
