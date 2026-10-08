@@ -1,0 +1,38 @@
+name: QuietForest
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "17.0"
+  developmentLanguage: ko
+
+packages:
+  ForestCore:
+    path: Packages/ForestCore
+
+targets:
+  QuietForest:
+    type: application
+    platform: iOS
+    sources:
+      - QuietForest
+    dependencies:
+      - package: ForestCore
+    scheme: {}
+    info:
+      path: QuietForest/Info.plist
+      properties:
+        CFBundleDisplayName: 조용한 숲
+        CFBundleDevelopmentRegion: ko
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        LSApplicationCategoryType: public.app-category.healthcare-fitness
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.quietforest
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: 1
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        ENABLE_PREVIEWS: YES

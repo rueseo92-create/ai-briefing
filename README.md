@@ -1,0 +1,76 @@
+# 조용한 숲 (Quiet Forest)
+
+무언가를 끊으려는 사람들이 각자 나무 한 그루씩 키우는 iOS 앱.
+치료 앱이 아니라, 가볍게 계속 동기를 주는 앱이다.
+
+## 원칙
+
+- **사람끼리 오가는 건 응원(물 주기) 하나뿐.** 채팅, 댓글, 프로필, 팔로우, DM 없음.
+- **이름은 자동.** `조용한 자작나무`처럼 숲이 붙여 주고, 바꿀 수 없다.
+- **무엇을 끊는지는 기기 밖으로 나가지 않는다.** 숲에는 이름, 나무 모습, 지금 참는 중인지만 보인다. 정확한 일수, 돈, 이유도 공개하지 않는다.
+- **실패해도 0이 되지 않는다.** 다시 하면 나무가 하루 시들고, "지금까지 참은 날"에서 하루만 빠진다.
+- **끊는 것 전용.** 할 일, 집중 타이머, 출석 체크는 만들지 않는다. 나무는 날짜로만 자란다.
+
+## 기능 (v0.1)
+
+| 화면 | 내용 |
+|---|---|
+| 시작 | 끊을 것 고르기 → 마지막으로 한 때 → 하루 비용·이유(선택) → 자동 이름 공개 |
+| 내 나무 | 실시간 카운터, 지금까지 참은 날, 버텨 낸 횟수, 아낀 돈, 오늘 받은 물, 위시리스트 진행 바 |
+| 참기 | 10분 카운트다운, 끊는 이유 다시 보기. 그동안 숲에서 내 나무가 흔들리고, 누가 물을 주면 바로 알림 |
+| 숲 | 다른 사람들의 나무. 참는 중인 나무가 앞에서 흔들림. 하루 3방울까지 물 주기 (보낸 사람은 익명) |
+| 설정 | 하루 비용, 이유, 위시리스트, 배지, 처음부터 다시 |
+
+나무 단계: 씨앗(0일) → 새싹(1) → 묘목(3) → 어린 나무(7) → 나무(21) → 꽃 핀 나무(60) → 열매 맺은 나무(120) → 큰 나무(365)
+
+## 실행하기 (Mac)
+
+Xcode 16 이상이 필요하다. Xcode 프로젝트 파일은 저장소에 두지 않고 `project.yml`로 만든다.
+
+```bash
+brew install xcodegen
+xcodegen generate
+open QuietForest.xcodeproj
+```
+
+처음에는 **가짜 숲**(기기 안에서 만든 나무 36그루)으로 동작해서, 계정이나 서버 설정 없이 시뮬레이터에서 바로 돌려 볼 수 있다.
+
+핵심 로직 테스트:
+
+```bash
+swift test --package-path Packages/ForestCore
+```
+
+## 진짜 숲 연결하기 (CloudKit)
+
+서버를 따로 두지 않고 CloudKit 공개 데이터베이스를 쓴다. 유료 Apple Developer 계정이 필요하다.
+
+1. `project.yml`의 `PRODUCT_BUNDLE_IDENTIFIER`를 내 것으로 바꾸고, Xcode에서 Team을 고른다.
+2. Signing & Capabilities → **iCloud** 추가 → **CloudKit** 체크 → 컨테이너 생성 (예: `iCloud.com.내도메인.quietforest`).
+3. `QuietForest/Forest/ForestService.swift`의 `AppConfig.cloudKitContainer`에 그 컨테이너 이름을 넣는다.
+4. 앱을 한 번 실행해 레코드가 만들어지면, [CloudKit Console](https://icloud.developer.apple.com)에서 인덱스를 추가한다.
+   - `Tree`: `updatedAt` (Queryable, Sortable), `startDay` (Queryable), `recordName` (Queryable)
+   - `Cheer`: `target` (Queryable), `sentAt` (Queryable)
+5. 출시 전에 스키마를 Production으로 배포한다.
+
+## 구조
+
+```
+Packages/ForestCore/     # UI 없는 핵심 로직 (성장, 이름, 물방울 한도, 공개 정보) + 테스트
+QuietForest/
+  App/                   # 앱 진입점, 탭
+  Model/AppModel.swift   # 상태와 기기 저장
+  Forest/                # 숲 연결: 가짜(Mock) / CloudKit
+  Design/                # 색, 나무 그림
+  Views/                 # 시작, 내 나무, 참기, 숲, 설정
+```
+
+숲에 나가는 데이터는 `PublicTree` 하나뿐이다. 여기에 필드를 추가하면 `PublicTreeTests`가 실패하도록 해 두었다.
+
+## 다음에 할 것
+
+- 앱 아이콘, 런치 화면
+- 물을 받았을 때 푸시 알림 (CloudKit 구독)
+- 물방울 스팸 방지 (지금은 하루 3방울 제한을 기기에서만 확인함)
+- 여러 개를 동시에 끊기
+- 홈 화면 위젯 (카운터)

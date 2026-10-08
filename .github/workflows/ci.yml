@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: 핵심 로직 테스트
+        run: swift test --package-path Packages/ForestCore
+      - name: Xcode 프로젝트 생성
+        run: |
+          brew install xcodegen
+          xcodegen generate
+      - name: 시뮬레이터용 빌드
+        run: |
+          xcodebuild build \
+            -project QuietForest.xcodeproj \
+            -scheme QuietForest \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO
