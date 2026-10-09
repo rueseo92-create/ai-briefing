@@ -88,14 +88,120 @@ final class TreeNameTests: XCTestCase {
 final class CheerBudgetTests: XCTestCase {
     func testDailyLimitAndReset() {
         var budget = CheerBudget(now: t0, calendar: utc)
-        for _ in 0..<CheerBudget.dailyLimit {
-            XCTAssertTrue(budget.spend(at: t0, calendar: utc))
+        for index in 0..<CheerBudget.dailyLimit {
+            XCTAssertTrue(budget.spend(on: "tree-\(index)", at: t0, calendar: utc))
         }
-        XCTAssertFalse(budget.spend(at: t0, calendar: utc))
+        XCTAssertFalse(budget.spend(on: "another", at: t0, calendar: utc))
         XCTAssertEqual(budget.remaining(at: t0, calendar: utc), 0)
         XCTAssertEqual(budget.remaining(at: t0 + day, calendar: utc), CheerBudget.dailyLimit)
-        XCTAssertTrue(budget.spend(at: t0 + day, calendar: utc))
+        XCTAssertTrue(budget.spend(on: "tree-0", at: t0 + day, calendar: utc))
         XCTAssertEqual(budget.remaining(at: t0 + day, calendar: utc), CheerBudget.dailyLimit - 1)
+    }
+
+    func testOneDropPerTreePerDay() {
+        var budget = CheerBudget(now: t0, calendar: utc)
+        XCTAssertTrue(budget.spend(on: "a", at: t0, calendar: utc))
+        XCTAssertFalse(budget.spend(on: "a", at: t0 + 60, calendar: utc))
+        XCTAssertTrue(budget.hasWatered("a", at: t0, calendar: utc))
+        XCTAssertEqual(budget.remaining(at: t0, calendar: utc), CheerBudget.dailyLimit - 1)
+        XCTAssertFalse(budget.hasWatered("a", at: t0 + day, calendar: utc))
+    }
+
+    /// 앱을 다시 열어도 오늘 물 준 나무를 기억하고, 예전 데이터도 읽힌다.
+    func testWateredTreesSurviveSaveAndOldDataDecodes() throws {
+        var budget = CheerBudget(now: t0, calendar: utc)
+        _ = budget.spend(on: "a", at: t0, calendar: utc)
+        let restored = try JSONDecoder().decode(CheerBudget.self, from: JSONEncoder().encode(budget))
+        XCTAssertTrue(restored.hasWatered("a", at: t0, calendar: utc))
+
+        let old = #"{"day":"2026-10-08","used":2}"#.data(using: .utf8)!
+        let decoded = try JSONDecoder().decode(CheerBudget.self, from: old)
+        XCTAssertEqual(decoded.used, 2)
+        XCTAssertTrue(decoded.wateredIDs.isEmpty)
+    }
+}
+
+final class CheerInboxTests: XCTestCase {
+    func testSameSenderCountsOncePerDay() {
+        var inbox = CheerInbox(now: t0, calendar: utc)
+        let spam = Array(repeating: IncomingCheer(sender: "x", sentAt: t0), count: 50)
+        XCTAssertEqual(inbox.receive(spam + [IncomingCheer(sender: "y", sentAt: t0)], now: t0, calendar: utc), 2)
+        XCTAssertEqual(inbox.receive([IncomingCheer(sender: "x", sentAt: t0 + 60)], now: t0 + 60, calendar: utc), 0)
+        XCTAssertEqual(inbox.count(at: t0, calendar: utc), 2)
+        // 다음 날에는 같은 사람의 물방울도 다시 센다.
+        XCTAssertEqual(inbox.receive([IncomingCheer(sender: "x", sentAt: t0 + day)], now: t0 + day, calendar: utc), 1)
+        XCTAssertEqual(inbox.count(at: t0 + day, calendar: utc), 1)
+        XCTAssertEqual(inbox.count(at: t0 + 2 * day, calendar: utc), 0)
+    }
+
+    func testUnknownSendersAlwaysCount() {
+        var inbox = CheerInbox(day: DayKey.make(t0, calendar: utc), count: 2)
+        let cheers = Array(repeating: IncomingCheer(sender: nil, sentAt: t0), count: 3)
+        XCTAssertEqual(inbox.receive(cheers, now: t0, calendar: utc), 3)
+        XCTAssertEqual(inbox.count(at: t0, calendar: utc), 5)
+    }
+}
+
+final class RemindersTests: XCTestCase {
+    /// 오후에 시작해서 알림 시각이 낮에 떨어지게 한다.
+    private let noon = Date(timeIntervalSince1970: 1_790_000_000 - 1_790_000_000.truncatingRemainder(dividingBy: day) + 12 * 3600)
+
+    func testUpcomingMergesStageMilestoneAndGoal() {
+        let habit = Habit(kind: .smoking, startedAt: noon, goal: .days(7))
+        let reminders = Reminders.upcoming(habit: habit, now: noon + 3600, calendar: utc)
+        XCTAssertEqual(reminders.map(\.id), ["grow-1", "grow-3", "grow-7"])
+        XCTAssertEqual(reminders[0].date, noon + day)
+        XCTAssertEqual(reminders[0].title, "배지를 받았어요 🏅")
+        XCTAssertEqual(reminders[0].body, "‘첫 하루’ 배지를 받았어요. 이제 새싹이에요.")
+        XCTAssertEqual(reminders[2].title, "목표에 닿았어요 🎯")
+        XCTAssertEqual(reminders[2].body, "7일 목표를 이뤘어요. ‘일주일’ 배지를 받았어요. 이제 어린 나무예요. 다음 목표를 골라 봐요.")
+    }
+
+    func testStageOnlyAndLimit() {
+        let habit = Habit(kind: .drinking, startedAt: noon - 15 * day)
+        let reminders = Reminders.upcoming(habit: habit, now: noon, calendar: utc, limit: 1)
+        XCTAssertEqual(reminders.map(\.id), ["grow-21"])
+        XCTAssertEqual(reminders[0].title, "나무가 자랐어요 🌳")
+        XCTAssertEqual(reminders[0].body, "이제 나무예요. 숲에서도 바뀐 모습이 보여요.")
+        XCTAssertEqual(reminders[0].date, noon + 6 * day)
+    }
+
+    func testSlipPushesRemindersBack() {
+        var habit = Habit(kind: .gaming, startedAt: noon)
+        habit.recordSlip(at: noon + 2 * 3600)
+        let reminders = Reminders.upcoming(habit: habit, now: noon + 3 * 3600, calendar: utc)
+        XCTAssertEqual(reminders.first?.id, "grow-1")
+        XCTAssertEqual(reminders.first?.date, noon + 2 * 3600 + day)
+    }
+
+    func testNightRemindersMoveToMorning() {
+        let midnight = noon - 12 * 3600
+        XCTAssertEqual(Reminders.daytime(midnight + 3 * 3600, calendar: utc), midnight + 9 * 3600)
+        XCTAssertEqual(Reminders.daytime(midnight + 22 * 3600, calendar: utc), midnight + day + 9 * 3600)
+        XCTAssertEqual(Reminders.daytime(midnight + 15 * 3600, calendar: utc), midnight + 15 * 3600)
+    }
+
+    /// 잠금 화면에 뜨는 문구에 무엇을 끊는지가 나오면 안 된다.
+    func testRemindersNeverMentionTheHabit() {
+        for kind in HabitKind.allCases {
+            let habit = Habit(kind: kind, customTitle: "비밀", startedAt: noon, dailyCost: 50_000, reason: "가족", goal: .days(30))
+            let texts = Reminders.upcoming(habit: habit, now: noon, calendar: utc, limit: 20)
+                .flatMap { [$0.title, $0.body] } + [Reminders.urgeDone(UrgeSession(startedAt: noon)).body]
+            for secret in [habit.title, kind.emoji, "50,000", "가족"] {
+                XCTAssertFalse(texts.contains { $0.contains(secret) }, "\(secret) leaked")
+            }
+        }
+    }
+
+    func testUrgeDoneFiresWhenTimerEnds() {
+        let reminder = Reminders.urgeDone(UrgeSession(startedAt: t0))
+        XCTAssertEqual(reminder.id, Reminders.urgeDoneID)
+        XCTAssertEqual(reminder.date, t0 + UrgeSession.defaultDuration)
+    }
+
+    func testCopula() {
+        XCTAssertEqual(Reminders.copula(after: "묘목"), "이에요")
+        XCTAssertEqual(Reminders.copula(after: "큰 나무"), "예요")
     }
 }
 

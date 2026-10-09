@@ -45,6 +45,17 @@ struct SettingsView: View {
                     }
                 }
 
+                Section {
+                    Toggle("나무가 자랄 때 알려 주기", isOn: Binding(
+                        get: { model.remindersOn },
+                        set: { on in Task { await model.setReminders(on) } }
+                    ))
+                } header: {
+                    Text("알림")
+                } footer: {
+                    Text("새 모습, 배지, 목표에 닿을 때와 참기가 끝났을 때 알려요. 이 폰 안에서만 울리고, 잠금 화면에는 무엇을 끊는지 나오지 않아요. 밤 9시부터 아침 9시 사이에는 울리지 않아요.")
+                }
+
                 Section("배지") {
                     NavigationLink("받은 배지 보기") { MilestonesView() }
                 }

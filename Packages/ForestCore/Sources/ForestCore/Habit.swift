@@ -124,6 +124,14 @@ public struct Habit: Codable, Equatable, Sendable {
         Int(totalClean(at: now) / 86_400)
     }
 
+    /// 다시 하지 않고 이어 가면 "지금까지 참은 날"이 days가 되는 시각. 이미 넘겼으면 nil.
+    public func date(reachingCleanDays days: Int, after now: Date) -> Date? {
+        let from = max(now, startedAt)
+        let needed = Double(days) * 86_400 - totalClean(at: from)
+        guard needed > 0 else { return nil }
+        return from.addingTimeInterval(needed)
+    }
+
     public func isWilting(at now: Date) -> Bool {
         guard let last = lastSlipAt else { return false }
         let since = now.timeIntervalSince(last)

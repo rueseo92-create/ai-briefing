@@ -52,12 +52,12 @@ actor MockForestService: ForestService {
 
     func sendCheer(to treeID: String) async throws {}
 
-    func fetchCheers(for treeID: String, since: Date) async throws -> Int {
+    func fetchCheers(for treeID: String, since: Date) async throws -> [IncomingCheer] {
         // 내가 참는 중이면 가끔 누군가 물을 준다.
         if let mine = myTree, mine.isUrging(at: Date()), Int.random(in: 0..<3) == 0 {
             pendingCheers += 1
         }
         defer { pendingCheers = 0 }
-        return pendingCheers
+        return (0..<pendingCheers).map { _ in IncomingCheer(sender: UUID().uuidString, sentAt: Date()) }
     }
 }

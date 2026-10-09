@@ -50,14 +50,21 @@ final class CloudKitForestService: ForestService, @unchecked Sendable {
         _ = try await database.save(record)
     }
 
-    func fetchCheers(for treeID: String, since: Date) async throws -> Int {
+    /// 보낸 사람은 CloudKit이 붙이는 앱 전용 사용자 id로만 구분한다. 중복을 세지 않는 데만 쓰고 화면에는 보이지 않는다.
+    func fetchCheers(for treeID: String, since: Date) async throws -> [IncomingCheer] {
         let predicate = NSPredicate(format: "target == %@ AND sentAt > %@", treeID, since as NSDate)
         let (results, _) = try await database.records(
             matching: CKQuery(recordType: "Cheer", predicate: predicate),
             desiredKeys: ["sentAt"],
             resultsLimit: 100
         )
-        return results.filter { (try? $0.1.get()) != nil }.count
+        return results.compactMap { _, result in
+            guard let record = try? result.get() else { return nil }
+            return IncomingCheer(
+                sender: record.creatorUserRecordID?.recordName,
+                sentAt: record["sentAt"] as? Date ?? since
+            )
+        }
     }
 
     private func trees(matching query: CKQuery, limit: Int) async throws -> [PublicTree] {

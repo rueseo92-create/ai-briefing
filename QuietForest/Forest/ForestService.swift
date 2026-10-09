@@ -8,8 +8,8 @@ protocol ForestService: Sendable {
     func fetchForest() async throws -> [PublicTree]
     func fetchCohort(startDay: String) async throws -> [PublicTree]
     func sendCheer(to treeID: String) async throws
-    /// since 이후에 내 나무가 받은 물방울 수.
-    func fetchCheers(for treeID: String, since: Date) async throws -> Int
+    /// since 이후에 내 나무가 받은 물방울.
+    func fetchCheers(for treeID: String, since: Date) async throws -> [IncomingCheer]
 }
 
 enum AppConfig {

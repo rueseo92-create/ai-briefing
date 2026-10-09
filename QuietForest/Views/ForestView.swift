@@ -73,7 +73,7 @@ struct ForestView: View {
 
     private func cell(_ tree: PublicTree, now: Date) -> some View {
         let urging = tree.isUrging(at: now)
-        let watered = model.wateredTreeIDs.contains(tree.id)
+        let watered = model.hasWatered(tree, at: now)
         return Button {
             guard !watered, model.cheersLeft() > 0 else { return }
             selected = tree

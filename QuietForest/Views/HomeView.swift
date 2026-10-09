@@ -82,6 +82,10 @@ struct HomeView: View {
             .frame(maxWidth: .infinity)
             .card()
 
+            if model.shouldAskReminders {
+                ReminderPrompt()
+            }
+
             if let goal = habit.goal {
                 GoalCard(goal: goal, cleanDays: habit.totalCleanDays(at: now)) { editingGoal = true }
             } else {
@@ -148,6 +152,27 @@ struct HomeView: View {
         guard let next = stage.next else { return stage.title }
         let left = next.requiredDays - habit.totalCleanDays(at: now)
         return "\(stage.title) · \(left)일 더 참으면 \(next.title)"
+    }
+}
+
+/// 처음 한 번만 알림을 켤지 묻는다. 시스템 권한 창은 "켜기"를 누른 뒤에만 띄운다.
+struct ReminderPrompt: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("🔔 나무가 자랄 때 알려 드릴까요?").font(.headline)
+            Text("잠금 화면에는 무엇을 끊는지 나오지 않아요. 밤에는 울리지 않아요.")
+                .font(.footnote)
+                .foregroundStyle(Theme.muted)
+            HStack {
+                Button("켜기") { Task { await model.setReminders(true) } }
+                    .buttonStyle(.borderedProminent)
+                Button("괜찮아요") { Task { await model.setReminders(false) } }
+                    .foregroundStyle(Theme.muted)
+            }
+        }
+        .card()
     }
 }
 
