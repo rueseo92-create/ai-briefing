@@ -84,3 +84,21 @@ final class GardenTests: XCTestCase {
         XCTAssertEqual(try JSONDecoder().decode(CheerInbox.self, from: old).total, 2)
     }
 }
+
+final class PublicGardenTests: XCTestCase {
+    /// 다른 기기에서 온 이상한 값은 걸러서 그린다.
+    func testForestStyleIsSanitized() {
+        let tree = PublicTree(
+            id: "x", name: "x", stage: .tree, isWilting: false, urgingSince: nil, startDay: "2026-10-01",
+            updatedAt: Date(), leaf: .skyNight,
+            decorations: [.deer, .deer, .leafMaple, .daisy, .pebble, .mushroom, .rabbit, .owl, .nest]
+        )
+        XCTAssertEqual(tree.style.leaf, .leafSpring)
+        XCTAssertEqual(tree.style.decorations, [.deer, .daisy, .pebble, .mushroom, .rabbit])
+    }
+
+    func testOldTreesWithoutStyleLookPlain() {
+        let tree = PublicTree(id: "x", name: "x", stage: .seed, isWilting: false, urgingSince: nil, startDay: "d", updatedAt: Date())
+        XCTAssertEqual(tree.style, GardenStyle())
+    }
+}

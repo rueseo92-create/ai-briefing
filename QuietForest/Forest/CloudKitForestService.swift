@@ -4,7 +4,7 @@ import ForestCore
 /// CloudKit 공개 데이터베이스로 만든 숲. 서버를 따로 두지 않는다.
 ///
 /// 레코드 타입 (CloudKit Console에서 인덱스를 만들어야 한다. README 참고)
-/// - Tree:  name, stage, isWilting, urgingSince, startDay, updatedAt   (recordName = 나무 id)
+/// - Tree:  name, stage, isWilting, urgingSince, startDay, updatedAt, leaf, decorations   (recordName = 나무 id)
 /// - Cheer: target, sentAt
 final class CloudKitForestService: ForestService, @unchecked Sendable {
     private let database: CKDatabase
@@ -24,6 +24,9 @@ final class CloudKitForestService: ForestService, @unchecked Sendable {
         record["urgingSince"] = tree.urgingSince ?? Self.notUrging
         record["startDay"] = tree.startDay
         record["updatedAt"] = tree.updatedAt
+        record["leaf"] = (tree.leaf ?? .leafSpring).rawValue
+        // 빈 목록은 저장이 안 되는 경우가 있어 빈 문자열 하나로 둔다. 읽을 때 걸러진다.
+        record["decorations"] = tree.decorations.isEmpty ? [""] : tree.decorations.map(\.rawValue)
         _ = try await database.modifyRecords(saving: [record], deleting: [], savePolicy: .allKeys)
     }
 
@@ -84,6 +87,9 @@ final class CloudKitForestService: ForestService, @unchecked Sendable {
             let updatedAt = record["updatedAt"] as? Date
         else { return nil }
         let urging = record["urgingSince"] as? Date
+        // 새 앱에서 늘어난 장식은 예전 앱에서 모르는 값이니 건너뛴다.
+        let leaf = (record["leaf"] as? String).flatMap(GardenItem.init(rawValue:))
+        let decorations = (record["decorations"] as? [String] ?? []).compactMap(GardenItem.init(rawValue:))
         return PublicTree(
             id: record.recordID.recordName,
             name: name,
@@ -91,7 +97,9 @@ final class CloudKitForestService: ForestService, @unchecked Sendable {
             isWilting: (record["isWilting"] as? Int ?? 0) == 1,
             urgingSince: urging == notUrging ? nil : urging,
             startDay: startDay,
-            updatedAt: updatedAt
+            updatedAt: updatedAt,
+            leaf: leaf,
+            decorations: decorations
         )
     }
 }

@@ -14,6 +14,11 @@ actor MockForestService: ForestService {
         for index in 0..<36 {
             let id = UUID()
             let stage = GrowthStage.allCases.randomElement() ?? .seed
+            // 꾸민 나무도 섞어 둔다.
+            let decorated = Int.random(in: 0..<3) > 0
+            let decorations = decorated
+                ? Array(GardenItem.items(in: .decoration).shuffled().prefix(Int.random(in: 1...3)))
+                : []
             let tree = PublicTree(
                 id: id.uuidString,
                 name: TreeName.make(seed: id),
@@ -21,7 +26,9 @@ actor MockForestService: ForestService {
                 isWilting: Int.random(in: 0..<10) == 0,
                 urgingSince: Int.random(in: 0..<6) == 0 ? now : nil,
                 startDay: index < 9 ? today : DayKey.make(now.addingTimeInterval(-Double(index) * 86_400)),
-                updatedAt: now.addingTimeInterval(-Double.random(in: 0...(10 * 86_400)))
+                updatedAt: now.addingTimeInterval(-Double.random(in: 0...(10 * 86_400))),
+                leaf: decorated ? GardenItem.items(in: .leaf).randomElement() : nil,
+                decorations: decorations
             )
             generated[tree.id] = tree
         }

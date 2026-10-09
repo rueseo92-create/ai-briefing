@@ -274,11 +274,13 @@ final class AppModel {
         return true
     }
 
-    func markGardenSeen() {
+    /// 꾸미기 화면을 나갈 때. 바꾼 모습을 숲에도 한 번에 보낸다.
+    func finishGardening() {
         var garden = garden
         garden.markSeen()
         saved.garden = garden
         save()
+        publish()
     }
 
     /// 참은 날, 버텨 낸 순간, 받은 물로 새로 생긴 것이 있는지 본다.
@@ -308,7 +310,7 @@ final class AppModel {
 
     private func publish() {
         guard let habit else { return }
-        let tree = PublicTree(id: treeID, name: treeName, habit: habit, urgingSince: urge?.startedAt, now: Date())
+        let tree = PublicTree(id: treeID, name: treeName, habit: habit, style: garden.style, urgingSince: urge?.startedAt, now: Date())
         Task { try? await service.publish(tree) }
     }
 

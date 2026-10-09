@@ -171,6 +171,17 @@ public struct GardenStyle: Codable, Equatable, Sendable {
         decorations = []
     }
 
+    /// 숲에서 받은 값으로 만든다. 종류가 맞지 않거나 겹치거나 너무 많은 것은 버린다.
+    public init(leaf: GardenItem, sky: GardenItem, decorations: [GardenItem]) {
+        self.leaf = leaf.category == .leaf ? leaf : .leafSpring
+        self.sky = sky.category == .sky ? sky : .skyDay
+        var unique: [GardenItem] = []
+        for item in decorations where item.category == .decoration && !unique.contains(item) {
+            unique.append(item)
+        }
+        self.decorations = Array(unique.prefix(Self.maxDecorations))
+    }
+
     public func isUsing(_ item: GardenItem) -> Bool {
         switch item.category {
         case .leaf: leaf == item

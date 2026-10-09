@@ -26,7 +26,7 @@ struct GardenView: View {
                 .frame(height: 260)
                 .frame(maxWidth: .infinity)
 
-                Text("한 번 생긴 것은 사라지지 않아요. 꾸민 모습은 숲에 보이지 않고 나만 봐요.")
+                Text("한 번 생긴 것은 사라지지 않아요. 잎 색과 장식은 숲에서도 보이고, 하늘은 나만 봐요.")
                     .font(.footnote)
                     .foregroundStyle(Theme.muted)
 
@@ -62,7 +62,7 @@ struct GardenView: View {
             Text("하나를 떼고 달아 봐요.")
         }
         .onAppear { unseen = Set(garden.unseen) }
-        .onDisappear { model.markGardenSeen() }
+        .onDisappear { model.finishGardening() }
     }
 
     private func tile(_ item: GardenItem, garden: GardenCollection) -> some View {

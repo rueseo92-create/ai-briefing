@@ -3,6 +3,7 @@ import Foundation
 /// 숲에 공개되는 정보의 전부.
 ///
 /// 무엇을 끊는지, 정확한 일수, 아낀 돈, 이유는 여기에 절대 넣지 않는다.
+/// 꾸민 모습(잎 색, 장식)은 보인다. 하늘은 내 화면에만 있다.
 /// 필드를 추가할 때는 PublicTreeTests의 허용 목록도 같이 바꿔야 한다.
 public struct PublicTree: Codable, Equatable, Identifiable, Sendable {
     public var id: String
@@ -13,6 +14,9 @@ public struct PublicTree: Codable, Equatable, Identifiable, Sendable {
     /// "같은 날 시작한 사람들"을 묶는 데만 쓴다.
     public var startDay: String
     public var updatedAt: Date
+    /// 꾸민 잎 색. 꾸미기 전이거나 예전 앱이면 nil(초록 잎).
+    public var leaf: GardenItem?
+    public var decorations: [GardenItem]
 
     public init(
         id: String,
@@ -21,7 +25,9 @@ public struct PublicTree: Codable, Equatable, Identifiable, Sendable {
         isWilting: Bool,
         urgingSince: Date?,
         startDay: String,
-        updatedAt: Date
+        updatedAt: Date,
+        leaf: GardenItem? = nil,
+        decorations: [GardenItem] = []
     ) {
         self.id = id
         self.name = name
@@ -30,9 +36,19 @@ public struct PublicTree: Codable, Equatable, Identifiable, Sendable {
         self.urgingSince = urgingSince
         self.startDay = startDay
         self.updatedAt = updatedAt
+        self.leaf = leaf
+        self.decorations = decorations
     }
 
-    public init(id: String, name: String, habit: Habit, urgingSince: Date?, now: Date, calendar: Calendar = .current) {
+    public init(
+        id: String,
+        name: String,
+        habit: Habit,
+        style: GardenStyle? = nil,
+        urgingSince: Date?,
+        now: Date,
+        calendar: Calendar = .current
+    ) {
         self.init(
             id: id,
             name: name,
@@ -40,8 +56,15 @@ public struct PublicTree: Codable, Equatable, Identifiable, Sendable {
             isWilting: habit.isWilting(at: now),
             urgingSince: urgingSince,
             startDay: DayKey.make(habit.startedAt, calendar: calendar),
-            updatedAt: now
+            updatedAt: now,
+            leaf: style?.leaf,
+            decorations: style?.decorations ?? []
         )
+    }
+
+    /// 숲에서 이 나무를 그릴 모습. 다른 기기가 보낸 값이니 한 번 더 걸러 낸다.
+    public var style: GardenStyle {
+        GardenStyle(leaf: leaf ?? .leafSpring, sky: .skyDay, decorations: decorations)
     }
 
     public func isUrging(at now: Date) -> Bool {

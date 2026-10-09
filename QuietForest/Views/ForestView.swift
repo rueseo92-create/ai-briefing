@@ -79,7 +79,7 @@ struct ForestView: View {
             selected = tree
         } label: {
             VStack(spacing: 6) {
-                TreeView(stage: tree.stage, isWilting: tree.isWilting, isSwaying: urging)
+                TreeView(stage: tree.stage, isWilting: tree.isWilting, isSwaying: urging, style: tree.style)
                     .frame(height: 84)
                 Text(tree.name)
                     .font(.caption)
