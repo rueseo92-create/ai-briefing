@@ -113,14 +113,14 @@ final class UrgeSessionTests: XCTestCase {
 final class PublicTreeTests: XCTestCase {
     /// 숲에 나가는 필드는 이것뿐이어야 한다. 끊는 것·일수·돈·이유가 새어 나가면 실패한다.
     func testOnlyAllowedFieldsAreShared() throws {
-        var habit = Habit(kind: .gambling, customTitle: "비밀", startedAt: t0, dailyCost: 50_000, reason: "가족")
+        var habit = Habit(kind: .gambling, customTitle: "비밀", startedAt: t0, dailyCost: 50_000, reason: "가족", goal: .lifetime)
         habit.wish = Wish(title: "여행", price: 1_000_000)
         let tree = PublicTree(id: "abc", name: "조용한 소나무", habit: habit, urgingSince: t0, now: t0 + 30 * day, calendar: utc)
         let data = try JSONEncoder().encode(tree)
         let object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
         XCTAssertEqual(Set(object.keys), ["id", "name", "stage", "isWilting", "urgingSince", "startDay", "updatedAt"])
         let json = String(decoding: data, as: UTF8.self)
-        for secret in ["gambling", "비밀", "50000", "가족", "여행"] {
+        for secret in ["gambling", "비밀", "50000", "가족", "여행", "goal", "lifetime"] {
             XCTAssertFalse(json.contains(secret), "\(secret) leaked")
         }
         XCTAssertEqual(tree.stage, .tree)
@@ -151,5 +151,49 @@ final class FormatTests: XCTestCase {
         let elapsed = Format.elapsed(2 * day + 4 * 3600 + 23 * 60 + 11)
         XCTAssertEqual(elapsed.days, 2)
         XCTAssertEqual(elapsed.clock, "04:23:11")
+    }
+}
+
+final class GoalTests: XCTestCase {
+    func testDayGoalProgress() {
+        let goal = Goal.days(70)
+        XCTAssertEqual(goal.progress(cleanDays: 35), 0.5)
+        XCTAssertEqual(goal.remaining(cleanDays: 45), 25)
+        XCTAssertFalse(goal.isReached(cleanDays: 69))
+        XCTAssertTrue(goal.isReached(cleanDays: 70))
+        XCTAssertEqual(goal.progress(cleanDays: 200), 1)
+    }
+
+    func testLifetimeNeverEnds() {
+        XCTAssertNil(Goal.lifetime.progress(cleanDays: 10_000))
+        XCTAssertNil(Goal.lifetime.remaining(cleanDays: 10))
+        XCTAssertFalse(Goal.lifetime.isReached(cleanDays: 10_000))
+        XCTAssertEqual(Goal.lifetime.title, "평생")
+    }
+
+    func testCustomIsClampedAndChoicesSkipPassedGoals() {
+        XCTAssertEqual(Goal.custom(0), .days(1))
+        XCTAssertEqual(Goal.custom(99_999), .days(Goal.maxDays))
+        XCTAssertEqual(Goal.choices(cleanDays: 40), [.days(70), .days(100), .days(365), .lifetime])
+        XCTAssertEqual(Goal.choices(cleanDays: 5_000), [.lifetime])
+    }
+
+    func testGoalSurvivesSlip() {
+        var habit = Habit(kind: .smoking, startedAt: t0, goal: .days(70))
+        habit.recordSlip(at: t0 + 40 * day)
+        XCTAssertFalse(habit.goal!.isReached(cleanDays: habit.totalCleanDays(at: t0 + 70 * day)))
+        XCTAssertTrue(habit.goal!.isReached(cleanDays: habit.totalCleanDays(at: t0 + 71 * day)))
+    }
+
+    /// 목표 기능 전에 저장된 데이터도 그대로 읽혀야 한다.
+    func testOldSavedHabitDecodesWithoutGoal() throws {
+        var object = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: JSONEncoder().encode(Habit(kind: .drinking, startedAt: t0))) as? [String: Any]
+        )
+        object.removeValue(forKey: "goal")
+        let habit = try JSONDecoder().decode(Habit.self, from: JSONSerialization.data(withJSONObject: object))
+        XCTAssertNil(habit.goal)
+        let lifetime = try JSONDecoder().decode(Goal.self, from: JSONEncoder().encode(Goal.lifetime))
+        XCTAssertEqual(lifetime, .lifetime)
     }
 }

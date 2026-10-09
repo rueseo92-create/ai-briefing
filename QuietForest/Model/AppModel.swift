@@ -14,6 +14,8 @@ final class AppModel {
         var receivedDay: String
         var receivedCount: Int
         var celebratedDays: Int
+        /// 축하한 목표 일수. 같은 목표를 두 번 축하하지 않게.
+        var celebratedGoalDays: Int?
 
         static func fresh(now: Date) -> SavedState {
             SavedState(
@@ -36,6 +38,8 @@ final class AppModel {
     var incomingCheers: Int?
     /// 새로 받은 배지. 화면이 축하한 뒤 nil로 돌린다.
     var newMilestone: Milestone?
+    /// 방금 달성한 목표. 화면이 다음 목표를 고르게 한 뒤 nil로 돌린다.
+    var reachedGoal: Goal?
     /// 이번 실행에서 물을 준 나무들.
     private(set) var wateredTreeIDs: Set<String> = []
 
@@ -89,6 +93,11 @@ final class AppModel {
         save()
     }
 
+    func setGoal(_ goal: Goal) {
+        reachedGoal = nil
+        updateHabit { $0.goal = goal }
+    }
+
     func recordSlip() {
         urge = nil
         updateHabit { $0.recordSlip(at: Date()) }
@@ -128,7 +137,7 @@ final class AppModel {
     func appBecameActive() {
         guard habit != nil else { return }
         publish()
-        checkMilestone()
+        checkProgress()
         Task { await pollCheers() }
     }
 
@@ -170,9 +179,20 @@ final class AppModel {
         save()
     }
 
-    func checkMilestone() {
+    /// 목표 달성과 새 배지를 확인한다. 같은 날 둘 다면 목표 축하만 띄운다.
+    func checkProgress() {
         guard let habit else { return }
-        let reached = Milestones.reached(cleanDays: habit.totalCleanDays(at: Date()))
+        let days = habit.totalCleanDays(at: Date())
+        let reached = Milestones.reached(cleanDays: days)
+
+        if let goal = habit.goal, let target = goal.targetDays, days >= target, saved.celebratedGoalDays != target {
+            saved.celebratedGoalDays = target
+            saved.celebratedDays = max(saved.celebratedDays, reached.last?.days ?? 0)
+            reachedGoal = goal
+            save()
+            return
+        }
+
         guard let latest = reached.last, latest.days > saved.celebratedDays else { return }
         saved.celebratedDays = latest.days
         newMilestone = latest

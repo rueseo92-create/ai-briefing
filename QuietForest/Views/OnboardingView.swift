@@ -5,7 +5,7 @@ struct OnboardingView: View {
     @Environment(AppModel.self) private var model
 
     private enum Step: Int, CaseIterable {
-        case welcome, choose, when, details, name
+        case welcome, choose, when, goal, details, name
     }
 
     @State private var step: Step = .welcome
@@ -13,6 +13,7 @@ struct OnboardingView: View {
     @State private var customTitle = ""
     @State private var startsNow = true
     @State private var lastTime = Date()
+    @State private var goal: Goal? = .days(100)
     @State private var dailyCost = ""
     @State private var reason = ""
 
@@ -27,6 +28,7 @@ struct OnboardingView: View {
                 case .welcome: welcome
                 case .choose: choose
                 case .when: when
+                case .goal: goalStep
                 case .details: details
                 case .name: name
                 }
@@ -122,6 +124,21 @@ struct OnboardingView: View {
         }
     }
 
+    /// 이미 참고 있었다면 그만큼 지난 날.
+    private var cleanDaysSoFar: Int {
+        startsNow ? 0 : max(0, Int(Date().timeIntervalSince(lastTime) / 86_400))
+    }
+
+    private var goalStep: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("목표를 정해요")
+                .font(.title.bold())
+            Text("언제든 바꿀 수 있어요. 목표를 넘겨도 나무는 계속 자라요.")
+                .foregroundStyle(Theme.muted)
+            GoalPicker(selection: $goal, cleanDays: cleanDaysSoFar)
+        }
+    }
+
     private var details: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("조금만 더 알려 주세요")
@@ -173,6 +190,9 @@ struct OnboardingView: View {
         case .choose:
             guard let kind else { return false }
             return kind != .custom || !customTitle.trimmingCharacters(in: .whitespaces).isEmpty
+        case .goal:
+            guard let goal else { return false }
+            return goal.targetDays.map { $0 > cleanDaysSoFar } ?? true
         default:
             return true
         }
@@ -194,7 +214,8 @@ struct OnboardingView: View {
             customTitle: kind == .custom ? customTitle : nil,
             startedAt: startsNow ? Date() : min(lastTime, Date()),
             dailyCost: Int(digits) ?? 0,
-            reason: reason.trimmingCharacters(in: .whitespacesAndNewlines)
+            reason: reason.trimmingCharacters(in: .whitespacesAndNewlines),
+            goal: goal
         )
         model.begin(with: habit)
     }

@@ -73,13 +73,15 @@ public struct Habit: Codable, Equatable, Sendable {
     /// 참기 버튼을 누르고 버텨 낸 횟수.
     public var urgeWins: Int
     public var wish: Wish?
+    public var goal: Goal?
 
     public init(
         kind: HabitKind,
         customTitle: String? = nil,
         startedAt: Date,
         dailyCost: Int = 0,
-        reason: String = ""
+        reason: String = "",
+        goal: Goal? = nil
     ) {
         self.kind = kind
         self.customTitle = customTitle
@@ -89,6 +91,7 @@ public struct Habit: Codable, Equatable, Sendable {
         self.reason = reason
         self.urgeWins = 0
         self.wish = nil
+        self.goal = goal
     }
 
     public var title: String {

@@ -4,6 +4,7 @@ import ForestCore
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
     @State private var confirmReset = false
+    @State private var editingGoal = false
 
     var body: some View {
         NavigationStack {
@@ -30,6 +31,11 @@ struct SettingsView: View {
                     Text("끊는 것, 날짜, 돈, 이유는 서버로 보내지 않아요. 우리도 당신이 무엇을 끊는지 몰라요.")
                 }
 
+                Section("목표") {
+                    LabeledContent("지금 목표", value: model.habit?.goal?.title ?? "없음")
+                    Button("목표 바꾸기") { editingGoal = true }
+                }
+
                 Section("위시리스트") {
                     TextField("갖고 싶은 것 (예: 운동화)", text: wishTitle)
                     LabeledContent("가격") {
@@ -52,6 +58,11 @@ struct SettingsView: View {
             .scrollContentBackground(.hidden)
             .background(Theme.background.ignoresSafeArea())
             .navigationTitle("설정")
+            .sheet(isPresented: $editingGoal) {
+                GoalSheet(reached: nil, cleanDays: model.habit?.totalCleanDays(at: Date()) ?? 0) { goal in
+                    model.setGoal(goal)
+                }
+            }
             .confirmationDialog("모든 기록을 지울까요?", isPresented: $confirmReset, titleVisibility: .visible) {
                 Button("지우고 다시 시작", role: .destructive) { model.resetEverything() }
                 Button("취소", role: .cancel) {}

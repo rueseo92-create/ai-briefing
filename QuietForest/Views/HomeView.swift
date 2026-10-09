@@ -4,6 +4,7 @@ import ForestCore
 struct HomeView: View {
     @Environment(AppModel.self) private var model
     @State private var confirmSlip = false
+    @State private var editingGoal = false
 
     var body: some View {
         @Bindable var model = model
@@ -36,7 +37,15 @@ struct HomeView: View {
                 MilestoneSheet(milestone: milestone)
                     .presentationDetents([.medium])
             }
-            .task { model.checkMilestone() }
+            .sheet(isPresented: Binding(
+                get: { editingGoal || model.reachedGoal != nil },
+                set: { if !$0 { editingGoal = false; model.reachedGoal = nil } }
+            )) {
+                GoalSheet(reached: model.reachedGoal, cleanDays: model.habit?.totalCleanDays(at: Date()) ?? 0) { goal in
+                    model.setGoal(goal)
+                }
+            }
+            .task { model.checkProgress() }
             .onChange(of: model.incomingCheers) { _, count in
                 // 참는 중이 아닐 때 온 물방울은 "오늘 받은 물"에만 쌓는다.
                 if count != nil, model.urge == nil { model.incomingCheers = nil }
@@ -72,6 +81,14 @@ struct HomeView: View {
             }
             .frame(maxWidth: .infinity)
             .card()
+
+            if let goal = habit.goal {
+                GoalCard(goal: goal, cleanDays: habit.totalCleanDays(at: now)) { editingGoal = true }
+            } else {
+                Button("🎯 목표 정하기") { editingGoal = true }
+                    .frame(maxWidth: .infinity)
+                    .card()
+            }
 
             HStack(spacing: 12) {
                 stat(title: "지금까지 참은 날", value: "\(habit.totalCleanDays(at: now))일")

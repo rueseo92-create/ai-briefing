@@ -1,19 +1,37 @@
 name: CI
 
+# GitHub의 macOS 서버는 리눅스보다 분당 10배 비싸다(비공개 저장소 기준).
+# - 핵심 로직 테스트는 싼 리눅스에서 매번 돌린다.
+# - iOS 빌드는 PR과 main에서만, 같은 브랜치의 이전 실행은 취소한다.
+# - 저장소 변수 IOS_RUNNER를 self-hosted로 바꾸면 맥 스튜디오(자체 실행기)에서 돈다.
 on:
-  push:
   pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: macos-15
+  core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: 핵심 로직 테스트
         run: swift test --package-path Packages/ForestCore
+
+  ios:
+    needs: core
+    runs-on: ${{ vars.IOS_RUNNER || 'macos-15' }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
       - name: Xcode 프로젝트 생성
         run: |
-          brew install xcodegen
+          command -v xcodegen >/dev/null || brew install xcodegen
           xcodegen generate
       - name: 시뮬레이터용 빌드
         run: |
