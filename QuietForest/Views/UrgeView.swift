@@ -25,7 +25,7 @@ struct UrgeView: View {
                             .stroke(Theme.leaf, style: StrokeStyle(lineWidth: 10, lineCap: .round))
                             .rotationEffect(.degrees(-90))
                         VStack(spacing: 8) {
-                            TreeView(stage: habit.stage(at: now), isWilting: habit.isWilting(at: now), isSwaying: !finished)
+                            TreeView(stage: habit.stage(at: now), isWilting: habit.isWilting(at: now), isSwaying: !finished, style: model.garden.style)
                                 .frame(width: 140, height: 140)
                             Text(Format.countdown(urge.remaining(at: now)))
                                 .font(.system(size: 40, weight: .semibold, design: .rounded).monospacedDigit())

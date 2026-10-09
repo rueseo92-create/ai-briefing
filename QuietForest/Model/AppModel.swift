@@ -23,6 +23,8 @@ final class AppModel {
         var urgeStartedAt: Date?
         /// 알림. nil이면 아직 묻지 않았다.
         var remindersOn: Bool?
+        /// 꾸미기. nil이면 아직 아무것도 생기지 않았다.
+        var garden: GardenCollection?
 
         static func fresh(now: Date) -> SavedState {
             SavedState(
@@ -46,6 +48,8 @@ final class AppModel {
     var newMilestone: Milestone?
     /// 방금 달성한 목표. 화면이 다음 목표를 고르게 한 뒤 nil로 돌린다.
     var reachedGoal: Goal?
+    /// 새로 생긴 꾸밀 것. 화면이 알려 준 뒤 nil로 돌린다.
+    var newGardenItems: [GardenItem]?
 
     private let service: ForestService
     private let fileURL: URL
@@ -99,6 +103,8 @@ final class AppModel {
         saved.cheerBudget.hasWatered(tree.id, at: now)
     }
 
+    var garden: GardenCollection { saved.garden ?? GardenCollection() }
+
     var remindersOn: Bool { saved.remindersOn ?? false }
     /// 알림을 켤지 아직 묻지 않았다.
     var shouldAskReminders: Bool { saved.remindersOn == nil }
@@ -111,6 +117,7 @@ final class AppModel {
         save()
         publish()
         planReminders()
+        refreshGarden()
     }
 
     func updateHabit(_ change: (inout Habit) -> Void) {
@@ -184,6 +191,7 @@ final class AppModel {
         clearUrge()
         if succeeded {
             updateHabit { $0.recordUrgeWin() }
+            refreshGarden()
         }
         publish()
     }
@@ -230,11 +238,13 @@ final class AppModel {
             incomingCheers = count
         }
         save()
+        if count > 0 { refreshGarden() }
     }
 
     /// 목표 달성과 새 배지를 확인한다. 같은 날 둘 다면 목표 축하만 띄운다.
     func checkProgress() {
         guard let habit else { return }
+        refreshGarden()
         let days = habit.totalCleanDays(at: Date())
         let reached = Milestones.reached(cleanDays: days)
 
@@ -250,6 +260,41 @@ final class AppModel {
         saved.celebratedDays = latest.days
         newMilestone = latest
         save()
+    }
+
+    // MARK: - 꾸미기
+
+    /// 잎·하늘은 바꾸고 장식은 달거나 뗀다. 장식이 꽉 찼으면 false.
+    @discardableResult
+    func toggleGarden(_ item: GardenItem) -> Bool {
+        var garden = garden
+        guard garden.toggle(item) else { return false }
+        saved.garden = garden
+        save()
+        return true
+    }
+
+    func markGardenSeen() {
+        var garden = garden
+        garden.markSeen()
+        saved.garden = garden
+        save()
+    }
+
+    /// 참은 날, 버텨 낸 순간, 받은 물로 새로 생긴 것이 있는지 본다.
+    private func refreshGarden() {
+        guard let habit else { return }
+        var garden = garden
+        let progress = GardenProgress(
+            cleanDays: habit.totalCleanDays(at: Date()),
+            urgeWins: habit.urgeWins,
+            cheers: saved.inbox?.total ?? 0
+        )
+        let fresh = garden.update(with: progress)
+        guard !fresh.isEmpty else { return }
+        saved.garden = garden
+        save()
+        newGardenItems = (newGardenItems ?? []) + fresh
     }
 
     // MARK: - 내부

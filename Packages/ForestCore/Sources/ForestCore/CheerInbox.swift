@@ -18,6 +18,8 @@ public struct CheerInbox: Codable, Equatable, Sendable {
     public private(set) var count: Int
     /// 오늘 물을 준 사람들. 날이 바뀌면 비운다.
     public private(set) var senders: Set<String>
+    /// 지금까지 받은 물방울 전부. 꾸밀 것이 생기는 데 쓴다.
+    public private(set) var total: Int
 
     public init(now: Date, calendar: Calendar = .current) {
         self.init(day: DayKey.make(now, calendar: calendar), count: 0)
@@ -28,6 +30,16 @@ public struct CheerInbox: Codable, Equatable, Sendable {
         self.day = day
         self.count = max(0, count)
         self.senders = []
+        self.total = max(0, count)
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        day = try container.decode(String.self, forKey: .day)
+        count = try container.decode(Int.self, forKey: .count)
+        senders = try container.decodeIfPresent(Set<String>.self, forKey: .senders) ?? []
+        // 이 필드가 생기기 전에 저장된 데이터는 오늘 받은 것부터 센다.
+        total = try container.decodeIfPresent(Int.self, forKey: .total) ?? count
     }
 
     public func count(at now: Date, calendar: Calendar = .current) -> Int {
@@ -50,6 +62,7 @@ public struct CheerInbox: Codable, Equatable, Sendable {
             added += 1
         }
         count += added
+        total += added
         return added
     }
 }

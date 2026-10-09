@@ -5,6 +5,8 @@ struct HomeView: View {
     @Environment(AppModel.self) private var model
     @State private var confirmSlip = false
     @State private var editingGoal = false
+    @State private var showGarden = false
+    @State private var poke = 0
 
     var body: some View {
         @Bindable var model = model
@@ -20,6 +22,37 @@ struct HomeView: View {
             .background(Theme.background.ignoresSafeArea())
             .foregroundStyle(Theme.ink)
             .navigationTitle("내 나무")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { showGarden = true } label: {
+                        Image(systemName: "paintpalette")
+                            .overlay(alignment: .topTrailing) {
+                                if !model.garden.unseen.isEmpty {
+                                    Circle().fill(Theme.blossom).frame(width: 8, height: 8).offset(x: 4, y: -3)
+                                }
+                            }
+                    }
+                    .accessibilityLabel("꾸미기")
+                }
+            }
+            .navigationDestination(isPresented: $showGarden) { GardenView() }
+            .overlay(alignment: .top) {
+                if let items = model.newGardenItems, !items.isEmpty {
+                    GardenToast(items: items)
+                        .padding(.top, 8)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .onTapGesture {
+                            model.newGardenItems = nil
+                            showGarden = true
+                        }
+                }
+            }
+            .animation(.spring(duration: 0.4), value: model.newGardenItems)
+            .task(id: model.newGardenItems) {
+                guard model.newGardenItems != nil else { return }
+                try? await Task.sleep(for: .seconds(5))
+                if !Task.isCancelled { model.newGardenItems = nil }
+            }
             .safeAreaInset(edge: .bottom) { actions }
             .confirmationDialog("다시 했나요?", isPresented: $confirmSlip, titleVisibility: .visible) {
                 Button("네, 다시 했어요") { model.recordSlip() }
@@ -61,8 +94,18 @@ struct HomeView: View {
 
         VStack(spacing: 20) {
             VStack(spacing: 6) {
-                TreeView(stage: stage, isWilting: habit.isWilting(at: now))
+                TreeView(stage: stage, isWilting: habit.isWilting(at: now), style: model.garden.style, showsSky: true, poke: poke)
                     .frame(height: 240)
+                    .overlay {
+                        if stage > .seed {
+                            FallingLeaves(trigger: poke, emoji: Theme.fallingLeaf(model.garden.style.leaf))
+                        }
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture { poke += 1 }
+                    .sensoryFeedback(.impact(weight: .light), trigger: poke)
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityHint("톡 건드리면 나무가 흔들려요")
                 Text(model.treeName)
                     .font(.title3.weight(.semibold))
                 Text(stageCaption(habit: habit, stage: stage, now: now))
