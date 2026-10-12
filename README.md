@@ -18,7 +18,7 @@
 - **광고는 솔직하게.** 항상 "광고" 표시, 한 번에 한 장, "결이 같은" 자리 금지, 싫어한 이유가 있으면 제외, 그 주 예산과 시간 안에서만.
 - **건강을 약속하지 않는다.** 질병 예방·치료 효과를 말하지 않는다. 설정에 도움받을 곳(자살예방 상담전화 109)을 둔다.
 
-## 기능 (v0.3)
+## 기능 (v0.4)
 
 | 탭 | 내용 |
 |---|---|
@@ -38,6 +38,10 @@ v0.3에서 더한 것:
 | 계절 카드 | 카드 121장. 벚꽃, 수박 화채, 단풍, 첫눈처럼 그 계절에만 나오는 카드 |
 | 문제 신고 | 실험 화면의 "문제가 있었나요?" → 문 닫힘·그런 곳 없음이면 그 장소를 다시 권하지 않는다. 메일로 장소 이름과 문제 종류만 보낼 수 있다 |
 | 영업시간 안내 | 장소 카드에 "가기 전에 지도 앱에서 영업시간을 확인해 주세요" |
+| 친구와 함께 | 실험마다 "친구에게 같이 하자고 보내기"(링크에는 실험 id와 적은 이름만). 친구가 링크를 열면 이번 주 실험에 "친구 초대"로 들어가고, 엽서 뒷면에 "함께: ○○". 체크인해도 초대받은 실험은 남는다 |
+| 실물 엽서 인쇄 | 엽서함 → 프린터 버튼. 계절별로 사진 있는 것·좋았어요부터 8장을 골라 두고, 인쇄용 PDF(148×100mm, 앞·뒷면)로 만든다. 인쇄 제휴처가 정해지면 `AppConfig.printOrderURL`로 주문 버튼 |
+| 바꾸기 이유 학습 | 최근 4주 "돈이 들어서" 2번 이상이면 싼 실험을, "시간이 없어서" 2번 이상이면 짧은 실험을 먼저. "마음이 안 가서"가 한 구역에 3번이면 그 구역은 뒤로. "시간이 없어서" 3번이면 체크인 기본값을 줄이자고 제안(괜찮아요 하면 4주 동안 안 물음) |
+| 제휴처 도구 | `partners/`: 제휴처 안내와 제안 파일 템플릿. `offer-check validate`로 검사(건강 효과 약속, 한국 밖 좌표, 가격, 코드 형식, 끝난 날짜 등), `offer-check redemptions`로 혜택 코드 사용을 코드·주별로 집계(성과형 정산). 앱은 CloudKit 공개 DB의 `OfferFile`을 받아 한 번 더 검사한다 |
 | 익명 주간 숫자 | 켠 사람만. 일주일에 한 번 체크인 여부, 엽서 수, 사진 넣은 수, 좋았어요 수, 바꾼 이유별 횟수, 혜택 코드 복사 수. 누가·무엇을·어디서는 없다(`WeeklyReportTests`가 확인) |
 
 ### 이번 주 체크인
@@ -108,11 +112,16 @@ swift test --package-path Packages/TasteCore
 4. 한 번 돌려 레코드가 생기면 CloudKit Console에서 확인한다.
    - 비공개 DB: `State`(file, updatedAt), `Photo`(image) — 사용자 본인만 본다
    - 공개 DB: `WeeklyReport`(week 외 숫자들) — 대시보드에서 `week`를 Queryable로 두고 주별로 모아 본다
+   - 공개 DB: `OfferFile`(file: 검사를 통과한 제안 JSON) — 운영자만 쓴다(보안 역할). `recordName`을 Queryable로
 5. 출시 전에 스키마를 Production으로 배포한다.
 
 ## 진짜 제안 연결하기
 
-`TasteLab/Offers/OfferService.swift`의 `SampleOfferService`를 바꾼다. CloudKit 공개 데이터베이스에 제안(실험 + 장소 좌표 + 혜택 또는 키트)을 **운영자만 쓰고 앱은 읽기만** 하게 두고, 시·도 단위로 통째로 받아 기기 안에서 고른다.
+1. 제휴처가 `partners/offer-template.json`을 채워 보낸다(`partners/README.md`).
+2. 운영자가 검사한다: `swift run --package-path Packages/TasteCore offer-check validate 받은파일.json`
+3. 통과하면 CloudKit Console에서 공개 DB에 `OfferFile` 레코드를 만들고 파일을 `file`에 올린다.
+4. `AppConfig.cloudKitContainer`가 있으면 앱은 예시 대신 이 제안을 받는다. 앱도 한 번 더 검사해서 오류 있는 제안은 버린다.
+5. 정산: 제휴처가 보낸 코드 사용 기록을 `offer-check redemptions codes.csv`로 집계한다.
 
 ## 구조
 
@@ -134,6 +143,12 @@ Packages/TasteCore/     # UI 없는 핵심 로직 + 테스트
   Weather.swift         # 이번 주 날씨와 바깥에 나가기 좋은 날
   WeeklyReminders.swift # 월요일 체크인, 키트 마감, 주말 계획 알림 시각
   WeeklyReport.swift    # 익명 주간 숫자(허용된 필드만)
+  Invite.swift          # 친구 초대 링크
+  PrintPack.swift       # 계절 묶음과 인쇄할 엽서 고르기
+  SwapLearning.swift    # 바꾸기 이유에서 배우기
+  OfferFile.swift       # 제휴처 제안 파일, 검사, 코드 사용 집계
+Packages/TasteCore/Sources/offer-check/   # 제휴처 도구(명령줄)
+partners/               # 제휴처 안내, 제안 파일 템플릿
   Weekend.swift         # 키트 주문 마감과 도착 토요일
 TasteLab/
   App/  Model/(상태, 서비스 약속, CloudKit 백업·숫자, 알림·날씨, 사진, 위치, 지도 검색)  Offers/  Design/  Views/
@@ -141,9 +156,8 @@ TasteLab/
 
 ## 다음에 할 것
 
-- 친구와 함께 실험(초대 링크, 엽서 주고받기)
-- 실물 엽서 인쇄 주문
-- 추천이 바꾸기 이유를 배우기(자주 "돈이 들어서"면 기본 예산 낮추자고 제안)
-- 제휴처 관리 도구(실험·혜택 올리기, 코드 사용 집계)
+- 초대 링크를 앱이 없는 사람도 열 수 있게(웹 페이지 + 유니버설 링크)
+- 인쇄 제휴처와 주문 연동
+- 제휴처가 직접 올리는 웹 폼(지금은 파일 + 운영자 검사)
 - 실제 제휴처 1~2곳 시험 운영, CloudKit 제안 연결
 - 앱 아이콘, 위젯

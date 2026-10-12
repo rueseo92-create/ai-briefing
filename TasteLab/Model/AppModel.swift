@@ -41,6 +41,10 @@ final class AppModel {
         /// 체크인한 주들. 익명 주간 숫자에만 쓴다.
         var checkedInWeeks: Set<String>?
         var backup: BackupState?
+        /// 친구에게 보일 이름(초대 링크에만 담긴다).
+        var nickname: String?
+        /// 바꾸기 이유로 배운 제안을 "괜찮아요" 한 뒤 다시 묻지 않을 때까지.
+        var suggestionDismissedUntil: Date?
 
         static let fresh = SavedState(
             journal: Journal(), picks: [], allowSponsored: true, onboarded: false,
@@ -58,6 +62,15 @@ final class AppModel {
     var justUnlockedSummary = false
     private(set) var backupAvailable = false
     private(set) var isBackingUp = false
+    /// 열린 초대 링크. 화면이 보여 준 뒤 nil로 돌린다.
+    var pendingInvite: Invite?
+
+    enum InviteResult: Equatable {
+        case added
+        case alreadyThisWeek
+        case alreadyTried
+        case unknownExperiment
+    }
 
     let photos: PhotoStore
     private let offerService: OfferService
@@ -122,6 +135,18 @@ final class AppModel {
     var lastBackupAt: Date? { saved.backup?.lastBackupAt }
 
     var catalog: [Experiment] { Catalog.all + offers }
+    var nickname: String { saved.nickname ?? "" }
+
+    /// 자주 "시간이 없어서" 바꿨으면 체크인 기본값을 바꾸자고 제안한다.
+    func checkInSuggestion(now: Date = Date()) -> CheckIn? {
+        if let until = saved.suggestionDismissedUntil, now < until { return nil }
+        return SwapLearning(journal: saved.journal, now: now).suggestion(for: saved.checkIn)
+    }
+
+    func dismissSuggestion(now: Date = Date()) {
+        saved.suggestionDismissedUntil = now.addingTimeInterval(SwapLearning.window)
+        save()
+    }
 
     var recommender: Recommender {
         Recommender(
@@ -212,9 +237,11 @@ final class AppModel {
         saved.checkedInWeek = week
         saved.checkedInWeeks = (saved.checkedInWeeks ?? []).union([week])
         if firstThisWeek || saved.picksWeek != week || saved.picks.isEmpty {
+            // 체크인 전에 받아 둔 친구 초대는 남긴다.
+            let invited = saved.picks.filter { $0.invitedBy != nil && !hasTried($0.experiment) }
             var rng = SystemRandomNumberGenerator()
             let picks = recommender.weeklyPicks(journal: saved.journal, now: now, using: &rng)
-            saved.picks = picks
+            saved.picks = picks.filter { pick in !invited.contains { $0.id == pick.id } } + invited
             saved.picksWeek = week
             saved.journal.markShown(picks.map(\.id), at: now)
         } else {
@@ -256,7 +283,7 @@ final class AppModel {
     func swap(_ pick: Pick, reason: SwapReason?, now: Date = Date()) {
         guard let index = saved.picks.firstIndex(of: pick) else { return }
         saved.journal.skip(pick.id, at: now)
-        saved.journal.recordSwap(reason, at: now)
+        saved.journal.recordSwap(reason, domain: pick.experiment.domain, at: now)
         let extra: (Experiment) -> Bool
         switch reason {
         case .tooExpensive:
@@ -292,17 +319,59 @@ final class AppModel {
         save()
     }
 
-    /// 해 본 뒤 엽서 한 장. photo는 PhotoStore에 이미 저장한 파일 이름.
-    func record(_ experiment: Experiment, feeling: Feeling, why: [Tag], note: String, photo: String?) {
+    /// 해 본 뒤 엽서 한 장. photo는 PhotoStore에 이미 저장한 파일 이름. with는 함께한 사람.
+    func record(_ experiment: Experiment, feeling: Feeling, why: [Tag], note: String, photo: String?, with companion: String? = nil) {
         let before = saved.journal
         let hadSummary = summary != nil
-        let entry = Entry(experiment: experiment, feeling: feeling, why: why, note: note, photo: photo, at: Date())
+        let entry = Entry(experiment: experiment, feeling: feeling, why: why, note: note, photo: photo, with: companion, at: Date())
         saved.journal.record(entry)
         if saved.weekendPlanID == experiment.id { saved.weekendPlanID = nil }
         save()
         freshStamps = Stamps.newlyEarned(before: before, after: saved.journal)
         freshPostcard = entry
         if !hadSummary, summary != nil { justUnlockedSummary = true }
+    }
+
+    // MARK: - 친구와 함께
+
+    func setNickname(_ name: String) {
+        saved.nickname = String(name.prefix(Invite.maxNameLength))
+        save()
+    }
+
+    /// 이 실험을 같이 하자는 링크.
+    func invite(for experiment: Experiment) -> Invite {
+        Invite(experimentID: experiment.id, from: saved.nickname)
+    }
+
+    /// 이번 주 실험이 이 친구 초대로 온 것이면 그 사람 이름.
+    func invitedBy(_ experiment: Experiment) -> String? {
+        saved.picks.first { $0.id == experiment.id }?.invitedBy
+    }
+
+    /// 받은 초대를 이번 주 실험에 넣는다. 예산·시간과 상관없이 넣는다(친구와 정한 거니까).
+    @discardableResult
+    func accept(_ invite: Invite, now: Date = Date()) -> InviteResult {
+        guard let experiment = invite.experiment(in: catalog) else { return .unknownExperiment }
+        if hasTried(experiment) { return .alreadyTried }
+        if let index = saved.picks.firstIndex(where: { $0.id == experiment.id }) {
+            saved.picks[index].invitedBy = invite.senderName
+            save()
+            return .alreadyThisWeek
+        }
+        let recommender = recommender
+        let pick = Pick(
+            experiment: experiment, slot: .fresh,
+            reason: "\(invite.senderName)님이 같이 해 보자고 했어요",
+            travelMinutes: recommender.travelMinutes(experiment) ?? 0,
+            venue: recommender.venue(for: experiment),
+            invitedBy: invite.senderName
+        )
+        saved.picks.append(pick)
+        if saved.picksWeek == nil { saved.picksWeek = Week.key(now) }
+        saved.journal.markShown([experiment.id], at: now)
+        save()
+        return .added
     }
 
     func planWeekend(_ experiment: Experiment?) {

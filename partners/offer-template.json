@@ -1,0 +1,30 @@
+{
+  "partner": { "name": "예시 요가 스튜디오", "contact": "hello@example.com" },
+  "offers": [
+    {
+      "id": "first-yoga",
+      "title": "처음 오는 사람을 위한 요가 수업",
+      "detail": "몸이 굳은 사람도 따라 할 수 있는 60분 기초 수업.",
+      "zone": "movement",
+      "tags": ["moving", "slow", "learning"],
+      "minutes": 60,
+      "place": { "name": "예시 요가 스튜디오 (마포)", "latitude": 37.5560, "longitude": 126.9220, "address": "서울 마포구 예시로 1" },
+      "price": 25000,
+      "benefit": "첫 수업 무료",
+      "priceAfterBenefit": 0,
+      "code": "YOGAFREE",
+      "url": "https://example.com/book",
+      "endsAt": "2027-03-31"
+    },
+    {
+      "id": "home-tea",
+      "title": "주말 아침 홈 티 시음",
+      "detail": "차 다섯 가지를 같은 방법으로 우려 비교해요.",
+      "zone": "food",
+      "tags": ["sensory", "quiet", "slow"],
+      "minutes": 60,
+      "price": 19000,
+      "kit": { "name": "홈 티 시음 키트", "contents": ["잎차 5종 각 5g", "거름망", "맛 비교 카드"], "price": 19000, "leadDays": 2, "url": "https://example.com/kit" }
+    }
+  ]
+}

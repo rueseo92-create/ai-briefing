@@ -5,10 +5,35 @@ import TasteCore
 struct CheckInForm: View {
     @State var answer: CheckIn
     let isFirstThisWeek: Bool
+    /// 바꾸기 이유에서 배운 제안. 예: 시간을 '짧게'로.
+    var suggestion: CheckIn? = nil
+    var onDismissSuggestion: () -> Void = {}
     let onDone: (CheckIn) -> Void
+    @State private var suggestionHandled = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
+            if let suggestion, !suggestionHandled, suggestion != answer {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("요즘 ‘시간이 없어서’로 자주 바꿨어요. 시간을 ‘\(suggestion.time.title)’로 맞춰 볼까요?")
+                        .font(.callout)
+                    HStack {
+                        Button("그렇게 할게요") {
+                            answer.time = suggestion.time
+                            suggestionHandled = true
+                        }
+                        .buttonStyle(.bordered)
+                        Button("괜찮아요") {
+                            suggestionHandled = true
+                            onDismissSuggestion()
+                        }
+                        .foregroundStyle(Theme.muted)
+                    }
+                }
+                .padding(12)
+                .background(Theme.accent.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+            }
+
             question("이번 주 얼마까지 쓸 수 있어요?", options: CheckIn.Budget.allCases, selection: $answer.budget, title: \.title)
             question("에너지는 어때요?", options: CheckIn.Energy.allCases, selection: $answer.energy, title: \.title)
             question("시간은요? (오가는 시간 포함)", options: CheckIn.TimeBudget.allCases, selection: $answer.time, title: \.title)

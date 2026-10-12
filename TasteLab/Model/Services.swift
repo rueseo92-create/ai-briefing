@@ -9,6 +9,8 @@ enum AppConfig {
     static let cloudKitContainer: String? = nil
     /// 의견 보내기를 받을 주소.
     static let feedbackEmail = "feedback@example.com"
+    /// 실물 엽서 인쇄 제휴처 주문 페이지. 정해지면 넣는다. 없으면 PDF 저장·공유만.
+    static let printOrderURL: URL? = nil
 }
 
 /// 사용자 본인의 iCloud(비공개 데이터베이스)에 백업한다. 우리 서버로는 가지 않는다.

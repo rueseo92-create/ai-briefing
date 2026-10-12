@@ -44,9 +44,11 @@ public struct Entry: Codable, Equatable, Identifiable, Sendable {
     public var note: String
     /// 엽서 사진의 파일 이름. 사진은 이 기기에만 저장된다. 없으면 구역 그림 엽서.
     public var photo: String?
+    /// 함께한 사람(초대받아 같이 했을 때). 엽서 뒷면에 "○○와 함께".
+    public var with: String?
     public var at: Date
 
-    public init(experiment: Experiment, feeling: Feeling, why: [Tag], note: String = "", photo: String? = nil, at: Date) {
+    public init(experiment: Experiment, feeling: Feeling, why: [Tag], note: String = "", photo: String? = nil, with: String? = nil, at: Date) {
         id = UUID()
         experimentID = experiment.id
         title = experiment.title
@@ -56,6 +58,7 @@ public struct Entry: Codable, Equatable, Identifiable, Sendable {
         self.why = why.filter(experiment.tags.contains)
         self.note = note
         self.photo = photo
+        self.with = with
         self.at = at
     }
 }
@@ -63,6 +66,8 @@ public struct Entry: Codable, Equatable, Identifiable, Sendable {
 /// "다른 걸로"를 누른 기록. 익명 주간 숫자에만 쓴다.
 public struct SwapLog: Codable, Equatable, Sendable {
     public var reason: SwapReason?
+    /// 넘긴 실험의 구역. "마음이 안 가서"가 한 구역에 몰리는지 보려고.
+    public var domain: Domain?
     public var at: Date
 }
 
@@ -93,8 +98,8 @@ public struct Journal: Codable, Equatable, Sendable {
         codeCopies = try container.decodeIfPresent([Date].self, forKey: .codeCopies) ?? []
     }
 
-    public mutating func recordSwap(_ reason: SwapReason?, at now: Date) {
-        swaps.append(SwapLog(reason: reason, at: now))
+    public mutating func recordSwap(_ reason: SwapReason?, domain: Domain? = nil, at now: Date) {
+        swaps.append(SwapLog(reason: reason, domain: domain, at: now))
     }
 
     public mutating func recordCodeCopy(at now: Date) {

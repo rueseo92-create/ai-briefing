@@ -13,6 +13,7 @@ struct ReactionSheet: View {
     @State private var photoItem: PhotosPickerItem?
     @State private var photo: UIImage?
     @State private var showCamera = false
+    @State private var together = true
 
     var body: some View {
         NavigationStack {
@@ -81,6 +82,14 @@ struct ReactionSheet: View {
                     Text("사진은 이 폰에만 저장돼요. 고른 한 장만 받고, 위치 정보는 남기지 않아요. 사진이 없으면 구역 그림 엽서가 돼요.")
                 }
 
+                if let friend = model.invitedBy(experiment) {
+                    Section {
+                        Toggle("\(friend)님과 함께 했어요", isOn: $together)
+                    } footer: {
+                        Text("엽서 뒷면에 함께한 사람으로 남아요.")
+                    }
+                }
+
                 Section("엽서 뒷면 한 줄 (선택)") {
                     TextField("예: 생각보다 시간이 빨리 갔다", text: $note, axis: .vertical)
                 }
@@ -93,7 +102,8 @@ struct ReactionSheet: View {
                     Button("엽서 만들기") {
                         guard let feeling else { return }
                         let name = photo.flatMap { model.photos.save($0) }
-                        model.record(experiment, feeling: feeling, why: feeling == .meh ? [] : why, note: note, photo: name)
+                        let friend = together ? model.invitedBy(experiment) : nil
+                        model.record(experiment, feeling: feeling, why: feeling == .meh ? [] : why, note: note, photo: name, with: friend)
                         dismiss()
                     }
                     .disabled(feeling == nil)

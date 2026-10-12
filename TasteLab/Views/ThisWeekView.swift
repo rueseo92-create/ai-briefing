@@ -21,7 +21,10 @@ struct ThisWeekView: View {
                             Text("이번 주 어때요?").font(.title2.bold())
                             Text("답에 맞춰 실험 세 장을 골라 드려요.").foregroundStyle(Theme.muted)
                         }
-                        CheckInForm(answer: model.checkIn, isFirstThisWeek: true) { answer in
+                        CheckInForm(
+                            answer: model.checkIn, isFirstThisWeek: true,
+                            suggestion: model.checkInSuggestion(), onDismissSuggestion: { model.dismissSuggestion() }
+                        ) { answer in
                             Task { await submit(answer) }
                         }
                         .card()
@@ -136,7 +139,7 @@ struct PickCard: View {
         let experiment = pick.experiment
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 6) {
-                Chip(text: pick.slot.title, color: Theme.slotColor(pick.slot))
+                Chip(text: pick.invitedBy != nil ? "친구 초대" : pick.slot.title, color: Theme.slotColor(pick.slot))
                 if experiment.isSponsored { Chip(text: "광고", color: Theme.ad) }
                 if experiment.kit != nil { Chip(text: "키트", color: Theme.kit) }
                 Spacer()

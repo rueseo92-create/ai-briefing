@@ -93,3 +93,27 @@ final class CloudKitMetrics: MetricsService, @unchecked Sendable {
         _ = try await database.save(record)
     }
 }
+
+/// 제휴처 제안을 CloudKit 공개 데이터베이스에서 받는다. 운영자가 offer-check로 검사한 파일을 OfferFile 레코드(file 자산)로 올려 둔다.
+/// 앱은 전부 받아서 한 번 더 검사하고, 무엇을 보여 줄지는 기기 안에서 고른다.
+final class CloudKitOfferService: OfferService, @unchecked Sendable {
+    private let database: CKDatabase
+
+    init(containerID: String) {
+        database = CKContainer(identifier: containerID).publicCloudDatabase
+    }
+
+    func fetchOffers() async throws -> [Experiment] {
+        let query = CKQuery(recordType: "OfferFile", predicate: NSPredicate(value: true))
+        let (results, _) = try await database.records(matching: query, desiredKeys: ["file"], resultsLimit: 200)
+        var experiments: [Experiment] = []
+        for (_, result) in results {
+            guard let record = try? result.get(),
+                  let url = (record["file"] as? CKAsset)?.fileURL,
+                  let data = try? Data(contentsOf: url),
+                  let file = try? JSONDecoder().decode(OfferFile.self, from: data) else { continue }
+            experiments += OfferValidator.experiments(from: file, now: Date())
+        }
+        return experiments
+    }
+}

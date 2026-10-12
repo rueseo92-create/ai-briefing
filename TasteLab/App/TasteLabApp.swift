@@ -1,8 +1,10 @@
 import SwiftUI
+import TasteCore
 
 @main
 struct TasteLabApp: App {
     @State private var model = AppModel(
+        offerService: AppConfig.cloudKitContainer.map { CloudKitOfferService(containerID: $0) as OfferService } ?? SampleOfferService(),
         backupService: AppConfig.cloudKitContainer.map { CloudKitBackup(containerID: $0) },
         metricsService: AppConfig.cloudKitContainer.map { CloudKitMetrics(containerID: $0) },
         reminderSink: LocalReminders(),
@@ -17,6 +19,7 @@ struct TasteLabApp: App {
                 .environment(model)
                 .tint(Theme.accent)
                 .task { await model.appBecameActive() }
+                .onOpenURL { url in model.pendingInvite = Invite(url: url) }
                 .onChange(of: scenePhase) { _, phase in
                     if phase == .active { Task { await model.appBecameActive() } }
                     if phase == .background { Task { await model.backupNow() } }
@@ -55,6 +58,11 @@ struct RootView: View {
             .onAppear {
                 // 체크인할 게 없고 엽서가 있으면 엽서함부터.
                 if !model.needsCheckIn(), !model.postcards.isEmpty { tab = .box }
+            }
+            .sheet(isPresented: Binding(get: { model.pendingInvite != nil }, set: { if !$0 { model.pendingInvite = nil } })) {
+                if let invite = model.pendingInvite {
+                    InviteSheet(invite: invite) { tab = .week }
+                }
             }
         }
     }

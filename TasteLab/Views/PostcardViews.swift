@@ -91,6 +91,9 @@ struct PostcardBack: View {
             VStack(alignment: .leading, spacing: 10) {
                 StampMark(domain: entry.domain, earned: true, gold: false, size: 44)
                 Text("나에게").font(.caption.weight(.semibold))
+                if let friend = entry.with {
+                    Text("함께: \(friend)").font(.caption)
+                }
                 Text("\(entry.feeling.emoji) \(entry.feeling.title)").font(.caption)
                 Text(entry.domain.title).font(.caption2).foregroundStyle(Theme.muted)
             }
@@ -282,6 +285,14 @@ struct PostcardBoxView: View {
             .background(Theme.background.ignoresSafeArea())
             .foregroundStyle(Theme.ink)
             .navigationTitle("엽서함")
+            .toolbar {
+                if !model.postcards.isEmpty {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationLink { PrintPackView() } label: { Image(systemName: "printer") }
+                            .accessibilityLabel("실물 엽서 인쇄")
+                    }
+                }
+            }
         }
     }
 }
@@ -300,6 +311,9 @@ struct PostcardDetail: View {
                         Label("엽서 저장·공유", systemImage: "square.and.arrow.up").frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
+                }
+                if let experiment = model.catalog.first(where: { $0.id == entry.experimentID }) {
+                    InviteShareButton(experiment: experiment)
                 }
             }
             .padding(20)

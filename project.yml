@@ -31,11 +31,15 @@ targets:
         NSCameraUsageDescription: 엽서에 넣을 사진을 찍어요. 사진은 이 폰에만 저장돼요.
         NSLocationWhenInUseUsageDescription: 오가는 시간을 재려고 실험을 받을 때만 대략적 위치를 써요. 위치는 서버로 보내지 않아요.
         NSLocationDefaultAccuracyReduced: true
+        CFBundleURLTypes:
+          - CFBundleURLName: invite
+            CFBundleURLSchemes:
+              - tastepostcard
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.tastepostcard
-        MARKETING_VERSION: 0.3.0
-        CURRENT_PROJECT_VERSION: 3
+        MARKETING_VERSION: 0.4.0
+        CURRENT_PROJECT_VERSION: 4
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1"
         ENABLE_PREVIEWS: YES

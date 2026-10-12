@@ -6,9 +6,11 @@ let package = Package(
     platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
         .library(name: "TasteCore", targets: ["TasteCore"]),
+        .executable(name: "offer-check", targets: ["offer-check"]),
     ],
     targets: [
         .target(name: "TasteCore"),
+        .executableTarget(name: "offer-check", dependencies: ["TasteCore"]),
         .testTarget(name: "TasteCoreTests", dependencies: ["TasteCore"]),
     ]
 )

@@ -47,7 +47,22 @@ public struct Pick: Codable, Equatable, Identifiable, Sendable {
     public var venue: Venue?
     /// 바깥 실험이면 이번 주 날씨 한 줄.
     public var weatherNote: String?
+    /// 친구가 같이 하자고 보낸 실험이면 그 사람 이름.
+    public var invitedBy: String?
     public var id: String { experiment.id }
+
+    public init(
+        experiment: Experiment, slot: Slot, reason: String, travelMinutes: Int,
+        venue: Venue? = nil, weatherNote: String? = nil, invitedBy: String? = nil
+    ) {
+        self.experiment = experiment
+        self.slot = slot
+        self.reason = reason
+        self.travelMinutes = travelMinutes
+        self.venue = venue
+        self.weatherNote = weatherNote
+        self.invitedBy = invitedBy
+    }
 }
 
 public struct Recommender: Sendable {
@@ -134,6 +149,7 @@ public struct Recommender: Sendable {
         using rng: inout R
     ) -> Pick? {
         let profile = TasteProfile(journal: journal)
+        let learning = SwapLearning(journal: journal, now: now)
         let base = catalog.filter { experiment in
             !excluding.contains(experiment.id)
                 && !journal.hasTried(experiment.id)
@@ -150,7 +166,10 @@ public struct Recommender: Sendable {
             let spread = pool.filter { !avoidDomains.contains($0.domain) }
             let tiers = rough ? [spread.filter { !$0.isOutdoor }, pool.filter { !$0.isOutdoor }, spread, pool] : [spread, pool]
             for candidates in tiers where !candidates.isEmpty {
-                if var found = choose(slot: slot, from: candidates, profile: profile, sponsorAllowed: sponsorAllowed, using: &rng) {
+                // 자주 "마음이 안 가서" 넘긴 구역은 처음 가 보는 자리에서도 뒤로.
+                let warm = candidates.filter { !learning.coolDomains.contains($0.domain) }
+                let shortlist = slot == .fresh && !warm.isEmpty ? warm : candidates
+                if var found = choose(slot: slot, from: shortlist, profile: profile, learning: learning, sponsorAllowed: sponsorAllowed, using: &rng) {
                     if found.experiment.isOutdoor, let weather {
                         found.weatherNote = weather.outdoorNote(from: now, calendar: calendar)
                     }
@@ -186,16 +205,17 @@ public struct Recommender: Sendable {
         Pick(experiment: experiment, slot: slot, reason: reason, travelMinutes: travelMinutes(experiment) ?? 0, venue: venue(for: experiment))
     }
 
-    /// 누군가와 함께인 주에는 함께하는 실험을 앞으로.
-    private func score(_ experiment: Experiment, _ profile: TasteProfile) -> Int {
+    /// 누군가와 함께인 주에는 함께하는 실험을 앞으로. 바꾸기 이유에서 배운 것(비용, 시간, 안 맞는 구역)은 뒤로.
+    private func score(_ experiment: Experiment, _ profile: TasteProfile, _ learning: SwapLearning) -> Int {
         let together = checkIn.company == .together && experiment.tags.contains(.together) ? 3 : 0
-        return profile.score(experiment) + together
+        return profile.score(experiment) + together - learning.penalty(experiment, travelMinutes: travelMinutes(experiment) ?? 0)
     }
 
     private func choose<R: RandomNumberGenerator>(
         slot: Slot,
         from candidates: [Experiment],
         profile: TasteProfile,
+        learning: SwapLearning,
         sponsorAllowed: Bool,
         using rng: inout R
     ) -> Pick? {
@@ -205,22 +225,22 @@ public struct Recommender: Sendable {
             ? candidates.filter { $0.isSponsored && !profile.hasDislikedTag($0) && profile.score($0) >= 0 }
             : []
 
-        let organicPick = rule(for: slot, candidates: organic, profile: profile, using: &rng)
+        let organicPick = rule(for: slot, candidates: organic, profile: profile, learning: learning, using: &rng)
         if !sponsored.isEmpty, organicPick == nil || Bool.random(using: &rng),
-           let ad = rule(for: slot, candidates: sponsored, profile: profile, using: &rng) {
+           let ad = rule(for: slot, candidates: sponsored, profile: profile, learning: learning, using: &rng) {
             return ad
         }
         return organicPick
     }
 
-    private func rule<R: RandomNumberGenerator>(for slot: Slot, candidates: [Experiment], profile: TasteProfile, using rng: inout R) -> Pick? {
+    private func rule<R: RandomNumberGenerator>(for slot: Slot, candidates: [Experiment], profile: TasteProfile, learning: SwapLearning, using rng: inout R) -> Pick? {
         guard !candidates.isEmpty else { return nil }
         switch slot {
         case .confirm:
             let top = profile.topTags(3)
             let liked = Set(profile.likedDomains)
             let matching = candidates.filter { $0.tags.contains(where: top.contains) && !profile.hasDislikedTag($0) }
-            guard let chosen = best(matching, by: { score($0, profile) + (liked.contains($0.domain) ? 2 : 0) }, using: &rng) else { return nil }
+            guard let chosen = best(matching, by: { score($0, profile, learning) + (liked.contains($0.domain) ? 2 : 0) }, using: &rng) else { return nil }
             let tag = chosen.tags.first(where: top.contains) ?? top[0]
             return makePick(chosen, slot: .confirm, reason: "‘\(tag.title)’ 좋았던 실험과 결이 같아요")
 
@@ -235,7 +255,7 @@ public struct Recommender: Sendable {
                     && profile.stat(experiment.domain).state != .notForMe
                     && !profile.hasDislikedTag(experiment)
             }
-            guard let chosen = best(matching, by: { score($0, profile) }, using: &rng) else { return nil }
+            guard let chosen = best(matching, by: { score($0, profile, learning) }, using: &rng) else { return nil }
             let place = profile.stat(chosen.domain).tried == 0 ? "‘\(chosen.domain.stampName)’ 쪽은 처음이에요" : "이번엔 ‘\(chosen.domain.stampName)’ 쪽에서 해 봐요"
             return makePick(chosen, slot: .sideStep, reason: "‘\(anchor.title)’ 좋았던 건 같고, \(place)")
 
@@ -246,7 +266,11 @@ public struct Recommender: Sendable {
             let frontier = pool.filter { profile.stat($0.domain).tried == fewest }
             // 누군가와 함께인 주에는 같은 낯선 구역 안에서도 함께하는 실험을 먼저.
             let shared = frontier.filter { $0.tags.contains(.together) }
-            let choices = checkIn.company == .together && !shared.isEmpty ? shared : frontier
+            let leaning = checkIn.company == .together && !shared.isEmpty ? shared : frontier
+            // 바꾸기 이유에서 배운 것(비용, 시간)이 가장 덜 걸리는 것들 중에서.
+            let penalty = { (e: Experiment) in learning.penalty(e, travelMinutes: travelMinutes(e) ?? 0) }
+            let lowest = leaning.map(penalty).min() ?? 0
+            let choices = leaning.filter { penalty($0) == lowest }
             guard let chosen = choices.randomElement(using: &rng) else { return nil }
             let name = chosen.domain.stampName
             let reason: String

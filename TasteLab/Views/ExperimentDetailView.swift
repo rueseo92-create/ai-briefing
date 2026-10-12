@@ -48,6 +48,8 @@ struct ExperimentDetailView: View {
                     PostcardView(entry: entry, photos: model.photos)
                 }
 
+                InviteShareButton(experiment: experiment)
+
                 problemMenu
             }
             .padding(20)

@@ -28,6 +28,14 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    TextField("예: 지수", text: Binding(get: { model.nickname }, set: { model.setNickname($0) }))
+                } header: {
+                    Text("친구에게 보일 이름 (선택)")
+                } footer: {
+                    Text("같이 하자고 보내는 링크에만 담겨요. 비워 두면 '친구'로 보여요.")
+                }
+
+                Section {
                     Toggle("알림 받기", isOn: Binding(
                         get: { model.remindersOn },
                         set: { on in Task { await model.setReminders(on) } }
