@@ -25,8 +25,10 @@ public struct Coordinate: Codable, Hashable, Sendable {
 public enum Place: Codable, Hashable, Sendable {
     /// 집에서. 오가는 시간 0분.
     case home
-    /// 동네 어디서나(공원, 카페, 도서관). 오가는 시간은 정해 둔 값.
+    /// 동네 어디서나(골목, 집 앞, 아무 카페). 오가는 시간은 정해 둔 값.
     case nearby(roundTripMinutes: Int)
+    /// 공원, 한강, 도서관처럼 실제로 있어야 하는 곳. 지도에서 찾은 가장 가까운 곳까지 오가는 시간을 잰다.
+    case find(PlaceNeed)
     /// 특정 장소. 내 위치에서의 거리로 오가는 시간을 잰다.
     case venue(Venue)
 

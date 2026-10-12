@@ -17,7 +17,11 @@ struct SettingsView: View {
                 } header: {
                     Text("위치와 오가는 시간")
                 } footer: {
-                    Text("위치는 서버로 보내지 않아요. 장소 목록을 통째로 받아 이 폰 안에서 거리를 재요. 오가는 시간은 직선 거리에 보정값을 곱한 대략적인 값이에요.")
+                    Text("위치는 우리 서버로 보내지 않아요. 한강, 숲길, 도서관처럼 실제로 있어야 하는 곳은 Apple 지도에서 동네 근처를 찾아보고, 있을 때만 그 실험을 권해요. 오가는 시간은 직선 거리에 보정값을 곱한 대략적인 값이에요.")
+                }
+
+                Section {
+                    NavigationLink("동네 지도 보기") { NeighborhoodMapView() }
                 }
 
                 Section {

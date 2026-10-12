@@ -21,6 +21,8 @@ final class AppModel {
         /// 체크인을 마친 주.
         var checkedInWeek: String?
         var location: LocationSetting
+        /// 지도에서 찾아 둔 동네 근처의 실제 장소.
+        var nearby: NearbyPlaces?
 
         static let fresh = SavedState(
             journal: Journal(), picks: [], allowSponsored: true, onboarded: false,
@@ -65,6 +67,7 @@ final class AppModel {
     var picks: [Pick] { saved.picks }
     var checkIn: CheckIn { saved.checkIn }
     var location: LocationSetting { saved.location }
+    var nearby: NearbyPlaces? { saved.nearby }
     var profile: TasteProfile { TasteProfile(journal: saved.journal) }
     var summary: TasteSummary? { Insight.summarize(saved.journal) }
     var stamps: [StampState] { Stamps.board(saved.journal) }
@@ -74,7 +77,7 @@ final class AppModel {
     var catalog: [Experiment] { Catalog.all + offers }
 
     var recommender: Recommender {
-        Recommender(catalog: catalog, allowSponsored: saved.allowSponsored, checkIn: saved.checkIn, location: saved.location)
+        Recommender(catalog: catalog, allowSponsored: saved.allowSponsored, checkIn: saved.checkIn, location: saved.location, nearby: saved.nearby)
     }
 
     /// 이번 주 체크인을 아직 안 했다.
@@ -156,6 +159,20 @@ final class AppModel {
         save()
     }
 
+    /// 지도에서 동네 장소를 (다시) 찾아야 하면 그 출발점. 위치를 안 쓰거나 최근에 찾았으면 nil.
+    func placeSearchOrigin(now: Date = Date()) -> Coordinate? {
+        guard let origin = saved.location.origin else { return nil }
+        if let nearby = saved.nearby, nearby.isFresh(for: origin, now: now) { return nil }
+        return origin
+    }
+
+    /// 지도에서 찾은 장소로 바꾸고, 이제 갈 수 없게 된 카드는 다른 실험으로 바꾼다.
+    func updateNearby(_ places: NearbyPlaces) {
+        saved.nearby = places
+        replaceUnfitPicks(now: Date())
+        save()
+    }
+
     func setLocation(_ location: LocationSetting) {
         saved.location = location
         replaceUnfitPicks(now: Date())
@@ -233,8 +250,10 @@ final class AppModel {
 
     func resetEverything() {
         let location = saved.location
+        let nearby = saved.nearby
         saved = .fresh
         saved.location = location
+        saved.nearby = nearby
         saved.onboarded = true
         photos.removeAll()
         save()

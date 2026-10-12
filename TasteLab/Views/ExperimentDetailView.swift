@@ -30,6 +30,15 @@ struct ExperimentDetailView: View {
                 .font(.callout)
                 .foregroundStyle(Theme.muted)
 
+                if let venue = model.recommender.venue(for: experiment) {
+                    VenueMapCard(venue: venue, origin: model.location.origin, travel: model.travelMinutes(experiment))
+                } else if case .find(let need) = experiment.place {
+                    Text("근처 \(need.title): 아직 지도에서 못 찾았어요. 이번 주 화면의 동네 지도에서 다시 찾아볼 수 있어요.")
+                        .font(.footnote)
+                        .foregroundStyle(Theme.muted)
+                        .card()
+                }
+
                 if let sponsor = experiment.sponsor { sponsorCard(sponsor) }
                 if let kit = experiment.kit { kitCard(kit) }
 
@@ -69,8 +78,9 @@ struct ExperimentDetailView: View {
     private var placeText: String {
         switch experiment.place {
         case .home: "집에서"
-        case .nearby: "동네에서"
+        case .nearby: "동네 어디서나"
         case .venue(let venue): venue.name
+        case .find(let need): model.recommender.venue(for: experiment)?.name ?? need.title
         }
     }
 

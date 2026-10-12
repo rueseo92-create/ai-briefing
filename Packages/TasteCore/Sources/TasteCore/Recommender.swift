@@ -43,6 +43,8 @@ public struct Pick: Codable, Equatable, Identifiable, Sendable {
     public var reason: String
     /// 오가는 시간(왕복, 분).
     public var travelMinutes: Int
+    /// 실제로 갈 곳. 집이나 동네 어디서나면 nil.
+    public var venue: Venue?
     public var id: String { experiment.id }
 }
 
@@ -56,17 +58,25 @@ public struct Recommender: Sendable {
     public var allowSponsored: Bool
     public var checkIn: CheckIn
     public var location: LocationSetting
+    /// 지도에서 찾아 둔 동네 근처의 실제 장소. 없으면 장소가 필요한 실험은 나오지 않는다.
+    public var nearby: NearbyPlaces?
 
-    public init(catalog: [Experiment], allowSponsored: Bool, checkIn: CheckIn = .standard, location: LocationSetting = .none) {
+    public init(catalog: [Experiment], allowSponsored: Bool, checkIn: CheckIn = .standard, location: LocationSetting = .none, nearby: NearbyPlaces? = nil) {
         self.catalog = catalog
         self.allowSponsored = allowSponsored
         self.checkIn = checkIn
         self.location = location
+        self.nearby = nearby
     }
 
-    /// 오가는 시간(왕복, 분). 위치가 없어 갈 수 없는 곳이면 nil.
+    /// 오가는 시간(왕복, 분). 갈 수 없는 곳이면 nil.
     public func travelMinutes(_ experiment: Experiment) -> Int? {
-        Travel.roundTripMinutes(to: experiment.place, from: location.origin, mode: location.mode)
+        Travel.roundTripMinutes(to: experiment.place, from: location.origin, mode: location.mode, nearby: nearby)
+    }
+
+    /// 실제로 갈 곳.
+    public func venue(for experiment: Experiment) -> Venue? {
+        Travel.venue(for: experiment.place, from: location.origin, nearby: nearby)
     }
 
     /// 이번 주 체크인(예산, 에너지, 시간, 함께)으로 할 수 있는 실험인지.
@@ -151,7 +161,7 @@ public struct Recommender: Sendable {
     // MARK: - 내부
 
     private func makePick(_ experiment: Experiment, slot: Slot, reason: String) -> Pick {
-        Pick(experiment: experiment, slot: slot, reason: reason, travelMinutes: travelMinutes(experiment) ?? 0)
+        Pick(experiment: experiment, slot: slot, reason: reason, travelMinutes: travelMinutes(experiment) ?? 0, venue: venue(for: experiment))
     }
 
     /// 누군가와 함께인 주에는 함께하는 실험을 앞으로.

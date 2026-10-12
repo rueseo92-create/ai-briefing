@@ -8,7 +8,8 @@ struct ThisWeekView: View {
     @State private var editingCheckIn = false
     @State private var swapping: Pick?
     @State private var path: [Experiment] = []
-    @State private var locating = false
+    @State private var working: String?
+    @State private var showMap = false
     @State private var locationService = LocationService()
 
     var body: some View {
@@ -59,19 +60,24 @@ struct ThisWeekView: View {
                 .padding(20)
             }
             .overlay {
-                if locating { ProgressView("위치를 대략 확인하는 중").padding().background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12)) }
+                if let working { ProgressView(working).padding().background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12)) }
             }
             .background(Theme.background.ignoresSafeArea())
             .foregroundStyle(Theme.ink)
             .navigationTitle("이번 주")
             .navigationDestination(for: Experiment.self) { ExperimentDetailView(experiment: $0) }
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { showMap = true } label: { Image(systemName: "map") }
+                        .accessibilityLabel("동네 지도")
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showSettings = true } label: { Image(systemName: "gearshape") }
                         .accessibilityLabel("설정")
                 }
             }
             .sheet(isPresented: $showSettings) { SettingsView() }
+            .sheet(isPresented: $showMap) { NavigationStack { NeighborhoodMapView() } }
             .sheet(isPresented: $editingCheckIn) {
                 NavigationStack {
                     ScrollView {
@@ -102,12 +108,19 @@ struct ThisWeekView: View {
     /// 대략적 위치를 쓰기로 했으면 실험을 받기 직전에만 위치를 묻는다.
     private func submit(_ answer: CheckIn) async {
         if model.location.kind == .approximate {
-            locating = true
+            working = "위치를 대략 확인하는 중"
             if let coordinate = await locationService.requestApproximate() {
                 model.updateApproximateLocation(coordinate)
             }
-            locating = false
         }
+        // 공원, 한강, 도서관 같은 곳이 동네에 실제로 있는지 지도에서 확인한다(한 달에 한 번, 동네가 바뀌면 다시).
+        if let origin = model.placeSearchOrigin() {
+            working = "동네 지도에서 장소를 찾는 중"
+            if let places = await PlaceFinder.search(around: origin) {
+                model.updateNearby(places)
+            }
+        }
+        working = nil
         withAnimation { model.checkIn(answer) }
     }
 }
@@ -136,6 +149,9 @@ struct PickCard: View {
                 .font(.footnote)
                 .foregroundStyle(Theme.muted)
             VStack(alignment: .leading, spacing: 4) {
+                if let venue = pick.venue {
+                    Label(venue.name, systemImage: "mappin.and.ellipse")
+                }
                 Label(Formats.time(minutes: experiment.minutes, travel: pick.travelMinutes), systemImage: "clock")
                 Label(Formats.cost(experiment.effectiveCost), systemImage: "wonsign.circle")
             }

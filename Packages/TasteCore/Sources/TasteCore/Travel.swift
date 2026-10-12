@@ -72,18 +72,35 @@ public enum Travel {
     /// 길은 곧지 않으니 직선 거리에 곱한다.
     public static let detourFactor = 1.3
 
-    /// 오가는 시간(왕복, 분). 갈 수 없으면(위치가 없는데 특정 장소) nil.
-    public static func roundTripMinutes(to place: Place, from origin: Coordinate?, mode: TravelMode) -> Int? {
+    /// 실제로 갈 곳. 특정 장소면 그곳, 찾아야 하는 곳이면 지도에서 찾은 가장 가까운 곳.
+    public static func venue(for place: Place, from origin: Coordinate?, nearby: NearbyPlaces?) -> Venue? {
+        switch place {
+        case .home, .nearby:
+            return nil
+        case .venue(let venue):
+            return venue
+        case .find(let need):
+            guard let origin else { return nil }
+            return nearby?.nearest(need, from: origin)
+        }
+    }
+
+    /// 오가는 시간(왕복, 분). 갈 수 없으면 nil: 위치가 없거나, 지도에서 근처에 그런 곳을 못 찾았을 때.
+    public static func roundTripMinutes(to place: Place, from origin: Coordinate?, mode: TravelMode, nearby: NearbyPlaces? = nil) -> Int? {
         switch place {
         case .home:
             return 0
         case .nearby(let minutes):
             return minutes
-        case .venue(let venue):
-            guard let origin else { return nil }
-            let km = origin.distanceKm(to: venue.coordinate) * detourFactor
-            let oneWay = km / mode.speedKmh * 60 + mode.overheadMinutes
-            return Int((oneWay * 2).rounded(.up))
+        case .venue, .find:
+            guard let origin, let venue = venue(for: place, from: origin, nearby: nearby) else { return nil }
+            return roundTripMinutes(from: origin, to: venue.coordinate, mode: mode)
         }
+    }
+
+    public static func roundTripMinutes(from origin: Coordinate, to destination: Coordinate, mode: TravelMode) -> Int {
+        let km = origin.distanceKm(to: destination) * detourFactor
+        let oneWay = km / mode.speedKmh * 60 + mode.overheadMinutes
+        return Int((oneWay * 2).rounded(.up))
     }
 }
