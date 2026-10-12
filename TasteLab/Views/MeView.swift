@@ -1,46 +1,38 @@
 import SwiftUI
 import TasteCore
 
-/// 취향 지도. 해 볼수록 지역이 밝혀진다.
-struct MapView: View {
+/// 나 탭. 나에게 온 편지(취향 정리), 좋았던 이유, 설정.
+struct MeView: View {
     @Environment(AppModel.self) private var model
-
-    private let columns = [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)]
+    @State private var showSettings = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
-                    let profile = model.profile
-                    LazyVGrid(columns: columns, spacing: 12) {
-                        ForEach(Domain.allCases) { domain in
-                            tile(domain, stat: profile.stat(domain))
-                        }
-                    }
-
-                    if model.summary != nil {
+                    if let summary = model.summary {
                         NavigationLink {
-                            SummarySheet()
+                            LetterView()
                         } label: {
-                            Label("내 취향 정리 보기", systemImage: "sparkles")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 6)
+                            VStack(alignment: .leading, spacing: 8) {
+                                Label("나에게 온 편지", systemImage: "envelope.open").font(.caption.weight(.bold)).foregroundStyle(Theme.accent)
+                                Text(summary.headline).font(.title3.weight(.semibold))
+                                Text("열어 보기").font(.footnote).foregroundStyle(Theme.muted)
+                            }
+                            .card()
                         }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(.plain)
                     } else {
                         let count = model.journal.entries.count
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("실험을 \(Insight.minimumEntries)번 해 보면 취향 정리가 나와요")
-                                .font(.headline)
+                            Text("엽서 \(Insight.minimumEntries)장이 모이면 나에게 편지가 와요").font(.headline)
                             ProgressView(value: Double(count), total: Double(Insight.minimumEntries))
-                            Text("\(count) / \(Insight.minimumEntries)")
-                                .font(.footnote.monospacedDigit())
-                                .foregroundStyle(Theme.muted)
+                            Text("\(count) / \(Insight.minimumEntries)").font(.footnote.monospacedDigit()).foregroundStyle(Theme.muted)
                         }
                         .card()
                     }
 
+                    let profile = model.profile
                     if !profile.topTags().isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("좋았던 이유").font(.headline)
@@ -56,64 +48,64 @@ struct MapView: View {
                         }
                         .card()
                     }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("구역별로 해 본 것").font(.headline)
+                        ForEach(Domain.allCases) { domain in
+                            let stat = profile.stat(domain)
+                            HStack {
+                                Text("\(domain.emoji) \(domain.title)")
+                                Spacer()
+                                Text(stat.tried == 0 ? "아직" : "\(stat.tried)장 · \(stat.state.title)")
+                                    .foregroundStyle(Theme.muted)
+                            }
+                            .font(.callout)
+                        }
+                    }
+                    .card()
                 }
                 .padding(20)
             }
             .background(Theme.background.ignoresSafeArea())
             .foregroundStyle(Theme.ink)
-            .navigationTitle("취향 지도")
-        }
-    }
-
-    private func tile(_ domain: Domain, stat: DomainStat) -> some View {
-        let color = Theme.domainColor(domain)
-        let state = stat.state
-        return VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text(stat.tried == 0 ? "☁️" : domain.emoji).font(.title2)
-                Spacer()
-                if state == .favorite { Text("💛") }
+            .navigationTitle("나")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { showSettings = true } label: { Image(systemName: "gearshape") }
+                        .accessibilityLabel("설정")
+                }
             }
-            Text(domain.title).font(.headline)
-            Text(state.title).font(.caption).foregroundStyle(Theme.muted)
-            if stat.tried > 0 {
-                Text("\(stat.tried)번 해 봄 · 좋았던 \(stat.liked)번")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.muted)
-            }
+            .sheet(isPresented: $showSettings) { SettingsView() }
         }
-        .padding(14)
-        .frame(maxWidth: .infinity, minHeight: 110, alignment: .topLeading)
-        .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(color.opacity(0.06 + 0.3 * stat.light))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(color.opacity(stat.tried == 0 ? 0.15 : 0.5), style: StrokeStyle(lineWidth: 1.5, dash: stat.tried == 0 ? [5, 4] : []))
-        )
-        .accessibilityElement(children: .combine)
     }
 }
 
-/// 취향 정리. 다섯 번째 기록 직후에 한 번 뜨고, 지도에서 언제든 볼 수 있다.
-struct SummarySheet: View {
+/// 나에게 온 편지. 엽서 다섯 장부터 열린다.
+struct LetterView: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
         ScrollView {
             if let summary = model.summary {
                 VStack(spacing: 20) {
-                    TasteCard(summary: summary, profile: model.profile)
-                    VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("나에게").font(.headline)
+                        Text("엽서 \(model.journal.entries.count)장을 읽어 보니, 너는 \(summary.headline)이야.")
+                            .font(.title3.weight(.semibold))
                         ForEach(summary.lines, id: \.self) { line in
-                            Text("· \(line)")
+                            Text(line)
                         }
+                        if let frontier = summary.nextFrontier {
+                            Text("다음엔 ‘\(frontier.stampName)’ 쪽에도 가 볼까?").foregroundStyle(Theme.muted)
+                        }
+                        Text("— 취향 엽서").font(.footnote).foregroundStyle(Theme.muted).frame(maxWidth: .infinity, alignment: .trailing)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .card()
+                    .padding(22)
+                    .background(Theme.paper, in: RoundedRectangle(cornerRadius: 16))
+                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Theme.muted.opacity(0.2)))
 
-                    if let image = TasteCard.render(summary: summary, profile: model.profile) {
+                    TasteCard(summary: summary, stamps: model.stamps)
+                    if let image = TasteCard.render(summary: summary, stamps: model.stamps) {
                         ShareLink(item: image, preview: SharePreview("나의 취향 카드", image: image)) {
                             Label("취향 카드 저장·공유", systemImage: "square.and.arrow.up")
                                 .frame(maxWidth: .infinity)
@@ -121,7 +113,7 @@ struct SummarySheet: View {
                         }
                         .buttonStyle(.borderedProminent)
                     }
-                    Text("공유하는 건 이 카드뿐이에요. 실험 기록은 이 폰에만 있어요.")
+                    Text("공유하는 건 이 카드뿐이에요. 엽서와 기록은 이 폰에만 있어요.")
                         .font(.footnote)
                         .foregroundStyle(Theme.muted)
                 }
@@ -130,7 +122,7 @@ struct SummarySheet: View {
         }
         .background(Theme.background.ignoresSafeArea())
         .foregroundStyle(Theme.ink)
-        .navigationTitle("내 취향 정리")
+        .navigationTitle("나에게 온 편지")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -138,7 +130,7 @@ struct SummarySheet: View {
 /// 공유용 취향 카드.
 struct TasteCard: View {
     let summary: TasteSummary
-    let profile: TasteProfile
+    let stamps: [StampState]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -155,13 +147,12 @@ struct TasteCard: View {
                 }
             }
             HStack(spacing: 4) {
-                ForEach(Domain.allCases) { domain in
-                    Text(profile.stat(domain).tried == 0 ? "☁️" : domain.emoji)
-                        .opacity(0.4 + 0.6 * profile.stat(domain).light)
+                ForEach(stamps) { stamp in
+                    Text(stamp.earned ? stamp.domain.emoji : "·").opacity(stamp.earned ? 1 : 0.5)
                 }
             }
             .font(.title3)
-            Text("취향 실험실").font(.caption2).foregroundStyle(.white.opacity(0.7))
+            Text("취향 엽서").font(.caption2).foregroundStyle(.white.opacity(0.7))
         }
         .padding(22)
         .frame(width: 320, alignment: .leading)
@@ -172,8 +163,8 @@ struct TasteCard: View {
     }
 
     @MainActor
-    static func render(summary: TasteSummary, profile: TasteProfile) -> Image? {
-        let renderer = ImageRenderer(content: TasteCard(summary: summary, profile: profile).padding(12))
+    static func render(summary: TasteSummary, stamps: [StampState]) -> Image? {
+        let renderer = ImageRenderer(content: TasteCard(summary: summary, stamps: stamps).padding(12))
         renderer.scale = 3
         return renderer.uiImage.map { Image(uiImage: $0) }
     }

@@ -8,20 +8,24 @@ struct ExperimentDetailView: View {
     @Environment(\.openURL) private var openURL
     @State private var reacting = false
     @State private var copied = false
+    /// 기록 시트가 닫힌 뒤에 엽서를 보여 준다. 시트 두 개를 겹쳐 띄우지 않으려고.
+    @State private var reveal: Entry?
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 HStack(spacing: 6) {
-                    Chip(text: "\(experiment.domain.emoji) \(experiment.domain.title)", color: Theme.domainColor(experiment.domain))
+                    Chip(text: "\(experiment.domain.emoji) \(experiment.domain.stampName) · \(experiment.domain.title)", color: Theme.domainColor(experiment.domain))
                     if experiment.isSponsored { Chip(text: "광고", color: Theme.ad) }
                     if experiment.kit != nil { Chip(text: "키트", color: Theme.kit) }
                 }
                 Text(experiment.title).font(.title.bold())
-                Text(experiment.detail).font(.body)
-                HStack(spacing: 16) {
-                    Label(Formats.minutes(experiment.minutes), systemImage: "clock")
-                    Label(experiment.place == .home ? "집에서" : "밖에서", systemImage: experiment.place == .home ? "house" : "figure.walk")
+                Text(experiment.detail)
+                VStack(alignment: .leading, spacing: 6) {
+                    Label(Formats.time(minutes: experiment.minutes, travel: model.travelMinutes(experiment)), systemImage: "clock")
+                    Label(Formats.cost(experiment.effectiveCost), systemImage: "wonsign.circle")
+                    Label(placeText, systemImage: experiment.place.isHome ? "house" : "figure.walk")
+                    if experiment.needsCompany { Label("누군가와 함께 해요", systemImage: "person.2") }
                 }
                 .font(.callout)
                 .foregroundStyle(Theme.muted)
@@ -30,14 +34,7 @@ struct ExperimentDetailView: View {
                 if let kit = experiment.kit { kitCard(kit) }
 
                 if let entry = model.entry(for: experiment) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("\(entry.feeling.emoji) \(entry.feeling.title)").font(.headline)
-                        if !entry.why.isEmpty {
-                            Text(entry.why.map(\.title).joined(separator: " · ")).foregroundStyle(Theme.muted)
-                        }
-                        if !entry.note.isEmpty { Text(entry.note) }
-                    }
-                    .card()
+                    PostcardView(entry: entry, photos: model.photos)
                 }
             }
             .padding(20)
@@ -50,7 +47,7 @@ struct ExperimentDetailView: View {
                 Button {
                     reacting = true
                 } label: {
-                    Text("해 봤어요").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 8)
+                    Text("해 봤어요 · 엽서 만들기").font(.headline).frame(maxWidth: .infinity).padding(.vertical, 8)
                 }
                 .buttonStyle(.borderedProminent)
                 .padding(.horizontal, 20)
@@ -58,9 +55,22 @@ struct ExperimentDetailView: View {
                 .background(.bar)
             }
         }
-        .sheet(isPresented: $reacting) {
+        .sheet(isPresented: $reacting, onDismiss: {
+            reveal = model.freshPostcard
+            model.freshPostcard = nil
+        }) {
             ReactionSheet(experiment: experiment)
-                .presentationDetents([.medium, .large])
+        }
+        .sheet(item: $reveal) { entry in
+            PostcardReveal(entry: entry, stamps: model.freshStamps)
+        }
+    }
+
+    private var placeText: String {
+        switch experiment.place {
+        case .home: "집에서"
+        case .nearby: "동네에서"
+        case .venue(let venue): venue.name
         }
     }
 
@@ -71,7 +81,9 @@ struct ExperimentDetailView: View {
                 Spacer()
                 Chip(text: "광고", color: Theme.ad)
             }
-            Text("\(sponsor.brand)에서 소개하는 실험이에요. 내 기록은 광고주에게 가지 않아요.")
+            Text("원래 \(Formats.won(experiment.cost)) → 혜택 받으면 \(Formats.won(sponsor.priceAfterBenefit))")
+                .font(.callout.monospacedDigit())
+            Text("\(sponsor.brand)에서 소개하는 실험이에요. 내 기록, 예산, 위치는 광고주에게 가지 않아요.")
                 .font(.footnote)
                 .foregroundStyle(Theme.muted)
             if let code = sponsor.code {
@@ -87,9 +99,6 @@ struct ExperimentDetailView: View {
                 Button("예약하러 가기") { openURL(url) }
                     .buttonStyle(.borderedProminent)
                     .tint(Theme.ad)
-            }
-            if let endsAt = sponsor.endsAt {
-                Text("\(Formats.day(endsAt))까지").font(.caption).foregroundStyle(Theme.muted)
             }
         }
         .card()
@@ -127,78 +136,5 @@ struct ExperimentDetailView: View {
             }
         }
         .card()
-    }
-}
-
-/// 해 본 뒤 10초 기록.
-struct ReactionSheet: View {
-    let experiment: Experiment
-    @Environment(AppModel.self) private var model
-    @Environment(\.dismiss) private var dismiss
-    @State private var feeling: Feeling?
-    @State private var why: [Tag] = []
-    @State private var note = ""
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section("어땠어요?") {
-                    HStack(spacing: 10) {
-                        ForEach(Feeling.allCases, id: \.self) { option in
-                            Button {
-                                feeling = option
-                            } label: {
-                                VStack(spacing: 4) {
-                                    Text(option.emoji).font(.largeTitle)
-                                    Text(option.title).font(.caption)
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 8)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                        .fill(feeling == option ? Theme.accent.opacity(0.18) : .clear)
-                                )
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                }
-
-                if let feeling, feeling != .meh {
-                    Section(feeling == .liked ? "왜 좋았어요?" : "왜 별로였어요?") {
-                        ForEach(experiment.tags) { tag in
-                            Button {
-                                if let index = why.firstIndex(of: tag) { why.remove(at: index) } else { why.append(tag) }
-                            } label: {
-                                HStack {
-                                    Text(tag.title)
-                                    Spacer()
-                                    if why.contains(tag) { Image(systemName: "checkmark").foregroundStyle(Theme.accent) }
-                                }
-                            }
-                            .foregroundStyle(Theme.ink)
-                        }
-                    }
-                }
-
-                Section("한 줄 메모 (선택)") {
-                    TextField("예: 생각보다 시간이 빨리 갔다", text: $note, axis: .vertical)
-                }
-            }
-            .navigationTitle(experiment.title)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("저장") {
-                        guard let feeling else { return }
-                        model.record(experiment, feeling: feeling, why: feeling == .meh ? [] : why, note: note)
-                        dismiss()
-                    }
-                    .disabled(feeling == nil)
-                }
-            }
-        }
-        .sensoryFeedback(.selection, trigger: feeling)
     }
 }

@@ -20,9 +20,18 @@ public enum Feeling: String, Codable, CaseIterable, Sendable {
         case .disliked: "🙅"
         }
     }
+
+    /// 엽서에 찍히는 도장. 그저 그랬으면 도장 없이 사진과 메모만.
+    public var stamp: String? {
+        switch self {
+        case .liked: "좋았어요"
+        case .meh: nil
+        case .disliked: "다음엔 다르게"
+        }
+    }
 }
 
-/// 실험 하나를 해 본 기록. 실험 카드가 나중에 바뀌거나 사라져도 지도가 그대로이게, 그때의 분야와 태그를 함께 적어 둔다.
+/// 실험 하나를 해 본 기록. 화면에서는 엽서 한 장이다. 실험 카드가 나중에 바뀌거나 사라져도 취향 정리가 그대로이게, 그때의 분야와 태그를 함께 적어 둔다.
 public struct Entry: Codable, Equatable, Identifiable, Sendable {
     public var id: UUID
     public var experimentID: String
@@ -33,9 +42,11 @@ public struct Entry: Codable, Equatable, Identifiable, Sendable {
     /// 왜 그랬는지. 실험 태그 중에서 고른다.
     public var why: [Tag]
     public var note: String
+    /// 엽서 사진의 파일 이름. 사진은 이 기기에만 저장된다. 없으면 구역 그림 엽서.
+    public var photo: String?
     public var at: Date
 
-    public init(experiment: Experiment, feeling: Feeling, why: [Tag], note: String = "", at: Date) {
+    public init(experiment: Experiment, feeling: Feeling, why: [Tag], note: String = "", photo: String? = nil, at: Date) {
         id = UUID()
         experimentID = experiment.id
         title = experiment.title
@@ -44,6 +55,7 @@ public struct Entry: Codable, Equatable, Identifiable, Sendable {
         self.feeling = feeling
         self.why = why.filter(experiment.tags.contains)
         self.note = note
+        self.photo = photo
         self.at = at
     }
 }

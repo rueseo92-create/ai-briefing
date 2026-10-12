@@ -21,18 +21,21 @@ targets:
     info:
       path: TasteLab/Info.plist
       properties:
-        CFBundleDisplayName: 취향 실험실
+        CFBundleDisplayName: 취향 엽서
         CFBundleDevelopmentRegion: ko
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
-        LSApplicationCategoryType: public.app-category.lifestyle
+        LSApplicationCategoryType: public.app-category.healthcare-fitness
         ITSAppUsesNonExemptEncryption: false
+        NSCameraUsageDescription: 엽서에 넣을 사진을 찍어요. 사진은 이 폰에만 저장돼요.
+        NSLocationWhenInUseUsageDescription: 오가는 시간을 재려고 실험을 받을 때만 대략적 위치를 써요. 위치는 서버로 보내지 않아요.
+        NSLocationDefaultAccuracyReduced: true
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.tastelab
-        MARKETING_VERSION: 0.1.0
-        CURRENT_PROJECT_VERSION: 1
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.tastepostcard
+        MARKETING_VERSION: 0.2.0
+        CURRENT_PROJECT_VERSION: 2
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1"
         ENABLE_PREVIEWS: YES

@@ -19,21 +19,35 @@ struct TasteLabApp: App {
 }
 
 struct RootView: View {
+    enum Tab: Hashable {
+        case box, week, weekend, me
+    }
+
     @Environment(AppModel.self) private var model
+    @State private var tab: Tab = .week
 
     var body: some View {
         if !model.saved.onboarded {
             OnboardingView()
         } else {
-            TabView {
+            TabView(selection: $tab) {
+                PostcardBoxView()
+                    .tabItem { Label("엽서함", systemImage: "rectangle.stack") }
+                    .tag(Tab.box)
                 ThisWeekView()
-                    .tabItem { Label("이번 주", systemImage: "flask") }
+                    .tabItem { Label("이번 주", systemImage: "sparkles") }
+                    .badge(model.needsCheckIn() ? Text("!") : nil)
+                    .tag(Tab.week)
                 WeekendView()
                     .tabItem { Label("주말", systemImage: "shippingbox") }
-                MapView()
-                    .tabItem { Label("취향 지도", systemImage: "map") }
-                JournalView()
-                    .tabItem { Label("기록", systemImage: "book.closed") }
+                    .tag(Tab.weekend)
+                MeView()
+                    .tabItem { Label("나", systemImage: "envelope") }
+                    .tag(Tab.me)
+            }
+            .onAppear {
+                // 체크인할 게 없고 엽서가 있으면 엽서함부터.
+                if !model.needsCheckIn(), !model.postcards.isEmpty { tab = .box }
             }
         }
     }

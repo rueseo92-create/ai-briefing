@@ -4,9 +4,9 @@ import Foundation
 public enum Slot: String, Codable, CaseIterable, Sendable {
     /// 좋았던 이유와 결이 같은 것
     case confirm
-    /// 좋았던 이유는 같고 분야는 낯선 것
+    /// 좋았던 이유는 같고 구역은 낯선 것
     case sideStep
-    /// 아직 덜 가 본 지역
+    /// 아직 덜 가 본 구역
     case fresh
 
     public var title: String {
@@ -18,11 +18,31 @@ public enum Slot: String, Codable, CaseIterable, Sendable {
     }
 }
 
+/// "다른 걸로"를 누른 이유. 다음에 오는 실험이 달라진다.
+public enum SwapReason: String, Codable, CaseIterable, Sendable {
+    /// 같은 자리에 더 싼 실험이 오고, 이번 주 예산도 한 칸 낮아진다.
+    case tooExpensive
+    /// 같은 자리에 더 짧은 실험이 온다.
+    case noTime
+    /// 그냥 마음이 안 간다.
+    case notFeelingIt
+
+    public var title: String {
+        switch self {
+        case .tooExpensive: "돈이 들어서"
+        case .noTime: "시간이 없어서"
+        case .notFeelingIt: "마음이 안 가서"
+        }
+    }
+}
+
 public struct Pick: Codable, Equatable, Identifiable, Sendable {
     public var experiment: Experiment
     public var slot: Slot
     /// 왜 이걸 권하는지. 카드에 그대로 보인다.
     public var reason: String
+    /// 오가는 시간(왕복, 분).
+    public var travelMinutes: Int
     public var id: String { experiment.id }
 }
 
@@ -33,15 +53,28 @@ public struct Recommender: Sendable {
     public static let skipCooldown: TimeInterval = 30 * 86_400
 
     public var catalog: [Experiment]
-    /// 광고 실험을 받을지. 꺼도 앱은 똑같이 쓸 수 있다.
     public var allowSponsored: Bool
+    public var checkIn: CheckIn
+    public var location: LocationSetting
 
-    public init(catalog: [Experiment], allowSponsored: Bool) {
+    public init(catalog: [Experiment], allowSponsored: Bool, checkIn: CheckIn = .standard, location: LocationSetting = .none) {
         self.catalog = catalog
         self.allowSponsored = allowSponsored
+        self.checkIn = checkIn
+        self.location = location
     }
 
-    /// 이번 주 실험. 세 장 모두 다른 분야에서 나오고, 광고는 많아야 한 장이며 "결이 같은" 자리에는 오지 않는다.
+    /// 오가는 시간(왕복, 분). 위치가 없어 갈 수 없는 곳이면 nil.
+    public func travelMinutes(_ experiment: Experiment) -> Int? {
+        Travel.roundTripMinutes(to: experiment.place, from: location.origin, mode: location.mode)
+    }
+
+    /// 이번 주 체크인(예산, 에너지, 시간, 함께)으로 할 수 있는 실험인지.
+    public func fits(_ experiment: Experiment) -> Bool {
+        checkIn.allows(experiment, travelMinutes: travelMinutes(experiment))
+    }
+
+    /// 이번 주 실험. 세 장 모두 다른 구역에서 나오고, 광고는 많아야 한 장이며 "결이 같은" 자리에는 오지 않는다.
     public func weeklyPicks<R: RandomNumberGenerator>(journal: Journal, now: Date, count: Int = 3, using rng: inout R) -> [Pick] {
         let profile = TasteProfile(journal: journal)
         let slots: [Slot] = profile.hasLikes
@@ -63,7 +96,8 @@ public struct Recommender: Sendable {
         return picks
     }
 
-    /// 한 자리만 다시 고른다. "다른 걸로 바꾸기"에 쓴다.
+    /// 한 자리만 다시 고른다. "다른 걸로 바꾸기"와 체크인을 바꿨을 때 쓴다.
+    /// extra는 이번에만 더하는 조건(예: 바꾸기 전 실험보다 싼 것).
     public func pick<R: RandomNumberGenerator>(
         slot: Slot,
         journal: Journal,
@@ -71,6 +105,7 @@ public struct Recommender: Sendable {
         excluding: Set<String>,
         avoidDomains: Set<Domain>,
         sponsorAllowed: Bool,
+        where extra: (Experiment) -> Bool = { _ in true },
         using rng: inout R
     ) -> Pick? {
         let profile = TasteProfile(journal: journal)
@@ -79,10 +114,12 @@ public struct Recommender: Sendable {
                 && !journal.hasTried(experiment.id)
                 && !isCoolingDown(experiment.id, journal: journal, now: now)
                 && (experiment.sponsor?.isActive(at: now) ?? true)
+                && fits(experiment)
+                && extra(experiment)
         }
         // 최근에 보인 것은 빼되, 그러면 남는 게 없을 때만 다시 넣는다.
-        let fresh = base.filter { !wasShownRecently($0.id, journal: journal, now: now) }
-        for pool in [fresh, base] {
+        let unseen = base.filter { !wasShownRecently($0.id, journal: journal, now: now) }
+        for pool in [unseen, base] {
             let spread = pool.filter { !avoidDomains.contains($0.domain) }
             for candidates in [spread, pool] where !candidates.isEmpty {
                 if let found = choose(slot: slot, from: candidates, profile: profile, sponsorAllowed: sponsorAllowed, using: &rng) {
@@ -93,17 +130,35 @@ public struct Recommender: Sendable {
         return nil
     }
 
-    /// 주말 키트가 있는 실험. 나와 맞을 것 같은 순서로.
+    /// 주말 키트가 있는 실험. 이번 주 예산 안에서, 나와 맞을 것 같은 순서로.
+    /// 주말은 하루를 쓸 수 있다고 보고 시간과 에너지는 따지지 않는다.
     public func weekendIdeas(journal: Journal, now: Date, limit: Int = 5) -> [Experiment] {
         let profile = TasteProfile(journal: journal)
+        let weekend = CheckIn(budget: checkIn.budget, energy: .high, time: .fullDay, company: checkIn.company)
         return catalog
-            .filter { $0.kit != nil && !journal.hasTried($0.id) && !profile.hasDislikedTag($0) && ($0.sponsor?.isActive(at: now) ?? true) }
+            .filter { experiment in
+                experiment.kit != nil
+                    && !journal.hasTried(experiment.id)
+                    && !profile.hasDislikedTag(experiment)
+                    && (experiment.sponsor?.isActive(at: now) ?? true)
+                    && weekend.allows(experiment, travelMinutes: travelMinutes(experiment))
+            }
             .sorted { profile.score($0) > profile.score($1) }
             .prefix(limit)
             .map { $0 }
     }
 
     // MARK: - 내부
+
+    private func makePick(_ experiment: Experiment, slot: Slot, reason: String) -> Pick {
+        Pick(experiment: experiment, slot: slot, reason: reason, travelMinutes: travelMinutes(experiment) ?? 0)
+    }
+
+    /// 누군가와 함께인 주에는 함께하는 실험을 앞으로.
+    private func score(_ experiment: Experiment, _ profile: TasteProfile) -> Int {
+        let together = checkIn.company == .together && experiment.tags.contains(.together) ? 3 : 0
+        return profile.score(experiment) + together
+    }
 
     private func choose<R: RandomNumberGenerator>(
         slot: Slot,
@@ -132,10 +187,10 @@ public struct Recommender: Sendable {
         case .confirm:
             let top = profile.topTags(3)
             let liked = Set(profile.likedDomains)
-            let matching = candidates.filter { experiment in experiment.tags.contains(where: top.contains) && !profile.hasDislikedTag(experiment) }
-            guard let chosen = best(matching, by: { profile.score($0) + (liked.contains($0.domain) ? 2 : 0) }, using: &rng) else { return nil }
+            let matching = candidates.filter { $0.tags.contains(where: top.contains) && !profile.hasDislikedTag($0) }
+            guard let chosen = best(matching, by: { score($0, profile) + (liked.contains($0.domain) ? 2 : 0) }, using: &rng) else { return nil }
             let tag = chosen.tags.first(where: top.contains) ?? top[0]
-            return Pick(experiment: chosen, slot: .confirm, reason: "‘\(tag.title)’ 좋았던 실험과 결이 같아요")
+            return makePick(chosen, slot: .confirm, reason: "‘\(tag.title)’ 좋았던 실험과 결이 같아요")
 
         case .sideStep:
             let top = profile.topTags(2)
@@ -148,25 +203,29 @@ public struct Recommender: Sendable {
                     && profile.stat(experiment.domain).state != .notForMe
                     && !profile.hasDislikedTag(experiment)
             }
-            guard let chosen = best(matching, by: profile.score, using: &rng) else { return nil }
-            let place = profile.stat(chosen.domain).tried == 0 ? "‘\(chosen.domain.title)’ 쪽은 처음이에요" : "이번엔 ‘\(chosen.domain.title)’ 쪽에서 해 봐요"
-            return Pick(experiment: chosen, slot: .sideStep, reason: "‘\(anchor.title)’ 좋았던 건 같고, \(place)")
+            guard let chosen = best(matching, by: { score($0, profile) }, using: &rng) else { return nil }
+            let place = profile.stat(chosen.domain).tried == 0 ? "‘\(chosen.domain.stampName)’ 쪽은 처음이에요" : "이번엔 ‘\(chosen.domain.stampName)’ 쪽에서 해 봐요"
+            return makePick(chosen, slot: .sideStep, reason: "‘\(anchor.title)’ 좋았던 건 같고, \(place)")
 
         case .fresh:
             let open = candidates.filter { profile.stat($0.domain).state != .notForMe && !profile.hasDislikedTag($0) }
             let pool = open.isEmpty ? candidates : open
             guard let fewest = pool.map({ profile.stat($0.domain).tried }).min() else { return nil }
             let frontier = pool.filter { profile.stat($0.domain).tried == fewest }
-            guard let chosen = frontier.randomElement(using: &rng) else { return nil }
+            // 누군가와 함께인 주에는 같은 낯선 구역 안에서도 함께하는 실험을 먼저.
+            let shared = frontier.filter { $0.tags.contains(.together) }
+            let choices = checkIn.company == .together && !shared.isEmpty ? shared : frontier
+            guard let chosen = choices.randomElement(using: &rng) else { return nil }
+            let name = chosen.domain.stampName
             let reason: String
             if profile.entryCount == 0 {
-                reason = "첫 실험은 여러 지역에서 하나씩 골랐어요"
+                reason = "첫 실험은 여러 구역에서 하나씩 골랐어요"
             } else if fewest == 0 {
-                reason = "아직 안 가 본 ‘\(chosen.domain.title)’ 지역이에요"
+                reason = "아직 우표가 없는 ‘\(name)’\(Hangul.copula(after: name))"
             } else {
-                reason = "덜 가 본 ‘\(chosen.domain.title)’ 지역이에요"
+                reason = "덜 가 본 ‘\(name)’\(Hangul.copula(after: name))"
             }
-            return Pick(experiment: chosen, slot: .fresh, reason: reason)
+            return makePick(chosen, slot: .fresh, reason: reason)
         }
     }
 

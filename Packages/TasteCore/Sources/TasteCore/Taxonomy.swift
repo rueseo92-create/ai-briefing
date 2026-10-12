@@ -1,47 +1,61 @@
 import Foundation
 
-/// 취향 지도의 지역. 실험은 하나의 지역에 속한다.
+/// 웰니스 구역 여덟 개. 구역마다 우표가 있고, 엽서에는 그 구역의 우표가 붙는다.
 public enum Domain: String, Codable, CaseIterable, Identifiable, Sendable {
-    case sound
-    case taste
-    case place
-    case body
-    case hands
-    case people
-    case mind
-    case sight
+    case rest
+    case movement
+    case food
+    case breath
+    case nature
+    case senses
+    case making
+    case connection
 
     public var id: String { rawValue }
 
+    /// 웰니스 영역
     public var title: String {
         switch self {
-        case .sound: "소리"
-        case .taste: "맛과 향"
-        case .place: "공간"
-        case .body: "몸"
-        case .hands: "손"
-        case .people: "사람"
-        case .mind: "글과 생각"
-        case .sight: "보는 것"
+        case .rest: "잠과 쉼"
+        case .movement: "움직임"
+        case .food: "먹는 것"
+        case .breath: "숨과 마음"
+        case .nature: "자연"
+        case .senses: "감각"
+        case .making: "손과 만들기"
+        case .connection: "사람과 연결"
+        }
+    }
+
+    /// 우표 이름
+    public var stampName: String {
+        switch self {
+        case .rest: "쉼터"
+        case .movement: "오솔길"
+        case .food: "열매밭"
+        case .breath: "샘"
+        case .nature: "큰 나무"
+        case .senses: "꽃밭"
+        case .making: "공방"
+        case .connection: "모닥불"
         }
     }
 
     public var emoji: String {
         switch self {
-        case .sound: "🎧"
-        case .taste: "☕️"
-        case .place: "🗺️"
-        case .body: "🏃"
-        case .hands: "🧶"
-        case .people: "🫂"
-        case .mind: "📖"
-        case .sight: "🖼️"
+        case .rest: "🛌"
+        case .movement: "🥾"
+        case .food: "🍑"
+        case .breath: "💧"
+        case .nature: "🌳"
+        case .senses: "🌸"
+        case .making: "🧶"
+        case .connection: "🔥"
         }
     }
 }
 
 /// 좋았던(또는 별로였던) 이유. 추천은 분야가 아니라 이 이유를 따라간다.
-/// 그래서 "조용해서 좋았던 카페" 다음에 "조용한 새벽 산책"이 나올 수 있다.
 public enum Tag: String, Codable, CaseIterable, Identifiable, Sendable {
     case quiet
     case novel
@@ -58,7 +72,7 @@ public enum Tag: String, Codable, CaseIterable, Identifiable, Sendable {
 
     public var id: String { rawValue }
 
-    /// 느낌을 고를 때 보이는 말. "○○해서 좋았어요/별로였어요"
+    /// "○○ 좋았어요/별로였어요"
     public var title: String {
         switch self {
         case .quiet: "조용해서"
@@ -76,7 +90,7 @@ public enum Tag: String, Codable, CaseIterable, Identifiable, Sendable {
         }
     }
 
-    /// 취향 정리에서 쓰는 말. "○○ 사람"
+    /// "○○ 사람"
     public var persona: String {
         switch self {
         case .quiet: "조용한 것에 마음이 가는"
@@ -92,5 +106,13 @@ public enum Tag: String, Codable, CaseIterable, Identifiable, Sendable {
         case .pretty: "예쁜 것을 알아보는"
         case .refreshing: "기분 전환이 빠른"
         }
+    }
+}
+
+enum Hangul {
+    /// 받침이 있으면 "이에요", 없으면 "예요". "오솔길이에요", "쉼터예요"
+    static func copula(after word: String) -> String {
+        guard let last = word.unicodeScalars.last, (0xAC00...0xD7A3).contains(last.value) else { return "이에요" }
+        return (last.value - 0xAC00) % 28 == 0 ? "예요" : "이에요"
     }
 }

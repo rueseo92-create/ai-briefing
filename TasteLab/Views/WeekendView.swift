@@ -29,9 +29,12 @@ struct WeekendView: View {
                     }
 
                     Text("나랑 맞을 것 같은 주말 키트").font(.headline).padding(.top, 4)
+                    Text("이번 주 예산(\(model.checkIn.budget.title)) 안의 키트만 보여요.")
+                        .font(.footnote)
+                        .foregroundStyle(Theme.muted)
                     let ideas = model.weekendIdeas()
                     if ideas.isEmpty {
-                        Text("지금은 준비된 키트가 없어요.").foregroundStyle(Theme.muted)
+                        Text("이번 예산에 맞는 키트가 없어요. 이번 주 체크인에서 예산을 바꿀 수 있어요.").foregroundStyle(Theme.muted)
                     }
                     ForEach(ideas) { experiment in
                         NavigationLink(value: experiment) {
@@ -56,7 +59,7 @@ struct WeekendView: View {
     private func kitRow(_ experiment: Experiment) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
-                Chip(text: "\(experiment.domain.emoji) \(experiment.domain.title)", color: Theme.domainColor(experiment.domain))
+                Chip(text: "\(experiment.domain.emoji) \(experiment.domain.stampName)", color: Theme.domainColor(experiment.domain))
                 Chip(text: "키트", color: Theme.kit)
                 if experiment.isSponsored { Chip(text: "광고", color: Theme.ad) }
             }

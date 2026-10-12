@@ -21,16 +21,20 @@ enum Theme {
 
     static func domainColor(_ domain: Domain) -> Color {
         switch domain {
-        case .sound: Color(light: 0x7A6FD6, dark: 0x9C92EE)
-        case .taste: Color(light: 0xC77A3A, dark: 0xE39A5C)
-        case .place: Color(light: 0x3E8E7E, dark: 0x5DBBA6)
-        case .body: Color(light: 0xD3584F, dark: 0xEE7C73)
-        case .hands: Color(light: 0xB58A2E, dark: 0xDDB052)
-        case .people: Color(light: 0xCF5F97, dark: 0xEE86B7)
-        case .mind: Color(light: 0x4A6FB5, dark: 0x7896DA)
-        case .sight: Color(light: 0x5E9A3E, dark: 0x86C463)
+        case .rest: Color(light: 0x6F7FC9, dark: 0x93A1E6)
+        case .movement: Color(light: 0x4F9A6B, dark: 0x6FC28C)
+        case .food: Color(light: 0xD07A45, dark: 0xE89A66)
+        case .breath: Color(light: 0x3E8EA8, dark: 0x6BB8D0)
+        case .nature: Color(light: 0x5E8F3E, dark: 0x86BA63)
+        case .senses: Color(light: 0xC9628E, dark: 0xE88AB0)
+        case .making: Color(light: 0xB58A2E, dark: 0xDDB052)
+        case .connection: Color(light: 0xC8553D, dark: 0xE8775E)
         }
     }
+
+    static let paper = Color(light: 0xFFFDF8, dark: 0x2A2730)
+    static let stampInk = Color(light: 0xB8323A, dark: 0xE0626A)
+    static let gold = Color(light: 0xC9A227, dark: 0xE6C350)
 }
 
 extension Color {
@@ -93,6 +97,17 @@ enum Formats {
         formatter.numberStyle = .decimal
         formatter.locale = locale
         return (formatter.string(from: NSNumber(value: value)) ?? String(value)) + "원"
+    }
+
+    /// 0원 / 약 8,000원
+    static func cost(_ value: Int) -> String {
+        value == 0 ? "0원" : "약 " + won(value)
+    }
+
+    /// 실험 40분 · 오가는 시간 20분
+    static func time(minutes: Int, travel: Int?) -> String {
+        guard let travel else { return "실험 " + self.minutes(minutes) + " · 위치가 있어야 갈 수 있어요" }
+        return travel == 0 ? "실험 " + self.minutes(minutes) : "실험 " + self.minutes(minutes) + " · 오가는 시간 " + self.minutes(travel)
     }
 
     static func minutes(_ value: Int) -> String {
