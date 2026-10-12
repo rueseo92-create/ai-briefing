@@ -1,0 +1,8 @@
+.DS_Store
+# XcodeGen이 project.yml로 만든다
+*.xcodeproj
+TasteLab/Info.plist
+xcuserdata/
+DerivedData/
+.build/
+.swiftpm/

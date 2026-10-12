@@ -1,0 +1,40 @@
+name: CI
+
+# macOS 실행기는 리눅스보다 분당 비용이 훨씬 비싸다(비공개 저장소 기준).
+# 핵심 로직 테스트는 리눅스에서, iOS 빌드는 테스트가 통과한 뒤에만 돌린다.
+on:
+  pull_request:
+  push:
+    branches: [taste-lab]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: 핵심 로직 테스트
+        run: swift test --package-path Packages/TasteCore
+
+  ios:
+    needs: core
+    runs-on: ${{ vars.IOS_RUNNER || 'macos-15' }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Xcode 프로젝트 생성
+        run: |
+          command -v xcodegen >/dev/null || brew install xcodegen
+          xcodegen generate
+      - name: 시뮬레이터용 빌드
+        run: |
+          xcodebuild build \
+            -project TasteLab.xcodeproj \
+            -scheme TasteLab \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO

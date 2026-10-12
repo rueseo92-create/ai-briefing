@@ -1,0 +1,38 @@
+name: TasteLab
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "17.0"
+  developmentLanguage: ko
+
+packages:
+  TasteCore:
+    path: Packages/TasteCore
+
+targets:
+  TasteLab:
+    type: application
+    platform: iOS
+    sources:
+      - TasteLab
+    dependencies:
+      - package: TasteCore
+    scheme: {}
+    info:
+      path: TasteLab/Info.plist
+      properties:
+        CFBundleDisplayName: 취향 실험실
+        CFBundleDevelopmentRegion: ko
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        LSApplicationCategoryType: public.app-category.lifestyle
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.tastelab
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: 1
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        ENABLE_PREVIEWS: YES
