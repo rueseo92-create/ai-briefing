@@ -2,7 +2,13 @@ import SwiftUI
 
 @main
 struct TasteLabApp: App {
-    @State private var model = AppModel()
+    @State private var model = AppModel(
+        backupService: AppConfig.cloudKitContainer.map { CloudKitBackup(containerID: $0) },
+        metricsService: AppConfig.cloudKitContainer.map { CloudKitMetrics(containerID: $0) },
+        reminderSink: LocalReminders(),
+        weatherProvider: WeatherKitProvider(),
+        placeSearcher: MapKitPlaceSearcher()
+    )
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
@@ -13,6 +19,7 @@ struct TasteLabApp: App {
                 .task { await model.appBecameActive() }
                 .onChange(of: scenePhase) { _, phase in
                     if phase == .active { Task { await model.appBecameActive() } }
+                    if phase == .background { Task { await model.backupNow() } }
                 }
         }
     }

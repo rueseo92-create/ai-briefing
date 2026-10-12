@@ -26,7 +26,11 @@ struct ThisWeekView: View {
                         }
                         .card()
                     } else {
-                        CheckInSummary(checkIn: model.checkIn) { editingCheckIn = true }
+                        CheckInSummary(checkIn: model.checkIn, weather: model.weather) { editingCheckIn = true }
+
+                        if model.shouldAskReminders {
+                            ReminderPrompt()
+                        }
 
                         ForEach(model.picks) { pick in
                             // 카드 안의 "다른 걸로" 버튼이 먼저 눌리게, 링크 대신 탭으로 연다.
@@ -113,12 +117,10 @@ struct ThisWeekView: View {
                 model.updateApproximateLocation(coordinate)
             }
         }
-        // 공원, 한강, 도서관 같은 곳이 동네에 실제로 있는지 지도에서 확인한다(한 달에 한 번, 동네가 바뀌면 다시).
-        if let origin = model.placeSearchOrigin() {
-            working = "동네 지도에서 장소를 찾는 중"
-            if let places = await PlaceFinder.search(around: origin) {
-                model.updateNearby(places)
-            }
+        // 공원, 한강, 도서관 같은 곳이 동네에 실제로 있는지(한 달에 한 번)와 이번 주 날씨를 확인한다.
+        if model.location.origin != nil {
+            working = model.placeSearchOrigin() != nil ? "동네 지도와 날씨를 확인하는 중" : "이번 주 날씨를 확인하는 중"
+            await model.prepareWeek()
         }
         working = nil
         withAnimation { model.checkIn(answer) }
@@ -154,6 +156,9 @@ struct PickCard: View {
                 }
                 Label(Formats.time(minutes: experiment.minutes, travel: pick.travelMinutes), systemImage: "clock")
                 Label(Formats.cost(experiment.effectiveCost), systemImage: "wonsign.circle")
+                if let note = pick.weatherNote {
+                    Label(note, systemImage: "cloud.sun")
+                }
             }
             .font(.caption)
             .foregroundStyle(Theme.muted)

@@ -74,6 +74,7 @@ struct FlowChips<Option: Hashable>: View {
 /// 체크인을 마친 뒤 이번 주 화면 위에 보이는 요약.
 struct CheckInSummary: View {
     let checkIn: CheckIn
+    let weather: WeatherOutlook?
     let onEdit: () -> Void
 
     var body: some View {
@@ -82,10 +83,40 @@ struct CheckInSummary: View {
                 Text("이번 주").font(.caption.weight(.bold)).foregroundStyle(Theme.muted)
                 Text([checkIn.budget.title, "에너지 " + checkIn.energy.title, checkIn.time.title, checkIn.company.title].joined(separator: " · "))
                     .font(.callout)
+                if let weather {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(weather.isRoughWeek(from: Date()) ? "☔️ 궂은 주라 실내 실험을 먼저 골랐어요" : "🌤️ " + weather.outdoorNote(from: Date()))
+                            .font(.footnote)
+                        Link("날씨 정보:  Weather", destination: WeatherKitProvider.attributionURL)
+                            .font(.caption2)
+                            .foregroundStyle(Theme.muted)
+                    }
+                }
             }
             Spacer()
             Button("바꾸기", action: onEdit)
                 .font(.callout)
+        }
+        .card()
+    }
+}
+
+/// 첫 체크인 뒤 한 번만 묻는다. 시스템 권한 창은 "켜기"를 누른 뒤에만.
+struct ReminderPrompt: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("🔔 알려 드릴까요?").font(.headline)
+            Text("월요일 아침 체크인, 키트 주문 마감 날 아침, 토요일 주말 계획. 이 폰에서만 울려요.")
+                .font(.footnote)
+                .foregroundStyle(Theme.muted)
+            HStack {
+                Button("켜기") { Task { await model.setReminders(true) } }
+                    .buttonStyle(.borderedProminent)
+                Button("괜찮아요") { Task { await model.setReminders(false) } }
+                    .foregroundStyle(Theme.muted)
+            }
         }
         .card()
     }

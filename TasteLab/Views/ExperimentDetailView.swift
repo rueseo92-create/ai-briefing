@@ -10,6 +10,8 @@ struct ExperimentDetailView: View {
     @State private var copied = false
     /// 기록 시트가 닫힌 뒤에 엽서를 보여 준다. 시트 두 개를 겹쳐 띄우지 않으려고.
     @State private var reveal: Entry?
+    @State private var reported: ProblemReport?
+    @State private var mailURL: URL?
 
     var body: some View {
         ScrollView {
@@ -45,6 +47,8 @@ struct ExperimentDetailView: View {
                 if let entry = model.entry(for: experiment) {
                     PostcardView(entry: entry, photos: model.photos)
                 }
+
+                problemMenu
             }
             .padding(20)
         }
@@ -73,6 +77,34 @@ struct ExperimentDetailView: View {
         .sheet(item: $reveal) { entry in
             PostcardReveal(entry: entry, stamps: model.freshStamps)
         }
+        .alert(
+            reported?.blocksVenue == true ? "다음부터 이곳은 권하지 않을게요" : "알려 줘서 고마워요",
+            isPresented: Binding(get: { reported != nil }, set: { if !$0 { reported = nil } })
+        ) {
+            if let mailURL {
+                Button("메일로 자세히 보내기") { openURL(mailURL) }
+            }
+            Button("괜찮아요", role: .cancel) {}
+        } message: {
+            Text("장소 이름과 문제 종류만 메일에 담겨요. 위치는 담기지 않아요.")
+        }
+    }
+
+    /// 다녀온 뒤 문제가 있었으면 알려 준다. 문 닫힘·없음이면 그 장소를 다시 권하지 않는다.
+    private var problemMenu: some View {
+        Menu {
+            ForEach(ProblemReport.allCases, id: \.self) { problem in
+                Button(problem.title) {
+                    let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "-"
+                    mailURL = model.reportProblem(problem, experiment: experiment, venue: model.recommender.venue(for: experiment), appVersion: version)
+                    reported = problem
+                }
+            }
+        } label: {
+            Label("문제가 있었나요?", systemImage: "exclamationmark.bubble")
+                .font(.footnote)
+        }
+        .foregroundStyle(Theme.muted)
     }
 
     private var placeText: String {
@@ -99,6 +131,7 @@ struct ExperimentDetailView: View {
             if let code = sponsor.code {
                 Button {
                     UIPasteboard.general.string = code
+                    if !copied { model.recordCodeCopy() }
                     copied = true
                 } label: {
                     Label(copied ? "복사했어요" : "혜택 코드 \(code) 복사", systemImage: copied ? "checkmark" : "doc.on.doc")

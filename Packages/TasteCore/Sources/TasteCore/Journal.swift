@@ -60,15 +60,46 @@ public struct Entry: Codable, Equatable, Identifiable, Sendable {
     }
 }
 
-/// 내 실험 기록 전부. 이 기기에만 저장된다.
+/// "다른 걸로"를 누른 기록. 익명 주간 숫자에만 쓴다.
+public struct SwapLog: Codable, Equatable, Sendable {
+    public var reason: SwapReason?
+    public var at: Date
+}
+
+/// 내 실험 기록 전부. 이 기기에만 저장된다(사용자가 켜면 본인 iCloud에 백업).
 public struct Journal: Codable, Equatable, Sendable {
     public private(set) var entries: [Entry] = []
     /// 마지막으로 추천에 보인 때. 같은 실험이 자꾸 나오지 않게.
     public private(set) var shown: [String: Date] = [:]
     /// 넘긴 실험. 한동안 다시 나오지 않는다.
     public private(set) var skipped: [String: Date] = [:]
+    public private(set) var swaps: [SwapLog] = []
+    /// 광고 혜택 코드를 복사한 때.
+    public private(set) var codeCopies: [Date] = []
 
     public init() {}
+
+    private enum CodingKeys: String, CodingKey {
+        case entries, shown, skipped, swaps, codeCopies
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        entries = try container.decodeIfPresent([Entry].self, forKey: .entries) ?? []
+        shown = try container.decodeIfPresent([String: Date].self, forKey: .shown) ?? [:]
+        skipped = try container.decodeIfPresent([String: Date].self, forKey: .skipped) ?? [:]
+        // 이 필드들이 생기기 전에 저장된 기록도 읽는다.
+        swaps = try container.decodeIfPresent([SwapLog].self, forKey: .swaps) ?? []
+        codeCopies = try container.decodeIfPresent([Date].self, forKey: .codeCopies) ?? []
+    }
+
+    public mutating func recordSwap(_ reason: SwapReason?, at now: Date) {
+        swaps.append(SwapLog(reason: reason, at: now))
+    }
+
+    public mutating func recordCodeCopy(at now: Date) {
+        codeCopies.append(now)
+    }
 
     public func hasTried(_ experimentID: String) -> Bool {
         entries.contains { $0.experimentID == experimentID }

@@ -4,13 +4,13 @@ import Foundation
 /// 공원·한강·도서관처럼 실제로 있어야 하는 곳은 `.find`로 두고, 지도에서 동네 근처에 있을 때만 권한다.
 /// id는 기록에 저장되니 바꾸지 않는다.
 public enum Catalog {
-    public static let all: [Experiment] = rest + movement + food + breath + nature + senses + making + connection
+    public static let all: [Experiment] = rest + movement + food + breath + nature + senses + making + connection + more
 
     private static func e(
         _ id: String, _ title: String, _ detail: String, _ domain: Domain, _ tags: [Tag],
-        _ minutes: Int, _ place: Place, _ cost: Int = 0, company: Bool = false
+        _ minutes: Int, _ place: Place, _ cost: Int = 0, company: Bool = false, seasons: [Season]? = nil
     ) -> Experiment {
-        Experiment(id: id, title: title, detail: detail, domain: domain, tags: tags, minutes: minutes, place: place, cost: cost, needsCompany: company)
+        Experiment(id: id, title: title, detail: detail, domain: domain, tags: tags, minutes: minutes, place: place, cost: cost, needsCompany: company, seasons: seasons)
     }
 
     /// 동네 어디서나. 걸어서 다녀오는 시간.
@@ -119,5 +119,56 @@ public enum Catalog {
         e("conn-old-photos", "가족과 옛날 사진 같이 보기", "사진마다 이야기 하나씩.", .connection, [.together, .slow], 30, .home, company: true),
         e("conn-campfire", "모닥불 앞에서 불멍 하기", "캠핑장이나 불멍 카페에서. 불을 보며 이야기하거나 그냥 앉아 있어요.", .connection, [.together, .slow, .outdoors], 90, .find(.campfire), 20_000),
         e("conn-class-chat", "원데이 클래스에서 옆 사람과 이야기하기", "주제는 뭐든 좋아요.", .connection, [.together, .novel, .learning], 120, .find(.craftStudio), 30_000),
+    ]
+
+    /// 두 번째 묶음. 계절 카드는 그 계절에만 나온다.
+    static let more: [Experiment] = [
+        e("rest-bedtime-tea", "잠들기 전 따뜻한 차 한 잔", "카페인 없는 차로. 휴대폰은 다른 방에.", .rest, [.slow, .quiet, .sensory], 15, .home),
+        e("rest-bed-stretch", "잠들기 전 침대에서 스트레칭 10분", "누운 채로 할 수 있는 동작만.", .rest, [.slow, .quiet], 10, .home),
+        e("rest-fresh-sheets", "침구 빨아서 새로 깔고 자기", "갓 마른 이불 냄새를 맡아 봐요.", .rest, [.refreshing, .sensory], 40, .home),
+        e("rest-warm-pack", "따뜻한 찜질팩 올리고 15분", "목이나 배 위에.", .rest, [.sensory, .slow], 15, .home, 3_000, seasons: [.winter]),
+        e("rest-summer-shade", "한여름 오후 나무 그늘에서 쉬기", "가장 더운 시간에 그늘 아래로.", .rest, [.outdoors, .slow], 30, .find(.park), seasons: [.summer]),
+
+        e("move-jump-rope", "줄넘기 100번", "나눠서 해도 돼요.", .movement, [.moving, .refreshing], 10, near(0), 5_000),
+        e("move-plank", "플랭크 30초 세 번", "자세 영상 하나 보고.", .movement, [.moving, .learning], 5, .home),
+        e("move-cherry-walk", "벚꽃길 걷기", "꽃이 진 길도 괜찮아요.", .movement, [.outdoors, .pretty, .moving], 40, .find(.park), seasons: [.spring]),
+        e("move-autumn-hike", "단풍 든 산길 걷기", "정상 말고 단풍이 예쁜 데까지만.", .movement, [.outdoors, .moving, .pretty], 120, .find(.trail), seasons: [.autumn]),
+        e("move-snow-walk", "눈 온 날 발자국 남기며 걷기", "미끄럽지 않은 길로.", .movement, [.outdoors, .novel, .refreshing], 20, near(0), seasons: [.winter]),
+
+        e("food-season-side", "제철 채소 하나로 반찬 만들기", "시장이나 마트에서 가장 싼 채소가 제철이에요.", .food, [.making, .sensory], 30, .home, 5_000),
+        e("food-spring-greens", "봄나물 비빔밥", "냉이, 달래, 두릅 중 하나만이라도.", .food, [.sensory, .novel], 30, .home, 8_000, seasons: [.spring]),
+        e("food-watermelon-bowl", "수박 화채 만들기", "얼음 넉넉히.", .food, [.making, .refreshing], 20, .home, 10_000, seasons: [.summer]),
+        e("food-roasted-snack", "군밤이나 군고구마 사 먹기", "길에서 따뜻할 때 바로.", .food, [.sensory, .outdoors], 15, near(20), 5_000, seasons: [.autumn, .winter]),
+        e("food-warm-cup", "찻잔 데워서 차 천천히 마시기", "잔에 뜨거운 물을 먼저 부었다가 버려요.", .food, [.slow, .quiet, .learning], 20, .home),
+
+        e("breath-body-scan", "누워서 발끝부터 몸 훑기 10분", "힘이 들어간 곳을 하나씩 풀어요.", .breath, [.quiet, .slow, .solo], 10, .home),
+        e("breath-thanks", "고마운 사람에게 짧은 메시지", "이유 한 줄과 함께.", .breath, [.together, .refreshing], 5, .home),
+        e("breath-rain-window", "창가에서 빗소리 15분 듣기", "비 오는 날에만 할 수 있는 실험이에요.", .breath, [.quiet, .sensory], 15, .home),
+        e("breath-walking", "천천히 걷기 명상 10분", "발바닥이 땅에 닿는 느낌에만 집중해요.", .breath, [.quiet, .slow, .outdoors], 10, .find(.park)),
+        e("breath-year-letter", "올해의 나에게 편지 쓰기", "잘한 것 세 가지부터.", .breath, [.making, .quiet, .slow], 30, .home, seasons: [.winter]),
+
+        e("nature-blossom", "벚꽃 구경", "바람 부는 날이면 꽃비가 내려요.", .nature, [.pretty, .outdoors], 60, .find(.park), seasons: [.spring]),
+        e("nature-river-breeze", "한강이나 천변에서 저녁 바람 맞기", "해 지고 나서 시원할 때.", .nature, [.outdoors, .slow, .refreshing], 60, .find(.waterside), seasons: [.summer]),
+        e("nature-maple-photo", "단풍 사진 한 장", "빛이 비스듬한 오후에.", .nature, [.pretty, .outdoors], 30, .find(.park), seasons: [.autumn]),
+        e("nature-first-snow", "첫눈 오는 날 밖에 나가 보기", "5분이라도.", .nature, [.novel, .outdoors, .refreshing], 15, near(0), seasons: [.winter]),
+        e("nature-clouds", "구름 모양 세 개 찾기", "누워서 보면 더 잘 보여요.", .nature, [.slow, .quiet, .outdoors], 10, near(0)),
+
+        e("senses-perfume-strips", "시향지로 향수 세 가지 비교하기", "첫 향, 10분 뒤 향이 달라요.", .senses, [.sensory, .novel], 30, .find(.scentShop)),
+        e("senses-request-song", "라이브 공연장에서 한 곡 듣기", "모르는 가수여도 좋아요.", .senses, [.sensory, .novel], 60, .find(.liveVenue), 10_000),
+        e("senses-dark-tea", "불 끄고 차 마시기", "눈을 쓰지 않으면 맛이 달라져요.", .senses, [.sensory, .quiet, .novel], 15, .home),
+        e("senses-one-room", "미술관 한 전시실만 천천히", "한 작품 앞에서 3분.", .senses, [.learning, .quiet, .pretty], 60, .find(.gallery)),
+        e("senses-autumn-smell", "가을 냄새 찾기 산책", "낙엽, 군밤, 찬 바람.", .senses, [.sensory, .outdoors], 20, near(20), seasons: [.autumn]),
+
+        e("making-print-photo", "사진 한 장 인화해서 세워 두기", "편의점 인화기도 있어요.", .making, [.making, .pretty], 30, near(20), 3_000),
+        e("making-knit-start", "뜨개질로 코 잡기", "영상 하나 보고 스무 코만.", .making, [.making, .slow, .learning], 40, .home, 10_000),
+        e("making-clay-dish", "지점토로 작은 그릇 만들기", "반지 하나 올려 둘 크기로.", .making, [.making, .sensory], 40, .home, 5_000),
+        e("making-year-card", "손으로 연말 카드 만들기", "한 사람에게만.", .making, [.making, .together, .pretty], 40, .home, 3_000, seasons: [.winter]),
+        e("making-pressed-petal", "꽃잎 눌러 말리기", "두꺼운 책 사이에 일주일.", .making, [.making, .pretty, .slow], 20, .home, seasons: [.spring, .summer]),
+
+        e("conn-hello-neighbor", "이웃에게 먼저 인사하기", "엘리베이터에서 한마디.", .connection, [.together, .novel], 1, near(0)),
+        e("conn-call-parent", "부모님이나 가족에게 전화 10분", "용건 없이.", .connection, [.together, .slow], 10, .home),
+        e("conn-lend-book", "좋아하는 책 빌려주기", "왜 좋았는지 쪽지 하나 끼워서.", .connection, [.together, .refreshing], 10, .home),
+        e("conn-summer-night", "여름밤 누군가와 산책", "편의점 아이스크림 하나씩.", .connection, [.together, .outdoors, .slow], 40, near(0), company: true, seasons: [.summer]),
+        e("conn-new-year-wish", "새해 소원 서로 적어 보기", "접어서 일 년 뒤에 열어요.", .connection, [.together, .slow], 20, .home, company: true, seasons: [.winter]),
     ]
 }

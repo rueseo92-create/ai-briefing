@@ -38,7 +38,7 @@ final class CatalogTests: XCTestCase {
     func testCatalogIsBalancedAndWellFormed() {
         let all = Catalog.all + SampleOffers.all
         XCTAssertEqual(Set(all.map(\.id)).count, all.count, "id가 겹치면 기록이 섞인다")
-        XCTAssertEqual(Catalog.all.count, 81)
+        XCTAssertEqual(Catalog.all.count, 121)
         for domain in Domain.allCases {
             XCTAssertGreaterThanOrEqual(Catalog.all.filter { $0.domain == domain }.count, 10, domain.title)
         }

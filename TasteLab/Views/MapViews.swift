@@ -73,6 +73,9 @@ struct VenueMapCard: View {
             Text(venue.name).font(.headline)
             if let address = venue.address { Text(address).font(.footnote).foregroundStyle(Theme.muted) }
             if let travel { Text("오가는 시간 약 \(Formats.minutes(travel)) (직선 거리로 잰 대략의 값)").font(.footnote).foregroundStyle(Theme.muted) }
+            Label("가기 전에 지도 앱에서 영업시간을 확인해 주세요.", systemImage: "clock.badge.questionmark")
+                .font(.footnote)
+                .foregroundStyle(Theme.muted)
             if let url = MapLinks.appleMaps(venue) {
                 Button("지도 앱에서 열기") { openURL(url) }
                     .buttonStyle(.bordered)

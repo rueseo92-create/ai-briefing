@@ -7,6 +7,9 @@ struct OnboardingView: View {
     @State private var page = 0
     @State private var location = LocationSetting(kind: .neighborhood, mode: .transit)
     @State private var allowSponsored = true
+    @State private var analytics = true
+    @State private var backup = true
+    @State private var restoring = false
 
     private let lastPage = 3
 
@@ -18,7 +21,22 @@ struct OnboardingView: View {
                         emoji: "💌",
                         title: "취향은 해 봐야 알아요",
                         text: "\"뭐 좋아해?\"에 답하기 어려운 건 취향이 없어서가 아니라, 해 본 게 적고 돌아볼 틈이 없어서예요."
-                    ).tag(0)
+                    )
+                    .overlay(alignment: .bottom) {
+                        if model.backupAvailable {
+                            Button(restoring ? "가져오는 중…" : "전에 쓰던 엽서가 있어요 · iCloud에서 가져오기") {
+                                Task {
+                                    restoring = true
+                                    _ = await model.restoreFromBackup()
+                                    restoring = false
+                                }
+                            }
+                            .font(.footnote)
+                            .disabled(restoring)
+                            .padding(.bottom, 40)
+                        }
+                    }
+                    .tag(0)
                     intro(
                         emoji: "📮",
                         title: "해 보면 엽서 한 장",
@@ -43,7 +61,7 @@ struct OnboardingView: View {
                     if page < lastPage {
                         withAnimation { page += 1 }
                     } else {
-                        model.finishOnboarding(location: location, allowSponsored: allowSponsored)
+                        model.finishOnboarding(location: location, allowSponsored: allowSponsored, analytics: analytics && model.canSendAnalytics, backup: backup && model.backupAvailable)
                     }
                 } label: {
                     Text(page < lastPage ? "다음" : "시작하기")
@@ -83,7 +101,19 @@ struct OnboardingView: View {
             }
             .font(.callout)
             .foregroundStyle(Theme.muted)
-            Toggle("광고 실험도 받기", isOn: $allowSponsored).card()
+            VStack(alignment: .leading, spacing: 12) {
+                Toggle("광고 실험도 받기", isOn: $allowSponsored)
+                if model.backupAvailable {
+                    Toggle("내 iCloud에 엽서 백업", isOn: $backup)
+                }
+                if model.canSendAnalytics {
+                    Toggle("익명 주간 숫자 보내기", isOn: $analytics)
+                    Text("체크인 여부와 엽서 수 같은 숫자만. 누가, 무엇을, 어디서 했는지는 보내지 않아요.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                }
+            }
+            .card()
             Text("설정에서 언제든 바꿀 수 있어요.").font(.footnote).foregroundStyle(Theme.muted)
             Spacer()
         }

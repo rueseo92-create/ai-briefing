@@ -45,6 +45,8 @@ public struct Pick: Codable, Equatable, Identifiable, Sendable {
     public var travelMinutes: Int
     /// 실제로 갈 곳. 집이나 동네 어디서나면 nil.
     public var venue: Venue?
+    /// 바깥 실험이면 이번 주 날씨 한 줄.
+    public var weatherNote: String?
     public var id: String { experiment.id }
 }
 
@@ -60,13 +62,26 @@ public struct Recommender: Sendable {
     public var location: LocationSetting
     /// 지도에서 찾아 둔 동네 근처의 실제 장소. 없으면 장소가 필요한 실험은 나오지 않는다.
     public var nearby: NearbyPlaces?
+    /// 동네의 이번 주 날씨. 궂은 주에는 실내 실험을 먼저 권한다.
+    public var weather: WeatherOutlook?
+    public var calendar: Calendar
 
-    public init(catalog: [Experiment], allowSponsored: Bool, checkIn: CheckIn = .standard, location: LocationSetting = .none, nearby: NearbyPlaces? = nil) {
+    public init(
+        catalog: [Experiment],
+        allowSponsored: Bool,
+        checkIn: CheckIn = .standard,
+        location: LocationSetting = .none,
+        nearby: NearbyPlaces? = nil,
+        weather: WeatherOutlook? = nil,
+        calendar: Calendar = .current
+    ) {
         self.catalog = catalog
         self.allowSponsored = allowSponsored
         self.checkIn = checkIn
         self.location = location
         self.nearby = nearby
+        self.weather = weather
+        self.calendar = calendar
     }
 
     /// 오가는 시간(왕복, 분). 갈 수 없는 곳이면 nil.
@@ -124,15 +139,21 @@ public struct Recommender: Sendable {
                 && !journal.hasTried(experiment.id)
                 && !isCoolingDown(experiment.id, journal: journal, now: now)
                 && (experiment.sponsor?.isActive(at: now) ?? true)
+                && experiment.isInSeason(at: now, calendar: calendar)
                 && fits(experiment)
                 && extra(experiment)
         }
-        // 최근에 보인 것은 빼되, 그러면 남는 게 없을 때만 다시 넣는다.
+        let rough = weather?.isRoughWeek(from: now, calendar: calendar) ?? false
+        // 최근에 보인 것은 빼되, 그러면 남는 게 없을 때만 다시 넣는다. 궂은 주에는 실내 실험부터.
         let unseen = base.filter { !wasShownRecently($0.id, journal: journal, now: now) }
         for pool in [unseen, base] {
             let spread = pool.filter { !avoidDomains.contains($0.domain) }
-            for candidates in [spread, pool] where !candidates.isEmpty {
-                if let found = choose(slot: slot, from: candidates, profile: profile, sponsorAllowed: sponsorAllowed, using: &rng) {
+            let tiers = rough ? [spread.filter { !$0.isOutdoor }, pool.filter { !$0.isOutdoor }, spread, pool] : [spread, pool]
+            for candidates in tiers where !candidates.isEmpty {
+                if var found = choose(slot: slot, from: candidates, profile: profile, sponsorAllowed: sponsorAllowed, using: &rng) {
+                    if found.experiment.isOutdoor, let weather {
+                        found.weatherNote = weather.outdoorNote(from: now, calendar: calendar)
+                    }
                     return found
                 }
             }
@@ -151,6 +172,7 @@ public struct Recommender: Sendable {
                     && !journal.hasTried(experiment.id)
                     && !profile.hasDislikedTag(experiment)
                     && (experiment.sponsor?.isActive(at: now) ?? true)
+                    && experiment.isInSeason(at: now, calendar: calendar)
                     && weekend.allows(experiment, travelMinutes: travelMinutes(experiment))
             }
             .sorted { profile.score($0) > profile.score($1) }

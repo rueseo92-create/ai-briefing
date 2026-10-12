@@ -68,6 +68,8 @@ public struct Experiment: Codable, Hashable, Identifiable, Sendable {
     public var sponsor: Sponsorship?
     /// 미리 배송받을 수 있는 키트가 있는 실험.
     public var kit: Kit?
+    /// 이 계절에만 나오는 카드. nil이면 사계절.
+    public var seasons: [Season]?
 
     public init(
         id: String,
@@ -80,7 +82,8 @@ public struct Experiment: Codable, Hashable, Identifiable, Sendable {
         cost: Int = 0,
         needsCompany: Bool = false,
         sponsor: Sponsorship? = nil,
-        kit: Kit? = nil
+        kit: Kit? = nil,
+        seasons: [Season]? = nil
     ) {
         self.id = id
         self.title = title
@@ -93,9 +96,21 @@ public struct Experiment: Codable, Hashable, Identifiable, Sendable {
         self.needsCompany = needsCompany
         self.sponsor = sponsor
         self.kit = kit
+        self.seasons = seasons
     }
 
     public var isSponsored: Bool { sponsor != nil }
+
+    public func isInSeason(at date: Date, calendar: Calendar = .current) -> Bool {
+        seasons.map { $0.contains(Season.of(date, calendar: calendar)) } ?? true
+    }
+
+    /// 날씨를 타는 실험.
+    public var isOutdoor: Bool {
+        if tags.contains(.outdoors) { return true }
+        if case .find(let need) = place { return need.isOutdoor }
+        return false
+    }
 
     /// 실제로 내게 될 돈. 광고 실험은 혜택을 받은 뒤 가격, 키트는 키트 가격.
     public var effectiveCost: Int {

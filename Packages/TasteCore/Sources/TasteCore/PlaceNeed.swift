@@ -79,6 +79,14 @@ public enum PlaceNeed: String, Codable, CaseIterable, Identifiable, Sendable {
         }
     }
 
+    /// 날씨를 타는 바깥 장소인지.
+    public var isOutdoor: Bool {
+        switch self {
+        case .park, .waterside, .trail, .barefootPath, .arboretum, .campfire: true
+        default: false
+        }
+    }
+
     /// 지도에서 찾을 범위(km). 이보다 먼 곳은 동네 실험으로 치지 않는다.
     public var radiusKm: Double {
         switch self {
@@ -116,6 +124,21 @@ public struct NearbyPlaces: Codable, Equatable, Sendable {
 
     public func nearest(_ need: PlaceNeed, from point: Coordinate) -> Venue? {
         venues(for: need).min { $0.coordinate.distanceKm(to: point) < $1.coordinate.distanceKm(to: point) }
+    }
+
+    /// 사용자가 "문 닫혀 있었어요", "그런 곳이 없었어요"라고 알려 준 곳을 뺀다.
+    public func excluding(_ blocked: Set<String>) -> NearbyPlaces {
+        guard !blocked.isEmpty else { return self }
+        var copy = self
+        for (key, venues) in places {
+            copy.places[key] = venues.filter { !blocked.contains(Self.blockKey($0)) }
+        }
+        return copy
+    }
+
+    /// 장소를 막을 때 쓰는 키. 이름과 대략의 위치.
+    public static func blockKey(_ venue: Venue) -> String {
+        String(format: "%@@%.3f,%.3f", venue.name, venue.coordinate.latitude, venue.coordinate.longitude)
     }
 
     public var missing: [PlaceNeed] {
